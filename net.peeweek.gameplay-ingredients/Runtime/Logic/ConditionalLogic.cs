@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System;
 using UnityEngine.Events;
 
@@ -5,15 +6,18 @@ namespace GameplayIngredients.Logic
 {
     public abstract class ConditionalLogic : LogicBase
     {
-        public UnityEvent OnConditionValid;
-        public UnityEvent OnConditionInvalid;
+        [ReorderableList]
+        public Callable[] OnConditionValid;
+
+        [ReorderableList]
+        public Callable[] OnConditionInvalid;
 
         public override void Execute()
         {
             if (GetCondition())
-                OnConditionValid.Invoke();
+                Callable.Call(OnConditionValid);
             else
-                OnConditionInvalid.Invoke();
+                Callable.Call(OnConditionInvalid);
         }
 
         public abstract bool GetCondition();

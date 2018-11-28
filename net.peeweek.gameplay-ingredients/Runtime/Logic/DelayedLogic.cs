@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,8 +8,12 @@ namespace GameplayIngredients.Logic
     public class DelayedLogic : LogicBase
     {
         public float Delay = 1.0f;
-        public UnityEvent OnDelayComplete;
-        public UnityEvent OnCanceled;
+
+        [ReorderableList]
+        public Callable[] OnDelayComplete;
+
+        [ReorderableList]
+        public Callable[] OnCanceled;
 
         IEnumerator m_Coroutine;
 
@@ -17,7 +22,7 @@ namespace GameplayIngredients.Logic
             if(m_Coroutine != null)
             {
                 StopCoroutine(m_Coroutine);
-                OnCanceled.Invoke();
+                Callable.Call(OnCanceled);
                 m_Coroutine = null;
             }
         }
@@ -33,7 +38,7 @@ namespace GameplayIngredients.Logic
         IEnumerator RunDelay(float Seconds)
         {
             yield return new WaitForSeconds(Seconds);
-            OnDelayComplete.Invoke();
+            Callable.Call(OnDelayComplete);
             m_Coroutine = null;
         }
     }

@@ -1,15 +1,15 @@
-using UnityEngine;
-using UnityEngine.Events;
+using NaughtyAttributes;
 
 namespace GameplayIngredients.Hooks
 {
     public class OnStartHook : HookBase
     {
-        public UnityEvent OnStart;
+        [ReorderableList]
+        public Callable[] OnStart;
 
         private void Start()
         {
-            OnStart.Invoke();
+            Callable.Call(OnStart); 
         }
     }
 }

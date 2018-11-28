@@ -1,10 +1,13 @@
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
     public class ToggleGameObjectAction : ActionBase
     {
+        [ReorderableList]
         public GameObjectToggle[] Targets;
+
         public override void Execute()
         {
             foreach(var target in Targets)
@@ -31,6 +34,7 @@ namespace GameplayIngredients.Actions
             }
         }
 
+        [System.Serializable]
         public struct GameObjectToggle
         {
             [System.Serializable]

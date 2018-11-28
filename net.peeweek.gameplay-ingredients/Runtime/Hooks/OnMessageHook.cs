@@ -1,4 +1,4 @@
-using UnityEngine.Events;
+using NaughtyAttributes;
 
 namespace GameplayIngredients.Hooks
 {
@@ -6,7 +6,8 @@ namespace GameplayIngredients.Hooks
     {
         public string MessageName = "Message";
 
-        public UnityEvent Event;
+        [ReorderableList]
+        public Callable[] OnMessageRecieved;
 
         void OnEnable()
         {
@@ -20,7 +21,7 @@ namespace GameplayIngredients.Hooks
 
         void Execute()
         {
-            Event.Invoke();
+            Callable.Call(OnMessageRecieved);
         }
 
 

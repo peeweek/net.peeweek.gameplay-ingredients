@@ -2,8 +2,11 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
-    public abstract class ActionBase : MonoBehaviour
+    public abstract class ActionBase : Callable
     {
-        public abstract void Execute();
+        public override sealed string ToString()
+        {
+            return "Action : " + Name;
+        }
     }
 }

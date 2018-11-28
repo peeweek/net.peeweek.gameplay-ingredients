@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,7 +7,8 @@ namespace GameplayIngredients.Logic
 {
     public class NextFrameLogic : LogicBase
     {
-        public UnityEvent OnComplete;
+        [ReorderableList]
+        public Callable[] OnComplete;
         IEnumerator m_Coroutine;
 
         public override void Execute()
@@ -18,7 +20,7 @@ namespace GameplayIngredients.Logic
         IEnumerator RunDelay()
         {
             yield return new WaitForEndOfFrame();
-            OnComplete.Invoke();
+            Callable.Call(OnComplete);
             m_Coroutine = null;
         }
     }

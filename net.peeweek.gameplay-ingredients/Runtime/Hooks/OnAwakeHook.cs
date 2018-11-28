@@ -1,15 +1,16 @@
+using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace GameplayIngredients.Hooks
 {
     public class OnAwakeHook : MonoBehaviour
     {
-        public UnityEvent onAwake;
+        [ReorderableList]
+        public Callable[] onAwake;
 
         private void Awake()
         {
-            onAwake.Invoke();
+            Callable.Call(onAwake);
         }
     }
 }

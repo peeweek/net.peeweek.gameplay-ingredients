@@ -1,11 +1,13 @@
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
-    public abstract class LogicBase : MonoBehaviour
+    public abstract class LogicBase : Callable
     {
-        public abstract void Execute();
+        public override sealed string ToString()
+        {
+            return "Logic : " + Name;
+        }
     }
 }
-
-

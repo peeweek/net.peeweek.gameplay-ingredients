@@ -1,5 +1,5 @@
+using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace GameplayIngredients.Hooks
 {
@@ -13,16 +13,19 @@ namespace GameplayIngredients.Hooks
 
         public KeyCode Key = KeyCode.F5;
 
-        public UnityEvent OnKeyDownEvent;
-        public UnityEvent OnKeyUpEvent;
+        [ReorderableList]
+        public Callable[] OnKeyDownEvent;
+
+        [ReorderableList]
+        public Callable[] OnKeyUpEvent;
 
         void Update()
         {
             if (Input.GetKeyDown(Key))
-                OnKeyDownEvent.Invoke();
+                Callable.Call(OnKeyDownEvent);
 
             if (Input.GetKeyUp(Key))
-                OnKeyUpEvent.Invoke();
+                Callable.Call(OnKeyUpEvent);
         }
     }
 }

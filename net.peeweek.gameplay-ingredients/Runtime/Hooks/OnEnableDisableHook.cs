@@ -1,20 +1,23 @@
+using NaughtyAttributes;
 using UnityEngine.Events;
 
 namespace GameplayIngredients.Hooks
 {
     public class OnEnableDisableHook : HookBase
     {
-        public UnityEvent OnEnableEvent;
-        public UnityEvent OnDisableEvent;
+        [ReorderableList]
+        public Callable[] OnEnableEvent;
+        [ReorderableList]
+        public Callable[] OnDisableEvent;
 
         private void OnEnable()
         {
-            OnEnableEvent.Invoke();
+            Callable.Call(OnEnableEvent);
         }
 
         private void OnDisable()
         {
-            OnDisableEvent.Invoke();
+            Callable.Call(OnDisableEvent);
         }
     }
 }

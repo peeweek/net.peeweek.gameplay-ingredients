@@ -1,5 +1,6 @@
+using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.Events;
+
 
 namespace GameplayIngredients.Hooks
 {
@@ -11,8 +12,11 @@ namespace GameplayIngredients.Hooks
         private int m_RemainingEnterCount;
         private int m_RemainingExitCount;
 
-        public UnityEvent onTriggerEnter;
-        public UnityEvent onTriggerExit;
+        [ReorderableList]
+        public Callable[] onTriggerEnter;
+
+        [ReorderableList]
+        public Callable[] onTriggerExit;
 
         public bool OnlyInteractWithTag = true;
         public string Tag = "Player";
@@ -32,11 +36,11 @@ namespace GameplayIngredients.Hooks
             }
             if (OnlyInteractWithTag && other.tag == Tag )
             {
-                onTriggerEnter.Invoke();
+                Callable.Call(onTriggerEnter);
             }
             if (!OnlyInteractWithTag)
             {
-                onTriggerEnter.Invoke();
+                Callable.Call(onTriggerEnter);
             }
         }
 
@@ -49,11 +53,11 @@ namespace GameplayIngredients.Hooks
             }
             if (OnlyInteractWithTag && other.tag == Tag )
             {
-                onTriggerExit.Invoke();
+                Callable.Call(onTriggerExit);
             }
             if (!OnlyInteractWithTag)
             {
-                onTriggerExit.Invoke();
+                Callable.Call(onTriggerExit);
             }
         }
     }

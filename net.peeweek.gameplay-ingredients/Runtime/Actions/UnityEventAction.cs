@@ -2,7 +2,7 @@ using UnityEngine.Events;
 
 namespace GameplayIngredients.Actions
 {
-    public class SimpleAction : ActionBase
+    public class UnityEventAction : ActionBase
     {
         public UnityEvent OnExecute;
 

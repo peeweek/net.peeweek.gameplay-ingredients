@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
+using NaughtyAttributes;
 
-namespace GameplayIngredients.Actions
+namespace GameplayIngredients.Logic
 {
-    public class EditorOnlyAction : ActionBase
+    public class EditorOnlyLogic : LogicBase
     {
         public enum Mode
         {
@@ -13,17 +14,18 @@ namespace GameplayIngredients.Actions
 
         public Mode ExecutionPath;
 
-        public UnityEvent OnExecute;
+        [ReorderableList]
+        public Callable[] OnExecute;
 
         public override void Execute()
         {
             switch(ExecutionPath)
             {
                 case Mode.EditorOnly:
-                    if (Application.isEditor) OnExecute.Invoke();
+                    if (Application.isEditor) Callable.Call(OnExecute);
                     break;
                 case Mode.PlayerOnly:
-                    if (!Application.isEditor) OnExecute.Invoke();
+                    if (!Application.isEditor) Callable.Call(OnExecute);
                     break;
             }
         }
