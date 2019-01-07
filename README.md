@@ -9,9 +9,20 @@ Gameplay Ingredients for your Unity Games - A collection of scripts that ease si
 
 ## How to install
 
-* Open the project where you want to use these ingredients
-* Clone repository somewhere or download zip / unzip somewhere
-* Open package manager UI
-* Click the Plus button at the bottom, select `Add Package from Disk`, then navigate to the `/net.peeweek.gameplayingredients` folder to find the `package.json` file.
+You can use a manual, local package installation if you need to alter the code locally or automate the fetch of the repository by using a git address directly. The latter option shall download and manage automatically the repository, with the drawback of being read-only.
+
+### Manual Version
+
+- Clone repository somewhere of your liking
+- In your project, open the `Window/Package Manager` window and use the + button to select the `Add Package from Disk...` option.
+- Navigate to your repository folder and select the `package.json` file
+- The repository shall be added
+
+### Git reference version
+
+- With unity closed, edit the `Packages/manifest.json` with a text editor
+- append the line `    "net.peeweek.gameplay-ingredients": "https://github.com/peeweek/net.peeweek.gameplay-ingredients.git",` under `dependencies`
+
+
 
 You can check that the package was imported by looking at the project window, under Packages/ Hierarchy, there should be a `Gameplay Ingredients` hierarchy
