@@ -1,0 +1,16 @@
+{
+    "name": "com.alelievr.NodeGraphProcessor-Editor",
+    "references": [
+        "com.alelievr.NodeGraphProcessor"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [
+        "Editor"
+    ],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

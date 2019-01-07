@@ -2,7 +2,9 @@
     "name": "GameplayIngredients-Editor",
     "references": [
         "NaughtyAttributes",
-        "GameplayIngredients"
+        "GameplayIngredients",
+        "com.alelievr.NodeGraphProcessor",
+        "com.alelievr.NodeGraphProcessor-Editor"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [
