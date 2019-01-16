@@ -3,8 +3,8 @@
     "references": [
         "NaughtyAttributes",
         "GameplayIngredients",
-        "com.alelievr.NodeGraphProcessor",
-        "com.alelievr.NodeGraphProcessor-Editor"
+        "com.alelievr.NodeGraphProcessor-Editor",
+        "com.alelievr.NodeGraphProcessor"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [
