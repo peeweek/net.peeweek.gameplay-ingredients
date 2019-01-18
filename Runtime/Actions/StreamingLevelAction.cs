@@ -1,4 +1,5 @@
 using UnityEngine.Events;
+using GameplayIngredients;
 using GameplayIngredients.LevelStreaming;
 
 namespace GameplayIngredients.Actions
@@ -15,7 +16,7 @@ namespace GameplayIngredients.Actions
 
         public override void Execute()
         {
-            LevelStreamingManager.instance.LoadScenes(Action, Scenes, SceneToActivate, ShowUI, OnLoadComplete);
+            Manager.Get<LevelStreamingManager>().LoadScenes(Action, Scenes, SceneToActivate, ShowUI, OnLoadComplete);
         }
     }
 }

@@ -9,11 +9,9 @@ using System.Linq;
 
 namespace GameplayIngredients.LevelStreaming
 {
-    public class LevelStreamingManager : MonoBehaviour
+    [ManagerDefaultPrefab("LevelStreamingManager")]
+    public class LevelStreamingManager : Manager
     {
-        public static LevelStreamingManager instance { get { return s_Instance; } }
-        private static LevelStreamingManager s_Instance;
-
         public enum StreamingAction
         {
             Load,
@@ -27,6 +25,12 @@ namespace GameplayIngredients.LevelStreaming
         public Text LoadingText;
         public Text PercentageText;
 
+        [Header("Behavior")]
+        [Min(0.0f)]
+        public float DelayBeforeLoad = 0.0f;
+        [Min(0.0f)]
+        public float DelayAfterLoad = 0.0f;
+
         [Header("Debug")]
         public Text DebugText;
         public bool EnableDebug = false;
@@ -34,22 +38,6 @@ namespace GameplayIngredients.LevelStreaming
         private float[] percentages;
         private AsyncOperation[] asyncOperations;
 
-        void OnEnable()
-        {
-            //if(!Console.HasCommand("STREAMING")) Console.AddCommand(new LevelStreamingCommand());
-
-            if (s_Instance != null)
-                throw new InvalidOperationException("LevelStreamingManager Already Exists");
-            else
-                s_Instance = this;
-
-        }
-
-        void OnDisable()
-        {
-            if (s_Instance == this)
-                s_Instance = null;
-        }
 
         public void LoadScenes(StreamingAction action, string[] scenes, string sceneToActivate, bool showUI, UnityEvent onLoadComplete)
         {
@@ -97,6 +85,9 @@ namespace GameplayIngredients.LevelStreaming
             LogDebugInformation("START LOAD/UNLOAD FOR LEVELS...");
             SetProgressBar(0.0f, true);
 
+            if(DelayBeforeLoad >= 0.0f)
+                yield return new WaitForSeconds(DelayBeforeLoad);
+
             switch (action)
             {
                 case StreamingAction.Load:
@@ -121,6 +112,9 @@ namespace GameplayIngredients.LevelStreaming
                 SceneManager.SetActiveScene(newActive);
                 yield return new WaitForEndOfFrame();
             }
+
+            if(DelayAfterLoad >= 0.0f)
+                yield return new WaitForSeconds(DelayAfterLoad);
 
             if (onLoadComplete != null)
                 onLoadComplete.Invoke();
@@ -217,9 +211,7 @@ namespace GameplayIngredients.LevelStreaming
 
             // Update UI
             PercentageText.text = ((int)(m_CurrentPercentage * 100)) + "%";
-            Vector2 size = ProgressBar.GetComponent<RectTransform>().sizeDelta;
-            size.x = m_CurrentPercentage * ProgressBarContainer.GetComponent<RectTransform>().sizeDelta.x;
-            ProgressBar.GetComponent<RectTransform>().sizeDelta = size;
+            ProgressBar.GetComponent<RectTransform>().localScale = new Vector2(m_CurrentPercentage, 1.0f);
 
             //Debug
             if (EnableDebug)
