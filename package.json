@@ -3,5 +3,10 @@
     "displayName": "Gameplay Ingredients",
     "version": "1.0.0-preview",
     "unity": "2018.3",
-    "description": "Gameplay ingredients - A Collection of scripts for the editor and runtime to set-up gameplay actions and logic in your games"
+    "description": "Gameplay ingredients - A Collection of scripts for the editor and runtime to set-up gameplay actions and logic in your games",
+    "dependencies":
+    {
+    	"com.unity.cinemachine" : "2.2.8",
+    	"com.unity.inputsystem" : "0.1.2-preview"
+    }
 }

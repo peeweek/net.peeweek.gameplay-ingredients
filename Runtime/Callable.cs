@@ -19,12 +19,21 @@ namespace GameplayIngredients
         public static void Call(Callable[] calls)
         {
             foreach (var call in calls)
-                call.Execute();
+            {
+                if(call != null)
+                    call.Execute();
+                else
+                    Debug.LogError("Cannot execute call: Null or Missing");
+
+            }
         }
 
         public static void Call(Callable call)
         {
-            call.Execute();
+            if (call != null)
+                call.Execute();
+            else
+                Debug.LogError("Cannot execute call: Null or Missing");
         }
     }
 }

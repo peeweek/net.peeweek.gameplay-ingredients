@@ -39,7 +39,7 @@ namespace GameplayIngredients.LevelStreaming
         private AsyncOperation[] asyncOperations;
 
 
-        public void LoadScenes(StreamingAction action, string[] scenes, string sceneToActivate, bool showUI, UnityEvent onLoadComplete)
+        public void LoadScenes(StreamingAction action, string[] scenes, string sceneToActivate, bool showUI, Callable[] onLoadComplete)
         {
             if (EnableDebug)
                 DebugText.gameObject.SetActive(true);
@@ -70,7 +70,8 @@ namespace GameplayIngredients.LevelStreaming
             {
                 Debug.LogWarning("Did not find any candidates to load or unload...");
 
-                if (onLoadComplete != null) onLoadComplete.Invoke();
+                if (onLoadComplete != null)
+                    Callable.Call(onLoadComplete);
 
                 if (showUI)
                     LoadingRoot.SetActive(false);
@@ -80,7 +81,7 @@ namespace GameplayIngredients.LevelStreaming
             }
         }
 
-        IEnumerator LoadScenesCoroutine(StreamingAction action, List<string> scenes, string sceneToActivate, bool showUI, UnityEvent onLoadComplete)
+        IEnumerator LoadScenesCoroutine(StreamingAction action, List<string> scenes, string sceneToActivate, bool showUI, Callable[] onLoadComplete)
         {
             LogDebugInformation("START LOAD/UNLOAD FOR LEVELS...");
             SetProgressBar(0.0f, true);
@@ -117,7 +118,7 @@ namespace GameplayIngredients.LevelStreaming
                 yield return new WaitForSeconds(DelayAfterLoad);
 
             if (onLoadComplete != null)
-                onLoadComplete.Invoke();
+                Callable.Call(onLoadComplete);
 
             if (showUI)
                 LoadingRoot.SetActive(false);

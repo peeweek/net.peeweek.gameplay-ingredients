@@ -1,12 +1,14 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
 namespace GameplayIngredients.Editor
 {
-    static class MenuItems
+    public static class MenuItems
     {
+        const int kMenuPriority = 330;
+
         [MenuItem("Edit/Select None &D", priority = 149)]
         static void UnselectAll()
         {
@@ -15,7 +17,7 @@ namespace GameplayIngredients.Editor
 
 
         static readonly string helperPreferenceName = "GameplayIngredients.toggleIngredientHelpers";
-        [MenuItem("Edit/Gameplay Ingredients/Toggle Helpers", priority = 117)]
+        [MenuItem("Edit/Gameplay Ingredients/Toggle Helpers", priority = kMenuPriority)]
         static void ToggleIngredientHelpers()
         {
             bool value = EditorPrefs.GetBool(helperPreferenceName, false);
@@ -24,7 +26,7 @@ namespace GameplayIngredients.Editor
 
         }
 
-        [MenuItem("Edit/Gameplay Ingredients/Toggle Helpers", true, 117)]
+        [MenuItem("Edit/Gameplay Ingredients/Toggle Helpers", validate = true, priority = kMenuPriority)]
         static bool ToggleIngredientHelpersValidation()
         {
             Menu.SetChecked("Edit/Gameplay Ingredients/Toggle Helpers", EditorPrefs.GetBool(helperPreferenceName, false));

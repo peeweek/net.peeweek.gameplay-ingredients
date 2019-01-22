@@ -1,22 +1,28 @@
-using UnityEngine.Events;
-using GameplayIngredients;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using GameplayIngredients.LevelStreaming;
+using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
     public class StreamingLevelAction : ActionBase
     {
-        public string[] Scenes;
+        [ReorderableList]
+        public Scene[] Scenes;
         public string SceneToActivate;
         public LevelStreamingManager.StreamingAction Action = LevelStreamingManager.StreamingAction.Load;
 
         public bool ShowUI = false;
-
-        public UnityEvent OnLoadComplete;
+        
+        [ReorderableList]
+        public Callable[] OnLoadComplete;
 
         public override void Execute()
         {
-            Manager.Get<LevelStreamingManager>().LoadScenes(Action, Scenes, SceneToActivate, ShowUI, OnLoadComplete);
+            List<string> sceneNames = new List<string>();
+            foreach (var scene in Scenes)
+                sceneNames.Add(scene.name);
+            Manager.Get<LevelStreamingManager>().LoadScenes(Action, sceneNames.ToArray(), SceneToActivate, ShowUI, OnLoadComplete);
         }
     }
 }
