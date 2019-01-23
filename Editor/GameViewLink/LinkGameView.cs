@@ -14,21 +14,44 @@ namespace GameplayIngredients.Editor
         {
             get
             {
-                return EditorPrefs.GetBool(kPreferenceName, false);
+                // Get preference only when not playing
+                if (!Application.isPlaying)
+                    m_Active = EditorPrefs.GetBool(kPreferenceName, false);
+
+                return m_Active;
             }
 
             set
             {
-                EditorPrefs.SetBool(kPreferenceName, value);
+                // Update preference only when not playing
+                if(!Application.isPlaying)
+                    EditorPrefs.SetBool(kPreferenceName, value);
+
+                m_Active = value;
+
                 s_GameObject.SetActive(value);
                 UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
             }
         }
 
+        static bool m_Active = false;
+
         [InitializeOnLoadMethod]
         static void Initialize()
         {
             SceneView.onSceneGUIDelegate += Update;
+            EditorApplication.playModeStateChanged += OnPlayModeChanged;
+        }
+
+        static void OnPlayModeChanged(PlayModeStateChange state)
+        {
+            if(state == PlayModeStateChange.EnteredEditMode || state == PlayModeStateChange.EnteredPlayMode)
+            {
+                if (Active)
+                    Active = true;
+                else
+                    Active = false;
+            }
         }
 
         const string kMenuPath = "Edit/Link SceneView and GameView %,";
@@ -50,6 +73,7 @@ namespace GameplayIngredients.Editor
             Menu.SetChecked(kMenuPath, Active);
             return SceneView.sceneViews.Count > 0;
         }
+        
 
         [MenuItem(kMenuSelectPath, priority = kMenuPriority+1)]
         static void Select()
@@ -74,6 +98,9 @@ namespace GameplayIngredients.Editor
                     s_GameObject = result;
                 else // Create the camera if it does not exist
                     s_GameObject = CreateLinkedCamera();
+
+                if (Application.isPlaying)
+                    Active = false;
             }
 
             if (Active)
