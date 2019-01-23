@@ -1,7 +1,8 @@
 {
     "name": "GameplayIngredients",
     "references": [
-        "NaughtyAttributes"
+        "NaughtyAttributes",
+        "Cinemachine"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
