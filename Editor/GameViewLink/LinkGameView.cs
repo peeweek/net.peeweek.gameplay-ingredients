@@ -45,12 +45,18 @@ namespace GameplayIngredients.Editor
 
         static void OnPlayModeChanged(PlayModeStateChange state)
         {
+            // Reset State when entering editmode or play mode
             if(state == PlayModeStateChange.EnteredEditMode || state == PlayModeStateChange.EnteredPlayMode)
             {
                 if (Active)
                     Active = true;
                 else
                     Active = false;
+            }
+            else // Cleanup before switching state
+            {
+                if (s_GameObject != null)
+                    Object.DestroyImmediate(s_GameObject);
             }
         }
 
@@ -101,6 +107,21 @@ namespace GameplayIngredients.Editor
 
                 if (Application.isPlaying)
                     Active = false;
+            }
+
+            // If we have a VirtualCameraManager, manage its state here
+            if(Manager.Get<VirtualCameraManager>() != null)
+            {
+                var camera = Manager.Get<VirtualCameraManager>().gameObject;
+
+                if(camera.activeInHierarchy && Active) // We need to disable the VirtualCameraManager
+                {
+                    camera.SetActive(false);
+                }
+                else if (!camera.activeInHierarchy && !Active) // We need to re-enable the VirtualCameraManager
+                {
+                    camera.SetActive(true);
+                }
             }
 
             if (Active)

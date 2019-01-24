@@ -10,6 +10,14 @@ namespace GameplayIngredients
     [ManagerDefaultPrefab("VirtualCameraManager")]
     public class VirtualCameraManager : Manager
     {
+        public Camera Camera
+        {
+            get
+            {
+                return m_Camera;
+            }
+        }
+
         Camera m_Camera;
         CinemachineBrain m_Brain;
 
