@@ -5,12 +5,12 @@ using UnityEditor;
 
 namespace GameplayIngredients.Editor
 {
-    static class LinkGameView
+    public static class LinkGameView
     {
         static readonly string kPreferenceName = "GameplayIngredients.LinkGameView";
         static readonly string kLinkCameraName = "___LINK__SCENE__VIEW__CAMERA___";
 
-        static bool Active
+        public static bool Active
         {
             get
             {
