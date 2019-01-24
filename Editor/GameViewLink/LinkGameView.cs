@@ -115,7 +115,9 @@ namespace GameplayIngredients.Editor
                 {
                     s_GameObject.transform.position = sceneCamera.transform.position;
                     s_GameObject.transform.rotation = sceneCamera.transform.rotation;
+                    camera.orthographic = sceneCamera.orthographic;
                     camera.fieldOfView = sceneCamera.fieldOfView;
+                    camera.orthographicSize = sceneCamera.orthographicSize;
                     UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
                 }
             }

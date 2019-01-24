@@ -8,6 +8,10 @@ namespace GameplayIngredients.Editor
 {
     static class SceneViewToolbar
     {
+        public delegate void SceneViewToolbarDelegate(SceneView sceneView);
+
+        public static event SceneViewToolbarDelegate OnSceneViewToolbarGUI;
+
         [InitializeOnLoadMethod]
         static void Initialize()
         {
@@ -22,13 +26,25 @@ namespace GameplayIngredients.Editor
             {
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
-                    bool link = LinkGameView.Active;
-                    link = GUILayout.Toggle(link, "Link Game View", EditorStyles.toolbarButton);
+                    bool play = GUILayout.Toggle(EditorApplication.isPlaying, "Play from Here", EditorStyles.toolbarButton);
 
-                    if (GUI.changed)
-                        LinkGameView.Active = link;
+                    if(GUI.changed)
+                    {
+                        if (play)
+                            PlayFromHere.Play();
+                        else
+                            EditorApplication.isPlaying = false;
+                    }
 
                     GUILayout.FlexibleSpace();
+
+                    // Custom Code here
+                    if (OnSceneViewToolbarGUI != null)
+                        OnSceneViewToolbarGUI.Invoke(sceneView);
+
+                    // Saving Space not to overlap view controls
+                    GUILayout.Space(96);
+
                 }
             }
         }

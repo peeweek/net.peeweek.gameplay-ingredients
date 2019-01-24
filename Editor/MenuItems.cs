@@ -15,6 +15,17 @@ namespace GameplayIngredients.Editor
             Selection.activeObject = null;
         }
 
+        [MenuItem("Edit/Play from SceneView Position #%&P", priority = 160)]
+        static void PlayHere()
+        {
+            EditorApplication.isPlaying = true;
+        }
+
+        [MenuItem("Edit/Play from SceneView Position #%&P", priority = 160)]
+        static bool PlayHereValidate()
+        {
+            return true;
+        }
 
         static readonly string helperPreferenceName = "GameplayIngredients.toggleIngredientHelpers";
         [MenuItem("Edit/Gameplay Ingredients/Toggle Helpers", priority = kMenuPriority)]
