@@ -36,6 +36,18 @@ namespace GameplayIngredients.Editor
                             EditorApplication.isPlaying = false;
                     }
 
+                    bool isLocked = LinkGameView.LockedSceneView == sceneView;
+
+                    isLocked = GUILayout.Toggle(isLocked, "Lock LinkSceneView", EditorStyles.toolbarButton);
+
+                    if (GUI.changed)
+                    {
+                        if (isLocked)
+                            LinkGameView.LockedSceneView = sceneView;
+                        else
+                            LinkGameView.LockedSceneView = null;
+                    }
+
                     GUILayout.FlexibleSpace();
 
                     // Custom Code here

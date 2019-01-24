@@ -36,6 +36,22 @@ namespace GameplayIngredients.Editor
 
         static bool m_Active = false;
 
+
+        public static SceneView LockedSceneView
+        {
+            get
+            {
+                return s_LockedSceneView;
+            }
+
+            set
+            {
+                s_LockedSceneView = value;
+            }
+        }
+
+        static SceneView s_LockedSceneView;
+
         [InitializeOnLoadMethod]
         static void Initialize()
         {
@@ -126,7 +142,8 @@ namespace GameplayIngredients.Editor
 
             if (Active)
             {
-                var sceneCamera = SceneView.lastActiveSceneView.camera;
+                var sv = s_LockedSceneView == null ? SceneView.lastActiveSceneView : s_LockedSceneView;
+                var sceneCamera = sv.camera;
                 var camera = s_GameObject.GetComponent<Camera>();
                 bool needRepaint = sceneCamera.transform.position != camera.transform.position
                     || sceneCamera.transform.rotation != camera.transform.rotation
