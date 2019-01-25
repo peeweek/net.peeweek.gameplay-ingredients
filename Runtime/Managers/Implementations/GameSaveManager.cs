@@ -29,18 +29,7 @@ namespace GameplayIngredients
 
         private void OnEnable()
         {
-            // Load System Save
             LoadSystemSave();
-            //TestFunc();
-        }
-
-        void TestFunc()
-        {
-            SetValue("Toto", Location.System, 1.0f);
-            SetValue("Tata", Location.System, 10);
-            SetValue("Titi", Location.System, "1.0");
-            SetValue("Tutu", Location.System, false);
-            SaveSystemSave();
         }
 
         #region SAVE/LOAD
@@ -83,6 +72,21 @@ namespace GameplayIngredients
 
         #region VALUES
 
+        public bool HasBool(string name, Location location) { return HasValue<bool>(name, location); }
+        public bool HasInt(string name, Location location) { return HasValue<int>(name, location); }
+        public bool HasFloat(string name, Location location) { return HasValue<float>(name, location); }
+        public bool HasSting(string name, Location location) { return HasValue<string>(name, location); }
+
+        public bool GetBool(string name, Location location) { return GetValue<bool>(name, location); }
+        public int GetInt(string name, Location location) { return GetValue<int>(name, location); }
+        public float GetFloat(string name, Location location) { return GetValue<float>(name, location); }
+        public string GetString(string name, Location location) { return GetValue<string>(name, location); }
+
+        public void SetBool(string name, Location location, bool value) { SetValue(name, location, value); }
+        public void SetInt(string name, Location location, int value) { SetValue(name, location, value); }
+        public void SetFloat(string name, Location location, float value) { SetValue(name, location, value); }
+        public void SetString(string name, Location location, string value) { SetValue(name, location, value); }
+
         public enum Location
         {
             System = 0,
@@ -98,13 +102,13 @@ namespace GameplayIngredients
 
         }
 
-        public bool HasValue<T>(string name, Location location)
+        bool HasValue<T>(string name, Location location)
         {
             var dict = GetEntriesFor(location);
             return dict.ContainsKey(name) && dict[name] is T;
         }
 
-        public T GetValue<T>(string name, Location location)
+        T GetValue<T>(string name, Location location)
         {
             if (HasValue<T>(name, location))
             {
