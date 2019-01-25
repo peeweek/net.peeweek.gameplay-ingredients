@@ -159,11 +159,11 @@ namespace GameplayIngredients
             {
                 string val = data.values[i];
                 object value;
-                if (data.types[i] == SerializableOutput.ValueType.Bool)
+                if (data.types[i] == ValueType.Bool)
                     value = bool.Parse(val);
-                else if (data.types[i] == SerializableOutput.ValueType.Int)
+                else if (data.types[i] == ValueType.Int)
                     value = int.Parse(val);
-                else if (data.types[i] == SerializableOutput.ValueType.Float)
+                else if (data.types[i] == ValueType.Float)
                     value = float.Parse(val);
                 else
                     value = val;
@@ -182,7 +182,7 @@ namespace GameplayIngredients
 
             data.keys = new string[count];
             data.values = new string[count];
-            data.types = new SerializableOutput.ValueType[count];
+            data.types = new ValueType[count];
 
             int i = 0;
             foreach (var kvp in entries)
@@ -191,13 +191,13 @@ namespace GameplayIngredients
                 object value = kvp.Value;
 
                 if (value is bool)
-                    data.types[i] = SerializableOutput.ValueType.Bool;
+                    data.types[i] = ValueType.Bool;
                 else if (value is int)
-                    data.types[i] = SerializableOutput.ValueType.Int;
+                    data.types[i] = ValueType.Int;
                 else if (value is float)
-                    data.types[i] = SerializableOutput.ValueType.Float;
+                    data.types[i] = ValueType.Float;
                 else
-                    data.types[i] = SerializableOutput.ValueType.String;
+                    data.types[i] = ValueType.String;
 
                 data.values[i] = kvp.Value.ToString();
                 i++;
@@ -207,20 +207,20 @@ namespace GameplayIngredients
         }
 
         [System.Serializable]
+        public enum ValueType
+        {
+            Bool = 0,
+            Int = 1,
+            Float = 2,
+            String = 3
+        }
+
+        [System.Serializable]
         class SerializableOutput
         {
             public string[] keys;
             public string[] values;
             public ValueType[] types;
-
-            [System.Serializable]
-            public enum ValueType
-            {
-                Bool = 0,
-                Int = 1,
-                Float = 2,
-                String = 3
-            }
         }
 
         #endregion
