@@ -26,7 +26,7 @@ namespace GameplayIngredients.Editor
             {
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
-                    bool play = GUILayout.Toggle(EditorApplication.isPlaying, "Play from Here", EditorStyles.toolbarButton);
+                    bool play = GUILayout.Toggle(EditorApplication.isPlaying, Contents.playFromHere, EditorStyles.toolbarButton);
 
                     if(GUI.changed)
                     {
@@ -36,16 +36,31 @@ namespace GameplayIngredients.Editor
                             EditorApplication.isPlaying = false;
                     }
 
-                    bool isLocked = LinkGameView.LockedSceneView == sceneView;
+                    GUILayout.Space(24);
 
-                    isLocked = GUILayout.Toggle(isLocked, "Lock LinkSceneView", EditorStyles.toolbarButton);
+                    bool isLinked = LinkGameView.Active;
+                    isLinked = GUILayout.Toggle(isLinked, Contents.linkGameView, EditorStyles.toolbarButton, GUILayout.Width(48));
+
+                    if (GUI.changed)
+                    {
+                        LinkGameView.Active = isLinked;
+                    }
+
+
+
+                    bool isLocked = LinkGameView.LockedSceneView == sceneView;
+                    isLocked = GUILayout.Toggle(isLocked, Contents.lockLinkGameView, EditorStyles.toolbarButton);
 
                     if (GUI.changed)
                     {
                         if (isLocked)
+                        {
                             LinkGameView.LockedSceneView = sceneView;
+                        }
                         else
+                        {
                             LinkGameView.LockedSceneView = null;
+                        }
                     }
 
                     GUILayout.FlexibleSpace();
@@ -58,6 +73,23 @@ namespace GameplayIngredients.Editor
                     GUILayout.Space(96);
 
                 }
+            }
+        }
+
+        static class Contents
+        {
+            public static GUIContent playFromHere;
+            public static GUIContent lockLinkGameView;
+            public static GUIContent linkGameView;
+
+            static Contents()
+            {
+                lockLinkGameView = new GUIContent(EditorGUIUtility.IconContent("IN LockButton"));
+                linkGameView = new GUIContent(EditorGUIUtility.IconContent("Camera Icon").image);
+                linkGameView.text = "Link";
+
+                playFromHere = new GUIContent(EditorGUIUtility.IconContent("Animation.Play"));
+                playFromHere.text = "Here";
             }
         }
 

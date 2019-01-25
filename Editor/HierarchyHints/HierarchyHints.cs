@@ -23,7 +23,7 @@ namespace GameplayIngredients.Editor
             var c = GUI.color;
             if (o.isStatic) selectionRect = DrawLabel(selectionRect, "#", Color.gray);
             if (o.GetComponents<MonoBehaviour>().Length > 0) selectionRect = DrawLabel(selectionRect, "*", Colors.green);
-            if (o.GetComponents<Camera>().Length > 0) selectionRect = DrawLabel(selectionRect, "C", Colors.blue);
+            if (o.GetComponents<Camera>().Length > 0) selectionRect = DrawContent(selectionRect, Contents.cameraIcon, Color.white);
             if (o.GetComponents<Light>().Length > 0) selectionRect = DrawLabel(selectionRect, "L", Colors.yellow);
             if (o.GetComponents<MeshRenderer>().Length > 0) selectionRect = DrawLabel(selectionRect, "M", Colors.purple);
             if (o.GetComponents<AudioSource>().Length > 0) selectionRect = DrawLabel(selectionRect, "S", Colors.orange);
@@ -37,6 +37,19 @@ namespace GameplayIngredients.Editor
             GUI.Label(rect, label, Styles.rightLabel);
             rect.width = rect.width - size;
             return rect;
+        }
+
+        static Rect DrawContent(Rect rect, GUIContent content, Color color, int size = 12)
+        {
+            GUI.color = color;
+            GUI.Label(rect, content, Styles.rightLabel);
+            rect.width = rect.width - size;
+            return rect;
+        }
+
+        static class Contents
+        {
+            public static GUIContent cameraIcon = EditorGUIUtility.IconContent("Camera Icon"); 
         }
 
         static class Colors

@@ -37,13 +37,11 @@ public class SelectionHistoryWindow : EditorWindow
         selectionHistory = null;
     }
 
-    List<GameObject[]> selectionHistory;
-    List<GameObject[]> lockedObjects;
+    List<GameObject> selectionHistory;
+    List<GameObject> lockedObjects;
 
     int maxHistoryCount = 32;
     bool ignoreNextSelection = false;
-
-
 
     void OnSelectionChange()
     {
@@ -53,16 +51,21 @@ public class SelectionHistoryWindow : EditorWindow
             return;
         }
 
-        if (selectionHistory == null) selectionHistory = new List<GameObject[]>();
-        if (lockedObjects == null) lockedObjects = new List<GameObject[]>();
+        if (selectionHistory == null) selectionHistory = new List<GameObject>();
+        if (lockedObjects == null) lockedObjects = new List<GameObject>();
 
         if (Selection.activeGameObject != null || Selection.gameObjects.Length > 0)
         {
-            if (selectionHistory.Count > maxHistoryCount)
-                selectionHistory.RemoveAt(0);
 
-            if (selectionHistory.Count == 0 || CompareArray(selectionHistory[selectionHistory.Count - 1], Selection.gameObjects)) ;
-            selectionHistory.Add(Selection.gameObjects);
+            foreach(var go in Selection.gameObjects)
+            {
+                if (!selectionHistory.Contains(go))
+                    selectionHistory.Add(go);
+            }
+
+            if (selectionHistory.Count > maxHistoryCount)
+                selectionHistory.Take(maxHistoryCount);
+
             Repaint();
         }
 
@@ -73,42 +76,21 @@ public class SelectionHistoryWindow : EditorWindow
         return a.SequenceEqual(b);
     }
 
-    private static bool CheckObjects(GameObject[] objs)
-    {
-        if (objs == null) return false;
-
-        foreach (var obj in objs)
-        {
-            if (obj == null) return false;
-        }
-        return true;
-    }
-
     void Selection_OnGUI()
     {
-        if (selectionHistory == null) selectionHistory = new List<GameObject[]>();
-        if (lockedObjects == null) lockedObjects = new List<GameObject[]>();
+        if (selectionHistory == null) selectionHistory = new List<GameObject>();
+        if (lockedObjects == null) lockedObjects = new List<GameObject>();
         int i = 0;
-
-        using (new EditorGUILayout.HorizontalScope())
-        {
-            if (GUILayout.Button("Unselect All"))
-            {
-                Selection.activeObject = null;
-                ignoreNextSelection = true;
-                Repaint();
-            }
-        }
         int toRemove = -1;
 
         if (lockedObjects.Count > 0)
         {
-            GUILayout.Label("Retained", EditorStyles.boldLabel);
+            GUILayout.Label("Favorites", EditorStyles.boldLabel);
             i = 0;
             toRemove = -1;
             foreach (var obj in lockedObjects)
             {
-                if (obj == null || obj.Length == 0 || !CheckObjects(obj))
+                if (obj == null)
                 {
                     using (new EditorGUILayout.HorizontalScope())
                     {
@@ -121,26 +103,37 @@ public class SelectionHistoryWindow : EditorWindow
                 }
                 else
                 {
+                    bool highlight = Selection.gameObjects.Contains(obj);
+                    Color backup = GUI.color;
+
+                    if (highlight)
+                        GUI.color = Styles.highlightColor;
+
                     using (new EditorGUILayout.HorizontalScope())
                     {
-                        GUILayout.Label(Contents.star, GUILayout.Width(24));
-                        string label = obj.Length > 1 ? "Multiple (" + obj.Length + ") : " + obj[0].name + " ..." : obj[0].name;
-                        if (GUILayout.Button(label))
+                        GUILayout.Label(Contents.star, EditorStyles.miniLabel, GUILayout.Width(24));
+                        string label = obj.name;
+
+                        if (GUILayout.Button(label, EditorStyles.foldout))
                         {
                             ignoreNextSelection = true;
-                            Selection.objects = obj;
+                            Selection.activeObject = obj;
                         }
-                        if (GUILayout.Button("F", GUILayout.Width(24)))
+                        if (GUILayout.Button("Focus", EditorStyles.miniButton, GUILayout.Width(40)))
                         {
                             ignoreNextSelection = true;
-                            Selection.objects = obj;
+                            Selection.activeObject = obj;
                             SceneView.lastActiveSceneView.FrameSelected();
                         }
-                        if (GUILayout.Button("X", GUILayout.Width(24)))
+                        if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(24)))
                         {
                             toRemove = i;
                         }
                     }
+                    var rect = GUILayoutUtility.GetLastRect();
+                    EditorGUI.DrawRect(rect, new Color(0.2f, 0.2f, 0.2f, 0.5f));
+
+                    GUI.color = backup;
                 }
                 i++;
             }
@@ -159,13 +152,14 @@ public class SelectionHistoryWindow : EditorWindow
                 selectionHistory.Clear();
                 Repaint();
             }
-
         }
 
-        var reversedHistory = selectionHistory.Reverse<GameObject[]>().ToArray();
+        GUILayout.Space(8);
+
+        var reversedHistory = selectionHistory.Reverse<GameObject>().ToArray();
         foreach (var obj in reversedHistory)
         {
-            if (obj == null || obj.Length == 0 || !CheckObjects(obj))
+            if (obj == null)
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
@@ -179,26 +173,37 @@ public class SelectionHistoryWindow : EditorWindow
             }
             else
             {
+                bool highlight = Selection.gameObjects.Contains(obj);
+                Color backup = GUI.color;
+
+                if (highlight)
+                    GUI.color = Styles.highlightColor;
+
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    GUILayout.Space(24);
-                    string label = obj.Length > 1 ? "Multiple (" + obj.Length + ") : " + obj[0].name + " ..." : obj[0].name;
-                    if (GUILayout.Button(label))
+                    
+                    GUILayout.Space(16);
+                    string label = obj.name;
+                    if (GUILayout.Button(label, EditorStyles.foldout))
                     {
                         ignoreNextSelection = true;
-                        Selection.objects = obj;
+                        Selection.activeObject = obj;
                     }
-                    if (GUILayout.Button("F", GUILayout.Width(24)))
+                    if (GUILayout.Button("Focus", Styles.historyButton, GUILayout.Width(40)))
                     {
                         ignoreNextSelection = true;
-                        Selection.objects = obj;
+                        Selection.activeObject = obj;
                         SceneView.lastActiveSceneView.FrameSelected();
                     }
-                    if (GUILayout.Button("+", GUILayout.Width(24)))
+                    if (GUILayout.Button(Contents.star, Styles.historyButton, GUILayout.Width(24)))
                     {
                         toAdd = i;
                     }
                 }
+                var rect = GUILayoutUtility.GetLastRect();
+                EditorGUI.DrawRect(rect, new Color(0.2f,0.2f,0.2f,0.5f));
+
+                GUI.color = backup;
             }
 
             i++;
@@ -216,9 +221,28 @@ public class SelectionHistoryWindow : EditorWindow
 
     }
 
+    static class Styles
+    {
+        public static GUIStyle historyButton;
+        public static GUIStyle highlight;
+        public static Color highlightColor = new Color(2.0f, 2.0f, 2.0f);
+
+        static Styles()
+        {
+            historyButton = new GUIStyle(EditorStyles.miniButton);
+            historyButton.alignment = TextAnchor.MiddleLeft;
+            highlight = new GUIStyle(EditorStyles.miniLabel);
+            highlight.onNormal.background = Texture2D.whiteTexture;
+            highlight.onHover.background = Texture2D.whiteTexture;
+            highlight.onActive.background = Texture2D.whiteTexture;
+            highlight.onFocused.background = Texture2D.whiteTexture;
+
+        }
+    }
+
     static class Contents
     {
-        public static GUIContent title = new GUIContent("Select History");
+        public static GUIContent title = new GUIContent("Selection History");
         public static GUIContent star = EditorGUIUtility.IconContent("CustomSorting");
     }
 }
