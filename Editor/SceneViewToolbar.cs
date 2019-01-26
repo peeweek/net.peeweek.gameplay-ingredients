@@ -20,6 +20,7 @@ namespace GameplayIngredients.Editor
 
         private static void OnSceneGUI(SceneView sceneView)
         {
+
             var r = new Rect(Vector2.zero, new Vector2(sceneView.position.width,24));
 
             using (new GUILayout.AreaScope(r))
@@ -39,14 +40,12 @@ namespace GameplayIngredients.Editor
                     GUILayout.Space(24);
 
                     bool isLinked = LinkGameView.Active;
-                    isLinked = GUILayout.Toggle(isLinked, Contents.linkGameView, EditorStyles.toolbarButton, GUILayout.Width(48));
+                    isLinked = GUILayout.Toggle(isLinked, Contents.linkGameView, EditorStyles.toolbarButton, GUILayout.Width(64));
 
                     if (GUI.changed)
                     {
                         LinkGameView.Active = isLinked;
                     }
-
-
 
                     bool isLocked = LinkGameView.LockedSceneView == sceneView;
                     isLocked = GUILayout.Toggle(isLocked, Contents.lockLinkGameView, EditorStyles.toolbarButton);
@@ -85,8 +84,8 @@ namespace GameplayIngredients.Editor
             static Contents()
             {
                 lockLinkGameView = new GUIContent(EditorGUIUtility.IconContent("IN LockButton"));
-                linkGameView = new GUIContent(EditorGUIUtility.IconContent("Camera Icon").image);
-                linkGameView.text = "Link";
+                linkGameView = new GUIContent(EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/GUI/Camera16x16.png") as Texture);
+                linkGameView.text = " Game";
 
                 playFromHere = new GUIContent(EditorGUIUtility.IconContent("Animation.Play"));
                 playFromHere.text = "Here";
