@@ -27,19 +27,32 @@ namespace GameplayIngredients.Editor
             {
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
-                    bool play = GUILayout.Toggle(EditorApplication.isPlaying, Contents.playFromHere, EditorStyles.toolbarButton);
-
-                    if(GUI.changed)
+                    if(PlayFromHere.IsReady)
                     {
-                        if (play)
-                            PlayFromHere.Play();
-                        else
-                            EditorApplication.isPlaying = false;
+                        bool play = GUILayout.Toggle(EditorApplication.isPlaying, Contents.playFromHere, EditorStyles.toolbarButton);
+
+                        if(GUI.changed)
+                        {
+                            if (play)
+                                PlayFromHere.Play();
+                            else
+                                EditorApplication.isPlaying = false;
+                        }
+
+                        GUILayout.Space(24);
                     }
 
-                    GUILayout.Space(24);
+                    Color backup = GUI.color;
 
                     bool isLinked = LinkGameView.Active;
+                    bool isLocked = LinkGameView.LockedSceneView == sceneView;
+
+
+                    if(isLinked && isLocked)
+                    {
+                        GUI.color = Color.green *2;
+                    }
+
                     isLinked = GUILayout.Toggle(isLinked, Contents.linkGameView, EditorStyles.toolbarButton, GUILayout.Width(64));
 
                     if (GUI.changed)
@@ -47,7 +60,6 @@ namespace GameplayIngredients.Editor
                         LinkGameView.Active = isLinked;
                     }
 
-                    bool isLocked = LinkGameView.LockedSceneView == sceneView;
                     isLocked = GUILayout.Toggle(isLocked, Contents.lockLinkGameView, EditorStyles.toolbarButton);
 
                     if (GUI.changed)
@@ -61,6 +73,8 @@ namespace GameplayIngredients.Editor
                             LinkGameView.LockedSceneView = null;
                         }
                     }
+
+                    GUI.color = backup;
 
                     GUILayout.FlexibleSpace();
 

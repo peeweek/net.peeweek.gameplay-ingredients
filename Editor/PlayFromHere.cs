@@ -17,6 +17,13 @@ namespace GameplayIngredients.Editor
             EditorApplication.playModeStateChanged += OnEnterPlayMode;
         }
 
+        public static bool IsReady
+        {
+            get
+            {
+                return OnPlayFromHere != null &&  OnPlayFromHere.GetInvocationList().Length > 0;
+            }
+        }
         
         public static void Play()
         {
