@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Experimental.VFX;
 using UnityEditor;
 using GameplayIngredients;
@@ -10,14 +13,83 @@ namespace GameplayIngredients.Editor
     [InitializeOnLoad]
     public static class HierarchyHints
     {
+        const string kMenuPath = "Edit/Advanced Hierarchy View %.";
+        public const int kMenuPriority = 230;
+
+        [MenuItem(kMenuPath, priority = kMenuPriority, validate = false)]
+        static void Toggle()
+        {
+            if (Active)
+                Active = false;
+            else
+                Active = true;
+        }
+
+        [MenuItem(kMenuPath, priority = kMenuPriority, validate = true)]
+        static bool ToggleCheck()
+        {
+            Menu.SetChecked(kMenuPath, Active);
+            return SceneView.sceneViews.Count > 0;
+        }
+
+
+        static readonly string kPreferenceName = "GameplayIngredients.HierarchyHints";
+
+        public static bool Active
+        {
+            get
+            {
+                return EditorPrefs.GetBool(kPreferenceName, false);
+            }
+
+            set
+            {
+                EditorPrefs.SetBool(kPreferenceName, value);
+                UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
+            }
+        }
+
         static HierarchyHints()
         {
             EditorApplication.hierarchyWindowItemOnGUI -= HierarchyOnGUI;
             EditorApplication.hierarchyWindowItemOnGUI += HierarchyOnGUI;
+
+            foreach (var kvp in s_Definitions)
+            {
+                Contents.AddIcon(kvp.Key, kvp.Value);
+            }
         }
+
+        static Dictionary<Type, string> s_Definitions = new Dictionary<Type, string>()
+        {
+            { typeof(MonoBehaviour), "cs Script Icon"},
+            { typeof(Camera), "Camera Icon"},
+            { typeof(MeshRenderer), "MeshRenderer Icon"},
+            { typeof(SkinnedMeshRenderer), "SkinnedMeshRenderer Icon"},
+            { typeof(BoxCollider), "BoxCollider Icon"},
+            { typeof(SphereCollider), "SphereCollider Icon"},
+            { typeof(CapsuleCollider), "CapsuleCollider Icon"},
+            { typeof(MeshCollider), "MeshCollider Icon"},
+            { typeof(AudioSource), "AudioSource Icon"},
+            { typeof(Animation), "Animation Icon"},
+            { typeof(Animator), "Animator Icon"},
+            { typeof(PlayableDirector), "PlayableDirector Icon"},
+            { typeof(Light), "Light Icon"},
+            { typeof(LightProbeGroup), "LightProbeGroup Icon"},
+            { typeof(LightProbeProxyVolume), "LightProbeProxyVolume Icon"},
+            { typeof(ReflectionProbe), "ReflectionProbe Icon"},
+            { typeof(VisualEffect), "VisualEffect Icon"},
+            { typeof(ParticleSystem), "ParticleSystem Icon"},
+            { typeof(Canvas), "Canvas Icon"},
+            { typeof(Image), "Image Icon"},
+            { typeof(Text), "Text Icon"},
+            { typeof(Button), "Button Icon"},
+        };
 
         static void HierarchyOnGUI(int instanceID, Rect selectionRect)
         {
+            if (!Active) return;
+
             var fullRect = selectionRect;
             fullRect.xMin = 0;
             fullRect.xMax = EditorGUIUtility.currentViewWidth;
@@ -31,30 +103,16 @@ namespace GameplayIngredients.Editor
                 EditorGUI.DrawRect(fullRect, Colors.dimGray);
             }
 
-            if (o.GetComponents<MonoBehaviour>().Length > 0) selectionRect = DrawconContent(selectionRect, Contents.monoBehaviourIcon, Color.white);
-            if (o.GetComponents<MeshRenderer>().Length > 0) selectionRect = DrawconContent(selectionRect, Contents.meshIcon, Color.white);
-            if (o.GetComponents<Collider>().Length > 0) selectionRect = DrawconContent(selectionRect, Contents.colliderIcon, Color.white);
-            if (o.GetComponents<Camera>().Length > 0) selectionRect = DrawconContent(selectionRect, Contents.cameraIcon, Color.white);
-            if (o.GetComponents<Light>().Length > 0) selectionRect = DrawconContent(selectionRect, Contents.lightIcon, Color.white);
-            if (o.GetComponents<Animation>().Length > 0) selectionRect = DrawconContent(selectionRect, Contents.animationIcon, Color.white);
-            if (o.GetComponents<Animator>().Length > 0) selectionRect = DrawconContent(selectionRect, Contents.animatorIcon, Color.white);
-            if (o.GetComponents<PlayableDirector>().Length > 0) selectionRect = DrawconContent(selectionRect, Contents.directorIcon, Color.white);
-            if (o.GetComponents<AudioSource>().Length > 0) selectionRect = DrawconContent(selectionRect, Contents.audioIcon, Color.white);
-            if (o.GetComponents<VisualEffect>().Length > 0) selectionRect = DrawconContent(selectionRect, Contents.vfxIcon, Color.white);
-            if (o.GetComponents<ParticleSystem>().Length > 0) selectionRect = DrawconContent(selectionRect, Contents.shurikenIcon, Color.white);
+            foreach(var type in s_Definitions.Keys)
+            {
+                if (o.GetComponents(type).Length > 0) selectionRect = DrawIcon(selectionRect, Contents.GetContent(type), Color.white);
+            }
 
             GUI.color = c;
         }
 
-        static Rect DrawLabel(Rect rect, string label, Color color, int size = 16)
-        {
-            GUI.color = color;
-            GUI.Label(rect, label, Styles.rightLabel);
-            rect.width = rect.width - size;
-            return rect;
-        }
-
-        static Rect DrawconContent(Rect rect, GUIContent content, Color color, int size = 16)
+        
+        static Rect DrawIcon(Rect rect, GUIContent content, Color color, int size = 16)
         {
             GUI.color = color;
             GUI.Label(rect, content, Styles.icon);
@@ -64,17 +122,17 @@ namespace GameplayIngredients.Editor
 
         static class Contents
         {
-            public static GUIContent cameraIcon = EditorGUIUtility.IconContent("Camera Icon");
-            public static GUIContent meshIcon = EditorGUIUtility.IconContent("MeshRenderer Icon");
-            public static GUIContent colliderIcon = EditorGUIUtility.IconContent("BoxCollider Icon");
-            public static GUIContent audioIcon = EditorGUIUtility.IconContent("AudioSource Icon");
-            public static GUIContent animationIcon = EditorGUIUtility.IconContent("Animation Icon");
-            public static GUIContent animatorIcon = EditorGUIUtility.IconContent("Animator Icon");
-            public static GUIContent directorIcon = EditorGUIUtility.IconContent("PlayableDirector Icon");
-            public static GUIContent monoBehaviourIcon = EditorGUIUtility.IconContent("cs Script Icon");
-            public static GUIContent shurikenIcon = EditorGUIUtility.IconContent("ParticleSystem Icon");
-            public static GUIContent vfxIcon = EditorGUIUtility.IconContent("VisualEffect Icon");
-            public static GUIContent lightIcon = EditorGUIUtility.IconContent("Light Icon");
+            static Dictionary<Type, GUIContent> s_Icons = new Dictionary<Type, GUIContent>();
+
+            public static void AddIcon(Type type, string IconName)
+            {
+                s_Icons.Add(type, EditorGUIUtility.IconContent(IconName));
+            }
+
+            public static GUIContent GetContent(Type t)
+            {
+                return s_Icons[t];
+            }
         }
 
         static class Colors
@@ -107,8 +165,6 @@ namespace GameplayIngredients.Editor
                 icon = new GUIStyle(rightLabel);
                 icon.padding = new RectOffset();
                 icon.margin = new RectOffset();
-
-
             }
         }
 

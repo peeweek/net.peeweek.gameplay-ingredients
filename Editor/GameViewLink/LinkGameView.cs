@@ -77,7 +77,6 @@ namespace GameplayIngredients.Editor
         }
 
         const string kMenuPath = "Edit/Link SceneView and GameView %,";
-        const string kMenuSelectPath = "Edit/Select Linked Camera %#,";
         public const int kMenuPriority = 230;
 
         [MenuItem(kMenuPath, priority = kMenuPriority, validate = false)]
@@ -96,15 +95,6 @@ namespace GameplayIngredients.Editor
             return SceneView.sceneViews.Count > 0;
         }
         
-
-        [MenuItem(kMenuSelectPath, priority = kMenuPriority+1)]
-        static void Select()
-        {
-            if (s_GameObject != null)
-                Selection.activeGameObject = s_GameObject;
-        }
-
-
         static GameObject s_GameObject;
 
 
