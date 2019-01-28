@@ -146,7 +146,9 @@ namespace GameplayIngredients.Editor
                     camera.orthographic = sceneCamera.orthographic;
                     camera.fieldOfView = sceneCamera.fieldOfView;
                     camera.orthographicSize = sceneCamera.orthographicSize;
+                    
                     UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
+                    needRepaint = false;
                 }
             }
         }

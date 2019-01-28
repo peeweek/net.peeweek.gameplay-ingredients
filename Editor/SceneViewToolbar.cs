@@ -81,7 +81,7 @@ namespace GameplayIngredients.Editor
                     if(GUILayout.Button("POV", EditorStyles.toolbarDropDown))
                     {
                         Rect btnrect = GUILayoutUtility.GetLastRect();
-                        btnrect.yMax += 16;
+                        btnrect.yMax += 17;
                         SceneViewPOV.ShowPopup(btnrect, sceneView);
                     }
 
