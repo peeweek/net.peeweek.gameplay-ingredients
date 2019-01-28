@@ -76,6 +76,15 @@ namespace GameplayIngredients.Editor
 
                     GUI.color = backup;
 
+                    // SceneViewPOV
+                    GUILayout.Space(16);
+                    if(GUILayout.Button("POV", EditorStyles.toolbarDropDown))
+                    {
+                        Rect btnrect = GUILayoutUtility.GetLastRect();
+                        btnrect.yMax += 16;
+                        SceneViewPOV.ShowPopup(btnrect, sceneView);
+                    }
+
                     GUILayout.FlexibleSpace();
 
                     // Custom Code here
