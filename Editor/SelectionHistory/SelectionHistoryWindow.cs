@@ -111,7 +111,15 @@ public class SelectionHistoryWindow : EditorWindow
 
                     using (new EditorGUILayout.HorizontalScope())
                     {
-                        GUILayout.Label(Contents.star, EditorStyles.miniLabel, GUILayout.Width(24));
+                        var b = GUI.color;
+                        GUI.color = Color.yellow * 3;
+                        if (GUILayout.Button(Contents.star, Styles.icon, GUILayout.Width(24)))
+                        {
+                            toRemove = i;
+                        }
+
+                        GUI.color = b;
+
                         string label = obj.name;
 
                         if (GUILayout.Button(label, EditorStyles.foldout))
@@ -125,13 +133,7 @@ public class SelectionHistoryWindow : EditorWindow
                             Selection.activeObject = obj;
                             SceneView.lastActiveSceneView.FrameSelected();
                         }
-                        if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(24)))
-                        {
-                            toRemove = i;
-                        }
                     }
-                    var rect = GUILayoutUtility.GetLastRect();
-                    EditorGUI.DrawRect(rect, new Color(0.2f, 0.2f, 0.2f, 0.5f));
 
                     GUI.color = backup;
                 }
@@ -147,7 +149,7 @@ public class SelectionHistoryWindow : EditorWindow
         {
             GUILayout.Label("History", EditorStyles.boldLabel);
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Clear"))
+            if (GUILayout.Button("Clear", EditorStyles.miniButton))
             {
                 selectionHistory.Clear();
                 Repaint();
@@ -159,19 +161,7 @@ public class SelectionHistoryWindow : EditorWindow
         var reversedHistory = selectionHistory.Reverse<GameObject>().ToArray();
         foreach (var obj in reversedHistory)
         {
-            if (obj == null)
-            {
-                using (new EditorGUILayout.HorizontalScope())
-                {
-                    GUILayout.Label("(object is either null or has been deleted)");
-                    if (GUILayout.Button("X", GUILayout.Width(24)))
-                    {
-                        toRemove = i;
-                    }
-                }
-
-            }
-            else
+            if (obj != null)
             {
                 bool highlight = Selection.gameObjects.Contains(obj);
                 Color backup = GUI.color;
@@ -181,8 +171,12 @@ public class SelectionHistoryWindow : EditorWindow
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    
-                    GUILayout.Space(16);
+
+                    if (GUILayout.Button(Contents.starDisabled, Styles.icon, GUILayout.Width(24)))
+                    {
+                        toAdd = i;
+                    }
+
                     string label = obj.name;
                     if (GUILayout.Button(label, EditorStyles.foldout))
                     {
@@ -194,10 +188,6 @@ public class SelectionHistoryWindow : EditorWindow
                         ignoreNextSelection = true;
                         Selection.activeObject = obj;
                         SceneView.lastActiveSceneView.FrameSelected();
-                    }
-                    if (GUILayout.Button(Contents.star, Styles.historyButton, GUILayout.Width(24)))
-                    {
-                        toAdd = i;
                     }
                 }
                 var rect = GUILayoutUtility.GetLastRect();
@@ -227,6 +217,8 @@ public class SelectionHistoryWindow : EditorWindow
         public static GUIStyle highlight;
         public static Color highlightColor = new Color(2.0f, 2.0f, 2.0f);
 
+        public static GUIStyle icon;
+
         static Styles()
         {
             historyButton = new GUIStyle(EditorStyles.miniButton);
@@ -237,12 +229,18 @@ public class SelectionHistoryWindow : EditorWindow
             highlight.onActive.background = Texture2D.whiteTexture;
             highlight.onFocused.background = Texture2D.whiteTexture;
 
+            icon = new GUIStyle(EditorStyles.label);
+            icon.fixedHeight = 16;
+            icon.padding = new RectOffset(8,2,2,0);
+            icon.margin = new RectOffset();
+
         }
     }
 
     static class Contents
     {
         public static GUIContent title = new GUIContent("Selection History");
-        public static GUIContent star = EditorGUIUtility.IconContent("CustomSorting");
+        public static GUIContent star = new GUIContent(EditorGUIUtility.IconContent("Favorite Icon").image);
+        public static GUIContent starDisabled = new GUIContent(EditorGUIUtility.IconContent("Favorite").image);
     }
 }
