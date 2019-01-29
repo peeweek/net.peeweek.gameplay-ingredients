@@ -56,7 +56,8 @@ namespace GameplayIngredients.Editor
             if (activePOV == null)
             {
                 activePOV = CreatePOVRootObject();
-            }
+                MarkDirtyPOVScene(POVRoot);
+            };
 
             POVRoot = activePOV;
         }
@@ -67,17 +68,6 @@ namespace GameplayIngredients.Editor
             povRoot.isStatic = true;
             povRoot.hideFlags = HideFlags.HideInHierarchy;
             return povRoot.AddComponent<ScenePOVRoot>();
-        }
-
-        static GameObject CreatePOV(GameObject povRoot, string name, Transform transform)
-        {
-            var pov = new GameObject(name);
-            pov.isStatic = true;
-            pov.hideFlags = HideFlags.HideInHierarchy;
-            pov.transform.position = transform.position;
-            pov.transform.rotation = transform.rotation;
-            pov.transform.parent = povRoot.transform;
-            return pov;
         }
 
         public static void ShowPopup(Rect buttonRect, SceneView sceneView)
@@ -98,6 +88,11 @@ namespace GameplayIngredients.Editor
             return new Vector2(256.0f, 80.0f + POVRoot.AllPOV.Length * 20);
         }
 
+        static void MarkDirtyPOVScene(ScenePOVRoot root)
+        {
+            EditorSceneManager.MarkSceneDirty(root.gameObject.scene);
+        }
+
         string m_NewPOVName = "New POV";
 
         public override void OnGUI(Rect rect)
@@ -116,6 +111,8 @@ namespace GameplayIngredients.Editor
                     if (GUILayout.Button("+", GUILayout.Width(32)))
                     {
                         POVRoot.AddPOV(m_SceneView.camera.transform, m_NewPOVName);
+                        MarkDirtyPOVScene(POVRoot);
+                        m_NewPOVName = "New POV";
                     }
                 }
 
@@ -136,7 +133,10 @@ namespace GameplayIngredients.Editor
                         if (GUILayout.Button("X", GUILayout.Width(32)))
                         {
                             if (EditorUtility.DisplayDialog("Destroy POV?", "Do you want to destroy this POV: " + pov.gameObject.name + " ?", "Yes", "No"))
-                                GameObject.Destroy(pov.gameObject);
+                            {
+                                GameObject.DestroyImmediate(pov.gameObject);
+                                MarkDirtyPOVScene(POVRoot);
+                            }
                         }
                     }
                 }
