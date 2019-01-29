@@ -60,14 +60,18 @@ namespace GameplayIngredients.Editor
                 m_LoadedScenes.GetArrayElementAtIndex(index).FindPropertyRelative("Scene").objectReferenceValue = sceneAsset;
             }
 
+            EditorGUI.BeginDisabledGroup(index == 0);
             int visible = m_LoadedScenes.GetArrayElementAtIndex(index).FindPropertyRelative("Loaded").boolValue ? 1 : 0;
             visible = EditorGUI.IntPopup(loadedRect, visible, kLoadedItems, kLoadedIndices);
 
             if(GUI.changed)
             {
                 m_LoadedScenes.GetArrayElementAtIndex(index).FindPropertyRelative("Loaded").boolValue = visible == 1 ? true : false;
+            } else if(index == 0)
+            {
+                m_LoadedScenes.GetArrayElementAtIndex(index).FindPropertyRelative("Loaded").boolValue = true;
             }
-
+            EditorGUI.EndDisabledGroup();
             serializedObject.ApplyModifiedProperties();
         }
 
