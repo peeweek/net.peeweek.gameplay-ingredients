@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -10,7 +10,8 @@ using GameplayIngredients.Actions;
 
 public class SceneLogicEditor : BaseGraphWindow
 {
-    [MenuItem("Window/Gameplay Ingredients/Scene Logic")]
+    // TODO : When usable, uncomment this
+    //[MenuItem("Window/Gameplay Ingredients/Scene Logic")]
     static void OpenLogicEditor()
     {
         GetWindow<SceneLogicEditor>();
