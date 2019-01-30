@@ -56,7 +56,7 @@ namespace GameplayIngredients.Editor
             if (activePOV == null)
             {
                 activePOV = CreatePOVRootObject();
-                MarkDirtyPOVScene(POVRoot);
+                MarkDirtyPOVScene(activePOV);
             };
 
             POVRoot = activePOV;

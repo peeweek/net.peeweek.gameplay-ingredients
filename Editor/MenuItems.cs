@@ -44,7 +44,6 @@ namespace GameplayIngredients.Editor
             Menu.SetChecked(kToggleGizmosMenu, s_ShowAllGizmos);
         }
 
-        [InitializeOnLoadMethod]
         [MenuItem(kToggleGizmosMenu, priority = 600, validate = true)]
         static bool CheckToggleGizmos()
         {
