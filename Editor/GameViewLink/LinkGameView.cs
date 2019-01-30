@@ -29,7 +29,9 @@ namespace GameplayIngredients.Editor
 
                 m_Active = value;
 
-                s_GameObject.SetActive(value);
+                if(s_GameObject != null)
+                    s_GameObject.SetActive(value);
+
                 UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
             }
         }

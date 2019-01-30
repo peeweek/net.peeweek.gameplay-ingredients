@@ -12,8 +12,9 @@ namespace GameplayIngredients.Editor
         public static event PlayFromHereDelegate OnPlayFromHere;
 
         [InitializeOnLoadMethod]
-        public static void Initialize()
+        static void Initialize()
         {
+            EditorApplication.playModeStateChanged -= OnEnterPlayMode;
             EditorApplication.playModeStateChanged += OnEnterPlayMode;
         }
 
@@ -24,40 +25,61 @@ namespace GameplayIngredients.Editor
                 return OnPlayFromHere != null &&  OnPlayFromHere.GetInvocationList().Length > 0;
             }
         }
-        
-        public static void Play()
+
+        public static void Play(SceneView sceneView)
         {
-            EditorPrefs.SetBool("playFromHereNext",true);
+            var forward = sceneView.camera.transform.forward;
+            var position = sceneView.camera.transform.position;
+
+            EditorPrefs.SetInt("PlayFromHere", 1);
+            EditorPrefs.SetFloat("PlayFromHere.position.x", position.x);
+            EditorPrefs.SetFloat("PlayFromHere.position.y", position.y);
+            EditorPrefs.SetFloat("PlayFromHere.position.z", position.z);
+            EditorPrefs.SetFloat("PlayFromHere.forward.x", forward.x);
+            EditorPrefs.SetFloat("PlayFromHere.forward.y", forward.y);
+            EditorPrefs.SetFloat("PlayFromHere.forward.z", forward.z);
+
             EditorApplication.isPlaying = true;
         }
 
         static void OnEnterPlayMode(PlayModeStateChange state)
         {
-            if (state == PlayModeStateChange.EnteredPlayMode && EditorPrefs.GetBool("playFromHereNext"))
+            if(state == PlayModeStateChange.ExitingPlayMode)
+            {
+                PlayerPrefs.SetInt("PlayFromHere", 0);
+            }
+            if(state == PlayModeStateChange.ExitingEditMode)
+            {
+                if(EditorPrefs.GetInt("PlayFromHere") == 1)
+                {
+                    PlayerPrefs.SetInt("PlayFromHere", 1);
+                }
+                else
+                {
+                    PlayerPrefs.SetInt("PlayFromHere", 0);
+                }
+            }
+
+            if (state == PlayModeStateChange.EnteredPlayMode && (PlayerPrefs.GetInt("PlayFromHere") == 1))
             {
                 if (OnPlayFromHere != null)
                 {
-                    Vector3 position = Vector3.zero;
-                    Vector3 forward = Vector3.forward;
-                    if (SceneView.lastActiveSceneView != null)
-                    {
-                        // Let's choose a point 1m in front of the point of view
-                        var camera = SceneView.lastActiveSceneView.camera;
-                        position = camera.transform.position;
-                        forward = camera.transform.forward;
-                    }
-                    else
-                        Debug.LogWarning("Play From Here : Could not find the position of the last sceneview camera, playing at world's origin.");
-
-                    OnPlayFromHere.Invoke(position,forward);
-
+                    Vector3 position = new Vector3(
+                                    EditorPrefs.GetFloat("PlayFromHere.position.x"),
+                                    EditorPrefs.GetFloat("PlayFromHere.position.y"),
+                                    EditorPrefs.GetFloat("PlayFromHere.position.z"));
+                    Vector3 forward = new Vector3(
+                                    EditorPrefs.GetFloat("PlayFromHere.forward.x"),
+                                    EditorPrefs.GetFloat("PlayFromHere.forward.y"),
+                                    EditorPrefs.GetFloat("PlayFromHere.forward.z"));
+                    OnPlayFromHere.Invoke(position, forward);
                 }
                 else
                 {
                     Debug.LogWarning("Play From Here : No Actions to take. Please add events to PlayFromHere.OnPlayFromHere()");
                 }
 
-                EditorPrefs.SetBool("playFromHereNext", false);
+                EditorPrefs.SetInt("PlayFromHere", 0);
             }
 
         }

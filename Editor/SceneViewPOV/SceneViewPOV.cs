@@ -43,6 +43,9 @@ namespace GameplayIngredients.Editor
 
         private static void CheckPOVGameObjects()
         {
+            if (Application.isPlaying)
+                return;
+
             var activeScene = SceneManager.GetActiveScene();
 
             ScenePOVRoot[] allRoots = GameObject.FindObjectsOfType<ScenePOVRoot>();

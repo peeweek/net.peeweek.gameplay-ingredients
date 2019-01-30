@@ -38,8 +38,9 @@ namespace GameplayIngredients.Editor
                 {
                     EditorUtility.ClearProgressBar();
                 }
+                return true;
             }
-            return true;
+            return false;
         }
 
 

@@ -15,18 +15,18 @@ namespace GameplayIngredients.Editor
         [InitializeOnLoadMethod]
         static void Initialize()
         {
-            SceneView.onSceneGUIDelegate += OnSceneGUI;
+           SceneView.onSceneGUIDelegate += OnSceneGUI;
         }
 
         private static void OnSceneGUI(SceneView sceneView)
         {
-
             var r = new Rect(Vector2.zero, new Vector2(sceneView.position.width,24));
-
+            Handles.BeginGUI();
             using (new GUILayout.AreaScope(r))
             {
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
+
                     if(PlayFromHere.IsReady)
                     {
                         bool play = GUILayout.Toggle(EditorApplication.isPlaying, Contents.playFromHere, EditorStyles.toolbarButton);
@@ -34,7 +34,7 @@ namespace GameplayIngredients.Editor
                         if(GUI.changed)
                         {
                             if (play)
-                                PlayFromHere.Play();
+                                PlayFromHere.Play(sceneView);
                             else
                                 EditorApplication.isPlaying = false;
                         }
@@ -96,6 +96,7 @@ namespace GameplayIngredients.Editor
 
                 }
             }
+            Handles.EndGUI();
         }
 
         static class Contents
