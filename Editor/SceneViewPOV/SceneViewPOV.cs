@@ -41,7 +41,7 @@ namespace GameplayIngredients.Editor
             CheckPOVGameObjects();
         }
 
-        public static void CheckPOVGameObjects()
+        private static void CheckPOVGameObjects()
         {
             var activeScene = SceneManager.GetActiveScene();
 
