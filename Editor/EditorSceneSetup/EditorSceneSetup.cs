@@ -8,6 +8,18 @@ namespace GameplayIngredients.Editor
 {
     public class EditorSceneSetup : ScriptableObject
     {
+        [MenuItem("File/Save Scene Setup As... #%&S", priority = 171)]
+        static void SaveSetup()
+        {
+            string path = EditorUtility.SaveFilePanelInProject("Save EditorSceneSetup", "New EditorSceneSetup", "asset", "Save EditorSceneSetup?");
+            if(path != string.Empty)
+            {
+                EditorSceneSetup setup = GetCurrentSetup();
+                AssetDatabase.CreateAsset(setup, path);
+            }
+            
+        }
+
         [OnOpenAsset]
         static bool OnOpenAsset(int instanceID, int line)
         {
@@ -19,15 +31,8 @@ namespace GameplayIngredients.Editor
 
                 try
                 {
-                    for (int i = 0; i < setup.LoadedScenes.Length; i++)
-                    {
-                        var scene = setup.LoadedScenes[i];
-                        EditorUtility.DisplayProgressBar("Loading Scenes", string.Format("Loading {0}", scene.Scene.name), (float)i / setup.LoadedScenes.Length - 1);
-                        var path = AssetDatabase.GetAssetPath(scene.Scene);
-                        EditorSceneManager.OpenScene(path, i == 0 ? OpenSceneMode.Single : (scene.Loaded ? OpenSceneMode.Additive : OpenSceneMode.AdditiveWithoutLoading));
-                    }
-                    EditorUtility.DisplayProgressBar("Loading Scenes", "Set Active Scene", 1.0f);
-                    SceneManager.SetActiveScene(EditorSceneManager.GetSceneAt(active));
+                    EditorUtility.DisplayProgressBar("Loading Scenes", string.Format("Loading Scene Setup {0}....", setup.name), 1.0f);
+                    RestoreSetup(setup);
                 }
                 finally
                 {
@@ -53,6 +58,44 @@ namespace GameplayIngredients.Editor
             public SceneAsset Scene;
             public bool Loaded;
         }
+
+        public static EditorSceneSetup GetCurrentSetup()
+        {
+            var scenesetups = EditorSceneManager.GetSceneManagerSetup();
+
+            var editorSetup = CreateInstance<EditorSceneSetup>();
+
+            int i = 0;
+            editorSetup.LoadedScenes = new EditorScene[scenesetups.Length];
+            foreach(var setup in scenesetups)
+            {
+                if (setup.isActive)
+                    editorSetup.ActiveScene = i;
+
+                editorSetup.LoadedScenes[i].Scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(setup.path);
+                editorSetup.LoadedScenes[i].Loaded = setup.isLoaded;
+
+                i++;
+            }
+            return editorSetup;
+        }
+
+        public static void RestoreSetup(EditorSceneSetup editorSetup)
+        {
+            SceneSetup[] setups = new SceneSetup[editorSetup.LoadedScenes.Length];
+
+            for(int i = 0; i < setups.Length; i++)
+            {
+                setups[i] = new SceneSetup();
+                string path = AssetDatabase.GetAssetPath(editorSetup.LoadedScenes[i].Scene);
+                setups[i].path = path;
+                setups[i].isLoaded = editorSetup.LoadedScenes[i].Loaded;
+                setups[i].isActive = (editorSetup.ActiveScene == i);
+            }
+
+            EditorSceneManager.RestoreSceneManagerSetup(setups);
+        }
+
     }
 }
 
