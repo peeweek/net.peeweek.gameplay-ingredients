@@ -6,7 +6,7 @@ namespace GameplayIngredients
 {
     public interface ICallable
     {
-        void Execute();
+        void Execute(GameObject instigator = null);
     }
 
 }

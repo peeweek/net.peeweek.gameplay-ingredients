@@ -6,7 +6,7 @@ namespace GameplayIngredients.Actions
     {
         public float TimeScale = 1.0f;
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             Time.timeScale = TimeScale;
         }

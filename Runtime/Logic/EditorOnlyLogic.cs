@@ -12,21 +12,21 @@ namespace GameplayIngredients.Logic
             PlayerOnly
         }
 
-        [Tooltip("Executes in editor whe using Play From Here or not")]
-        public bool EditorOnPlayHere = false;
+        [Tooltip("Disables when using Play From Here")]
+        public bool DisableOnPlayFromHere = false;
 
         public Mode ExecutionPath;
 
         [ReorderableList]
         public Callable[] OnExecute;
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             switch(ExecutionPath)
             {
 
                 case Mode.EditorOnly:
-                    if (Application.isEditor && EditorOnPlayHere == (PlayerPrefs.GetInt("PlayFromHere") == 1))
+                    if (Application.isEditor && !(DisableOnPlayFromHere && (PlayerPrefs.GetInt("PlayFromHere") == 1)))
                         Callable.Call(OnExecute);
                     break;
 

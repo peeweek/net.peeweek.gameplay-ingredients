@@ -13,25 +13,24 @@ namespace GameplayIngredients
             Name = GetType().Name;
         }
 
-        public abstract void Execute();
+        public abstract void Execute(GameObject instigator = null);
         public abstract new string ToString();
 
-        public static void Call(Callable[] calls)
+        public static void Call(Callable[] calls, GameObject instigator = null)
         {
             foreach (var call in calls)
             {
                 if(call != null)
-                    call.Execute();
+                    call.Execute(instigator);
                 else
                     Debug.LogError("Cannot execute call: Null or Missing");
-
             }
         }
 
-        public static void Call(Callable call)
+        public static void Call(Callable call, GameObject instigator = null)
         {
             if (call != null)
-                call.Execute();
+                call.Execute(instigator);
             else
                 Debug.LogError("Cannot execute call: Null or Missing");
         }

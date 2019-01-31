@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using GameplayIngredients.LevelStreaming;
 using NaughtyAttributes;
@@ -17,7 +18,7 @@ namespace GameplayIngredients.Actions
         [ReorderableList]
         public Callable[] OnLoadComplete;
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             List<string> sceneNames = new List<string>();
             foreach (var scene in Scenes)

@@ -8,7 +8,7 @@ namespace GameplayIngredients.Actions
         [ReorderableList]
         public GameObjectToggle[] Targets;
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             foreach(var target in Targets)
             {

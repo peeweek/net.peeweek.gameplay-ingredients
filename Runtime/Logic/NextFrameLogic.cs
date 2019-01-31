@@ -11,7 +11,7 @@ namespace GameplayIngredients.Logic
         public Callable[] OnComplete;
         IEnumerator m_Coroutine;
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             m_Coroutine = RunDelay();
             StartCoroutine(m_Coroutine);

@@ -27,7 +27,7 @@ namespace GameplayIngredients.Logic
             }
         }
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             if (m_Coroutine != null) Cancel();
 

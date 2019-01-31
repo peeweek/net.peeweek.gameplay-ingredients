@@ -15,7 +15,7 @@ namespace GameplayIngredients.Actions
         public bool BoolValue;
         public float FloatValue;
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             var gsm = Manager.Get<GameSaveManager>();
             switch(valueType)

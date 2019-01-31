@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace GameplayIngredients.Actions
@@ -6,7 +7,7 @@ namespace GameplayIngredients.Actions
     {
         public Selectable UIObjectToFocus;
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             if (UIObjectToFocus != null)
                 UIObjectToFocus.Select();

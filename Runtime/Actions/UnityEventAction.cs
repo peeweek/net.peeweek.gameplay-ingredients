@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace GameplayIngredients.Actions
@@ -6,7 +7,7 @@ namespace GameplayIngredients.Actions
     {
         public UnityEvent OnExecute;
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             OnExecute.Invoke();
         }

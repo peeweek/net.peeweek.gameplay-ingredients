@@ -67,7 +67,7 @@ namespace GameplayIngredients.Actions
                 ButtonLabel.text = getText(selectedResolution);
         }
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             // When we are in the editor we don't have any available resolutions
             if (availableResolutions.Length == 0)

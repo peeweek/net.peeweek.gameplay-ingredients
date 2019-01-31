@@ -16,7 +16,7 @@ namespace GameplayIngredients.Actions
         public UnityEvent OnInterpComplete;
 
         Coroutine m_Coroutine;
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
 
             if (m_Coroutine != null)

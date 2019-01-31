@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace GameplayIngredients.Logic
@@ -12,7 +13,7 @@ namespace GameplayIngredients.Logic
         [ReorderableList]
         public Callable[] OnConditionInvalid;
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             if (GetCondition())
                 Callable.Call(OnConditionValid);

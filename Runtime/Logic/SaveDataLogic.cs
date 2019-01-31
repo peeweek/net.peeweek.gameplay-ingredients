@@ -32,7 +32,7 @@ namespace GameplayIngredients.Logic
         [ReorderableList]
         public Callable[] OnTesFail;
 
-        public override void Execute()
+        public override void Execute(GameObject instigator = null)
         {
             var gsm = Manager.Get<GameSaveManager>();
             bool result = false;
