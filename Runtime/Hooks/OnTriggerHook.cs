@@ -53,11 +53,11 @@ namespace GameplayIngredients.Hooks
             }
             if (OnlyInteractWithTag && other.tag == Tag )
             {
-                Callable.Call(onTriggerExit);
+                Callable.Call(onTriggerExit, other.gameObject);
             }
             if (!OnlyInteractWithTag)
             {
-                Callable.Call(onTriggerExit);
+                Callable.Call(onTriggerExit, other.gameObject);
             }
         }
     }
