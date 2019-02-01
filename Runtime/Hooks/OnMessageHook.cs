@@ -21,7 +21,7 @@ namespace GameplayIngredients.Hooks
 
         void Execute()
         {
-            Callable.Call(OnMessageRecieved);
+            Callable.Call(OnMessageRecieved, gameObject);
         }
 
 

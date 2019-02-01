@@ -8,6 +8,7 @@ namespace GameplayIngredients.Logic
     {
         public enum Mode
         {
+            PlayerAndEditor,
             EditorOnly,
             PlayerOnly
         }
@@ -15,23 +16,29 @@ namespace GameplayIngredients.Logic
         [Tooltip("Disables when using Play From Here")]
         public bool DisableOnPlayFromHere = false;
 
-        public Mode ExecutionPath;
+        public Mode ExecutionPath = Mode.PlayerAndEditor;
 
         [ReorderableList]
         public Callable[] OnExecute;
 
         public override void Execute(GameObject instigator = null)
         {
+            bool acceptPlayFromHere = !(DisableOnPlayFromHere && (PlayerPrefs.GetInt("PlayFromHere") == 1));
+
             switch(ExecutionPath)
             {
-
+                case Mode.PlayerAndEditor:
+                    if (acceptPlayFromHere)
+                        Callable.Call(OnExecute, instigator);
+                    break;
                 case Mode.EditorOnly:
-                    if (Application.isEditor && !(DisableOnPlayFromHere && (PlayerPrefs.GetInt("PlayFromHere") == 1)))
-                        Callable.Call(OnExecute);
+                    if (Application.isEditor && acceptPlayFromHere)
+                        Callable.Call(OnExecute, instigator);
                     break;
 
                 case Mode.PlayerOnly:
-                    if (!Application.isEditor) Callable.Call(OnExecute);
+                    if (!Application.isEditor && acceptPlayFromHere)
+                        Callable.Call(OnExecute, instigator);
                     break;
             }
         }

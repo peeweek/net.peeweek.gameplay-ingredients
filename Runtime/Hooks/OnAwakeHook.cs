@@ -10,7 +10,7 @@ namespace GameplayIngredients.Hooks
 
         private void Awake()
         {
-            Callable.Call(onAwake);
+            Callable.Call(onAwake, gameObject);
         }
     }
 }

@@ -13,14 +13,14 @@ namespace GameplayIngredients.Logic
 
         public override void Execute(GameObject instigator = null)
         {
-            m_Coroutine = RunDelay();
+            m_Coroutine = RunDelay(instigator);
             StartCoroutine(m_Coroutine);
         }
 
-        IEnumerator RunDelay()
+        IEnumerator RunDelay(GameObject instigator = null)
         {
             yield return new WaitForEndOfFrame();
-            Callable.Call(OnComplete);
+            Callable.Call(OnComplete, instigator);
             m_Coroutine = null;
         }
     }

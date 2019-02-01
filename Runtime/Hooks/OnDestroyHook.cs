@@ -10,7 +10,7 @@ namespace GameplayIngredients.Hooks
 
         private void OnDestroy()
         {
-            Callable.Call(onDestroy);
+            Callable.Call(onDestroy, gameObject);
         }
         
     }

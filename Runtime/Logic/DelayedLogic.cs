@@ -17,12 +17,12 @@ namespace GameplayIngredients.Logic
 
         IEnumerator m_Coroutine;
 
-        public void Cancel()
+        public void Cancel(GameObject instigator = null)
         {
             if(m_Coroutine != null)
             {
                 StopCoroutine(m_Coroutine);
-                Callable.Call(OnCanceled);
+                Callable.Call(OnCanceled, instigator);
                 m_Coroutine = null;
             }
         }
@@ -31,14 +31,14 @@ namespace GameplayIngredients.Logic
         {
             if (m_Coroutine != null) Cancel();
 
-            m_Coroutine = RunDelay(Delay);
+            m_Coroutine = RunDelay(Delay, instigator);
             StartCoroutine(m_Coroutine);
         }
 
-        IEnumerator RunDelay(float Seconds)
+        IEnumerator RunDelay(float Seconds, GameObject instigator = null)
         {
             yield return new WaitForSeconds(Seconds);
-            Callable.Call(OnDelayComplete);
+            Callable.Call(OnDelayComplete, instigator);
             m_Coroutine = null;
         }
     }

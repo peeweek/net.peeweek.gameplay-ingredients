@@ -16,9 +16,9 @@ namespace GameplayIngredients.Logic
         public override void Execute(GameObject instigator = null)
         {
             if (GetCondition())
-                Callable.Call(OnConditionValid);
+                Callable.Call(OnConditionValid, instigator);
             else
-                Callable.Call(OnConditionInvalid);
+                Callable.Call(OnConditionInvalid, instigator);
         }
 
         public abstract bool GetCondition();

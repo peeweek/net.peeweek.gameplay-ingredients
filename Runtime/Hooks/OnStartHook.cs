@@ -9,7 +9,7 @@ namespace GameplayIngredients.Hooks
 
         private void Start()
         {
-            Callable.Call(OnStart); 
+            Callable.Call(OnStart, gameObject); 
         }
     }
 }

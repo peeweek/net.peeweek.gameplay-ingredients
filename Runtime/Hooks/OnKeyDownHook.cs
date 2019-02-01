@@ -22,10 +22,10 @@ namespace GameplayIngredients.Hooks
         void Update()
         {
             if (Input.GetKeyDown(Key))
-                Callable.Call(OnKeyDownEvent);
+                Callable.Call(OnKeyDownEvent, gameObject);
 
             if (Input.GetKeyUp(Key))
-                Callable.Call(OnKeyUpEvent);
+                Callable.Call(OnKeyUpEvent, gameObject);
         }
     }
 }

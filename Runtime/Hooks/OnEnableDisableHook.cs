@@ -12,12 +12,12 @@ namespace GameplayIngredients.Hooks
 
         private void OnEnable()
         {
-            Callable.Call(OnEnableEvent);
+            Callable.Call(OnEnableEvent, gameObject);
         }
 
         private void OnDisable()
         {
-            Callable.Call(OnDisableEvent);
+            Callable.Call(OnDisableEvent, gameObject);
         }
     }
 }

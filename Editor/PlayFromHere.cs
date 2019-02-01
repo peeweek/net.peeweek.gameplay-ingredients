@@ -39,6 +39,8 @@ namespace GameplayIngredients.Editor
             EditorPrefs.SetFloat("PlayFromHere.forward.y", forward.y);
             EditorPrefs.SetFloat("PlayFromHere.forward.z", forward.z);
 
+            EditorUtility.DisplayProgressBar("Play From Here", "Entering Play From here mode...", 1.0f);
+
             EditorApplication.isPlaying = true;
         }
 
@@ -62,6 +64,8 @@ namespace GameplayIngredients.Editor
 
             if (state == PlayModeStateChange.EnteredPlayMode && (PlayerPrefs.GetInt("PlayFromHere") == 1))
             {
+                EditorUtility.ClearProgressBar();
+
                 if (OnPlayFromHere != null)
                 {
                     Vector3 position = new Vector3(
