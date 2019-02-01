@@ -1,7 +1,7 @@
 {
     "name": "net.peeweek.gameplay-ingredients",
     "displayName": "Gameplay Ingredients",
-    "version": "0.1.1-preview",
+    "version": "0.2.0-preview",
     "unity": "2018.3",
     "description": "Gameplay ingredients - A Collection of scripts for the editor and runtime to set-up gameplay actions and logic in your games",
     "dependencies":
