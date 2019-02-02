@@ -144,14 +144,14 @@ namespace GameplayIngredients
 
         Dictionary<string, object> LoadFile(string fileName)
         {
-            if(!System.IO.File.Exists(Application.dataPath+fileName))
+            if(!File.Exists(Application.dataPath + "/../" + fileName))
             {
                 SaveFile(fileName, new Dictionary<string, object>());
             }
 
             var dict = new Dictionary<string, System.Object>();
 
-            string contents= File.ReadAllText(Application.dataPath + fileName);
+            string contents= File.ReadAllText(Application.dataPath + "/../" + fileName);
 
             SerializableOutput data = JsonUtility.FromJson<SerializableOutput>(contents);
 
@@ -203,7 +203,7 @@ namespace GameplayIngredients
                 i++;
             }
 
-            File.WriteAllText(Application.dataPath+filename, JsonUtility.ToJson(data));
+            File.WriteAllText(Application.dataPath + "/../" + filename, JsonUtility.ToJson(data));
         }
 
         [System.Serializable]
