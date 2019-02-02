@@ -27,16 +27,37 @@ namespace GameplayIngredients
                 m_Coroutine = null;
             }
 
-            switch (mode)
+            if (duration <= 0.0f)
             {
-                case FadeMode.ToBlack:
-                    m_Coroutine = StartCoroutine(FadeCoroutine(duration, 1.0f, 1.0f, OnComplete));
-                    break;
-                case FadeMode.FromBlack:
-                    m_Coroutine = StartCoroutine(FadeCoroutine(duration, 0.0f, -1.0f, OnComplete));
-                    break;
-                default: throw new NotImplementedException();
+                var color = FullScreenFadePlane.color; ;
+                switch (mode)
+                {
+                    case FadeMode.ToBlack:
+                        color.a = 1.0f;
+                        break;
+                    case FadeMode.FromBlack:
+                        color.a = 0.0f;
+                        break;
+                    default: throw new NotImplementedException();
+                }
+                FullScreenFadePlane.gameObject.SetActive(color.a == 1.0f);
+                FullScreenFadePlane.color = color;
+                Callable.Call(OnComplete);
             }
+            else
+            {
+                switch (mode)
+                {
+                    case FadeMode.ToBlack:
+                        m_Coroutine = StartCoroutine(FadeCoroutine(duration, 1.0f, 1.0f, OnComplete));
+                        break;
+                    case FadeMode.FromBlack:
+                        m_Coroutine = StartCoroutine(FadeCoroutine(duration, 0.0f, -1.0f, OnComplete));
+                        break;
+                    default: throw new NotImplementedException();
+                }
+            }
+
         }
 
         IEnumerator FadeCoroutine(float duration, float target, float sign, Callable[] OnComplete)

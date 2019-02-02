@@ -9,7 +9,7 @@ namespace GameplayIngredients.Actions
     public class StreamingLevelAction : ActionBase
     {
         [ReorderableList]
-        public Scene[] Scenes;
+        public string[] Scenes;
         public string SceneToActivate;
         public LevelStreamingManager.StreamingAction Action = LevelStreamingManager.StreamingAction.Load;
 
@@ -22,7 +22,7 @@ namespace GameplayIngredients.Actions
         {
             List<string> sceneNames = new List<string>();
             foreach (var scene in Scenes)
-                sceneNames.Add(scene.name);
+                sceneNames.Add(scene);
             Manager.Get<LevelStreamingManager>().LoadScenes(Action, sceneNames.ToArray(), SceneToActivate, ShowUI, OnLoadComplete);
         }
     }
