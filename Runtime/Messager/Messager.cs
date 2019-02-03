@@ -13,7 +13,6 @@ namespace GameplayIngredients
             m_RegisteredEvents = new Dictionary<string, Action>();
         }
 
-
         public static void RegisterEvent(string eventName, Action action)
         {
             if (!m_RegisteredEvents.ContainsKey(eventName))
@@ -36,7 +35,15 @@ namespace GameplayIngredients
 
             if (m_RegisteredEvents.ContainsKey(eventName))
             {
-                m_RegisteredEvents[eventName]();
+                try
+                {
+                    m_RegisteredEvents[eventName]();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(string.Format("Caught {0} while sending Message {1}", e.GetType().Name, eventName));
+                    Debug.LogException(e);
+                }
             }
             else
             {
