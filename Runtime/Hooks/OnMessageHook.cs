@@ -21,7 +21,15 @@ namespace GameplayIngredients.Hooks
 
         void Execute()
         {
-            Callable.Call(OnMessageRecieved, gameObject);
+            try
+            {
+                Callable.Call(OnMessageRecieved, gameObject);
+            }
+            catch(System.Exception e)
+            {
+                UnityEngine.Debug.LogError(string.Format("Exception Caught while catching message '{0}' on Object '{1}'", MessageName, gameObject.name));
+                UnityEngine.Debug.LogException(e);
+            }
         }
 
 

@@ -5,27 +5,21 @@ namespace GameplayIngredients.Hooks
 {
     public class OnKeyDownHook : HookBase
     {
-        public enum ActionType
-        {
-            KeyDown,
-            KeyUp
-        }
-
         public KeyCode Key = KeyCode.F5;
 
         [ReorderableList]
-        public Callable[] OnKeyDownEvent;
+        public Callable[] OnKeyDown;
 
         [ReorderableList]
-        public Callable[] OnKeyUpEvent;
+        public Callable[] OnKeyUp;
 
         void Update()
         {
             if (Input.GetKeyDown(Key))
-                Callable.Call(OnKeyDownEvent, gameObject);
+                Callable.Call(OnKeyDown, gameObject);
 
             if (Input.GetKeyUp(Key))
-                Callable.Call(OnKeyUpEvent, gameObject);
+                Callable.Call(OnKeyUp, gameObject);
         }
     }
 }

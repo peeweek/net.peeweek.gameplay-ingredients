@@ -212,7 +212,9 @@ namespace GameplayIngredients.LevelStreaming
 
             // Update UI
             PercentageText.text = ((int)(m_CurrentPercentage * 100)) + "%";
-            ProgressBar.GetComponent<RectTransform>().localScale = new Vector2(m_CurrentPercentage, 1.0f);
+            Vector2 size = ProgressBar.GetComponent<RectTransform>().sizeDelta;
+            size.x = m_CurrentPercentage * ProgressBarContainer.GetComponent<RectTransform>().sizeDelta.x;
+            ProgressBar.GetComponent<RectTransform>().sizeDelta = size;
 
             //Debug
             if (EnableDebug)

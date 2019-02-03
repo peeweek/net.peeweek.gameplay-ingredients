@@ -26,7 +26,7 @@ namespace GameplayIngredients
         {
             var currentEvent = m_RegisteredEvents[eventName];
             currentEvent -= action;
-            if (currentEvent == null)
+            if (currentEvent == null || currentEvent.GetInvocationList().Length == 0)
                 m_RegisteredEvents.Remove(eventName);
         }
 
