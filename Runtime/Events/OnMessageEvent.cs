@@ -16,7 +16,7 @@ namespace GameplayIngredients.Events
 
         void OnDisable()
         {
-            Messager.UnregisterEvent(MessageName, Execute);
+            Messager.RemoveMessage(MessageName, Execute);
         }
 
         void Execute()

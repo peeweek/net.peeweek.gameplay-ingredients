@@ -23,7 +23,7 @@ namespace GameplayIngredients
                 m_RegisteredMessages[eventName] += message;
         }
 
-        public static void UnregisterEvent(string eventName, Message message)
+        public static void RemoveMessage(string eventName, Message message)
         {
             var currentEvent = m_RegisteredMessages[eventName];
             currentEvent -= message;
