@@ -115,7 +115,10 @@ namespace GameplayIngredients.LevelStreaming
             }
 
             if(DelayAfterLoad >= 0.0f)
+            {
+                SetProgressBar(1.0f, true);
                 yield return new WaitForSeconds(DelayAfterLoad);
+            }
 
             if (onLoadComplete != null)
                 Callable.Call(onLoadComplete);
@@ -154,13 +157,12 @@ namespace GameplayIngredients.LevelStreaming
             // Activate scenes
             foreach (var a in asyncOperations)
                 a.allowSceneActivation = true;
+
             LoadingText.text = "Starting...";
             LogDebugInformation("All scenes loaded");
 
             while (asyncOperations.Any(a => !a.isDone))
             {
-                foreach (var a in asyncOperations)
-                    Debug.Log("allowSceneActivation: " + a.allowSceneActivation);
                 UpdatePercentage();
                 yield return new WaitForEndOfFrame();
             }
