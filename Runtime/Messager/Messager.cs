@@ -8,27 +8,34 @@ namespace GameplayIngredients
     {
         public delegate void Message();
 
-        private static Dictionary<string, Message> m_RegisteredMessages;
+        private static Dictionary<string, List<Message>> m_RegisteredMessages;
 
         static Messager()
         {
-            m_RegisteredMessages = new Dictionary<string, Message>();
+            m_RegisteredMessages = new Dictionary<string, List<Message>>();
         }
 
-        public static void RegisterMessage(string eventName, Message message)
+        public static void RegisterMessage(string messageName, Message message)
         {
-            if (!m_RegisteredMessages.ContainsKey(eventName))
-                m_RegisteredMessages.Add(eventName, message);
+            if (!m_RegisteredMessages.ContainsKey(messageName))
+                m_RegisteredMessages.Add(messageName, new List<Message>());
+
+            if (!m_RegisteredMessages[messageName].Contains(message))
+                m_RegisteredMessages[messageName].Add(message);
             else
-                m_RegisteredMessages[eventName] += message;
+            {
+                Debug.LogWarning(string.Format("Messager : {0} entry already contains reference to message.", messageName));
+            }
         }
 
-        public static void RemoveMessage(string eventName, Message message)
+        public static void RemoveMessage(string messageName, Message message)
         {
-            var currentEvent = m_RegisteredMessages[eventName];
-            currentEvent -= message;
-            if (currentEvent == null || currentEvent.GetInvocationList().Length == 0)
-                m_RegisteredMessages.Remove(eventName);
+            var currentEvent = m_RegisteredMessages[messageName];
+            if(currentEvent.Contains(message))
+                currentEvent.Remove(message);
+
+            if (currentEvent == null || currentEvent.Count == 0)
+                m_RegisteredMessages.Remove(messageName);
         }
 
         public static void Send(string eventName)
@@ -39,7 +46,10 @@ namespace GameplayIngredients
             {
                 try
                 {
-                    m_RegisteredMessages[eventName]();
+                    foreach (var message in m_RegisteredMessages[eventName])
+                    {
+                        message.Invoke();
+                    }
                 }
                 catch (Exception e)
                 {
