@@ -11,7 +11,7 @@ namespace GameplayIngredients.Hooks
 
         void OnEnable()
         {
-            Messager.RegisterEvent(MessageName, Execute);
+            Messager.RegisterMessage(MessageName, Execute);
         }
 
         void OnDisable()

@@ -6,38 +6,47 @@ namespace GameplayIngredients
 {
     public static class Messager
     {
-        private static Dictionary<string, Action> m_RegisteredEvents;
+        public delegate void Message();
+
+        private static Dictionary<string, Message> m_RegisteredMessages;
 
         static Messager()
         {
-            m_RegisteredEvents = new Dictionary<string, Action>();
+            m_RegisteredMessages = new Dictionary<string, Message>();
         }
 
-        public static void RegisterEvent(string eventName, Action action)
+        public static void RegisterMessage(string eventName, Message message)
         {
-            if (!m_RegisteredEvents.ContainsKey(eventName))
-                m_RegisteredEvents.Add(eventName, action);
+            if (!m_RegisteredMessages.ContainsKey(eventName))
+                m_RegisteredMessages.Add(eventName, message);
             else
-                m_RegisteredEvents[eventName] += action;
+                m_RegisteredMessages[eventName] += message;
         }
 
-        public static void UnregisterEvent(string eventName, Action action)
+        public static void UnregisterEvent(string eventName, Message message)
         {
-            var currentEvent = m_RegisteredEvents[eventName];
-            currentEvent -= action;
+            var currentEvent = m_RegisteredMessages[eventName];
+            currentEvent -= message;
             if (currentEvent == null || currentEvent.GetInvocationList().Length == 0)
-                m_RegisteredEvents.Remove(eventName);
+                m_RegisteredMessages.Remove(eventName);
         }
 
         public static void Send(string eventName)
         {
             Debug.Log(string.Format("[MessageManager] Broadcast: {0}", eventName));
 
-            if (m_RegisteredEvents.ContainsKey(eventName))
+            if (m_RegisteredMessages.ContainsKey(eventName))
             {
                 try
                 {
-                    m_RegisteredEvents[eventName]();
+                    var call = m_RegisteredMessages[eventName];
+                    var list = call.GetInvocationList();
+
+                    if (call != null)
+                        call();
+                    else
+                        Debug.LogWarning(string.Format("Found null action while sending Message {0}", eventName));
+
                 }
                 catch (Exception e)
                 {
