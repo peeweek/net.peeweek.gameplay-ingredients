@@ -1,9 +1,9 @@
 using NaughtyAttributes;
 using UnityEngine;
 
-namespace GameplayIngredients.Hooks
+namespace GameplayIngredients.Events
 {
-    public class OnDestroyHook : MonoBehaviour
+    public class OnDestroyEvent : MonoBehaviour
     {
         [ReorderableList]
         public Callable[] onDestroy;

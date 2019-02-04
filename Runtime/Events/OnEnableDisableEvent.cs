@@ -1,9 +1,9 @@
 using NaughtyAttributes;
 using UnityEngine.Events;
 
-namespace GameplayIngredients.Hooks
+namespace GameplayIngredients.Events
 {
-    public class OnEnableDisableHook : HookBase
+    public class OnEnableDisableEvent : EventBase
     {
         [ReorderableList]
         public Callable[] OnEnableEvent;

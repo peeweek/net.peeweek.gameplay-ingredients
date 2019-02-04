@@ -1,9 +1,9 @@
 using NaughtyAttributes;
 using UnityEngine;
 
-namespace GameplayIngredients.Hooks
+namespace GameplayIngredients.Events
 {
-    public class OnAwakeHook : MonoBehaviour
+    public class OnAwakeEvent : MonoBehaviour
     {
         [ReorderableList]
         public Callable[] onAwake;

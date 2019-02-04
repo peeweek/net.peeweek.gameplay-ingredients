@@ -2,9 +2,9 @@ using NaughtyAttributes;
 using UnityEngine;
 
 
-namespace GameplayIngredients.Hooks
+namespace GameplayIngredients.Events
 {
-    public class OnTriggerHook : HookBase
+    public class OnTriggerEvent : EventBase
     {
         public int EnterMaxCount = 0;
         public int ExitMaxCount = 0;

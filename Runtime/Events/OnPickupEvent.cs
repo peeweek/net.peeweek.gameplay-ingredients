@@ -1,8 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OnPickupHook : MonoBehaviour
+public class OnPickupEvent : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

@@ -1,8 +1,8 @@
 using NaughtyAttributes;
 
-namespace GameplayIngredients.Hooks
+namespace GameplayIngredients.Events
 {
-    public class OnStartHook : HookBase
+    public class OnStartEvent : EventBase
     {
         [ReorderableList]
         public Callable[] OnStart;

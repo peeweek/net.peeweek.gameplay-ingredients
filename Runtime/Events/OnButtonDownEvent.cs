@@ -1,9 +1,9 @@
 using NaughtyAttributes;
 using UnityEngine;
 
-namespace GameplayIngredients.Hooks
+namespace GameplayIngredients.Events
 {
-    public class OnButtonDownHook : HookBase
+    public class OnButtonDownEvent : EventBase
     {
         public string Button = "Fire1";
 

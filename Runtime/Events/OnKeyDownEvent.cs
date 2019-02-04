@@ -1,9 +1,9 @@
 using NaughtyAttributes;
 using UnityEngine;
 
-namespace GameplayIngredients.Hooks
+namespace GameplayIngredients.Events
 {
-    public class OnKeyDownHook : HookBase
+    public class OnKeyDownEvent : EventBase
     {
         public KeyCode Key = KeyCode.F5;
 

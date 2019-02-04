@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using GraphProcessor;
 using System.Reflection;
-using GameplayIngredients.Hooks;
+using GameplayIngredients.Events;
 using GameplayIngredients.Logic;
 using GameplayIngredients.Actions;
 
@@ -37,7 +37,7 @@ public class SceneLogicEditor : BaseGraphWindow
         var result = new List<Type>();
         Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-        var hookBase = typeof(HookBase);
+        var hookBase = typeof(EventBase);
         var logicBase = typeof(LogicBase);
         var actionBase = typeof(ActionBase);
 

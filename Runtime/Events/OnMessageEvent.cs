@@ -1,8 +1,8 @@
 using NaughtyAttributes;
 
-namespace GameplayIngredients.Hooks
+namespace GameplayIngredients.Events
 {
-    public class OnMessageHook : HookBase
+    public class OnMessageEvent : EventBase
     {
         public string MessageName = "Message";
 
