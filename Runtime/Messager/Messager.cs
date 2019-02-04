@@ -50,7 +50,7 @@ namespace GameplayIngredients
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError(string.Format("Caught {0} while sending Message {1}", e.GetType().Name, eventName));
+                    Debug.LogError(string.Format("Messager : Caught {0} while sending Message {1}", e.GetType().Name, eventName));
                     Debug.LogException(e);
                 }
             }

@@ -27,7 +27,7 @@ namespace GameplayIngredients.Events
             }
             catch(System.Exception e)
             {
-                UnityEngine.Debug.LogError(string.Format("Exception Caught while catching message '{0}' on Object '{1}'", MessageName, gameObject.name));
+                UnityEngine.Debug.LogError(string.Format("OnMessageEvent : Exception Caught while catching message '{0}' on Object '{1}'", MessageName, gameObject.name));
                 UnityEngine.Debug.LogException(e);
             }
         }
