@@ -39,14 +39,7 @@ namespace GameplayIngredients
             {
                 try
                 {
-                    var call = m_RegisteredMessages[eventName];
-                    var list = call.GetInvocationList();
-
-                    if (call != null)
-                        call();
-                    else
-                        Debug.LogWarning(string.Format("Found null action while sending Message {0}", eventName));
-
+                    m_RegisteredMessages[eventName]();
                 }
                 catch (Exception e)
                 {
