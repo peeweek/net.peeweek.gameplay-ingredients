@@ -18,11 +18,18 @@ namespace GameplayIngredients.Actions
             foreach (var prefab in Prefabs)
             {
                 string name = prefab.name;
-                var obj = Instantiate<GameObject>(prefab);
+
+                Vector3 position = gameObject.transform.position;
+                Quaternion rotation = gameObject.transform.rotation;
+                if(TargetTransform != null)
+                {
+                    position = TargetTransform.position;
+                    rotation = TargetTransform.rotation;
+                }
+
+                var obj = Instantiate<GameObject>(prefab, position, rotation);
                 obj.name = name;
 
-                obj.transform.position = TargetTransform.position;
-                obj.transform.rotation = TargetTransform.rotation;
                 if (AttachToTarget)
                     obj.transform.parent = TargetTransform;
 
