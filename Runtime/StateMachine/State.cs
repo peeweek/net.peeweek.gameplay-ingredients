@@ -5,7 +5,7 @@ namespace GameplayIngredients.StateMachines
 {
     public class State : MonoBehaviour
     {
-        public string StateName = "State";
+        public string StateName { get { return gameObject.name; } }
 
         [ReorderableList]
         public Callable[] OnStateEnter;
