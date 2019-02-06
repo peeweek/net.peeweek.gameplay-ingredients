@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
-    public class OnDestroyEvent : MonoBehaviour
+    public class OnDestroyEvent : EventBase
     {
         [ReorderableList]
         public Callable[] onDestroy;
