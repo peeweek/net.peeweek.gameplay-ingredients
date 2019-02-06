@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NaughtyAttributes.Rigs
+namespace GameplayIngredients.Rigs
 {
     public class FollowPositionRig : MonoBehaviour
     {
