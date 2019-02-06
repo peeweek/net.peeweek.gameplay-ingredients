@@ -19,5 +19,16 @@ namespace GameplayIngredients.Actions
 
             }
         }
+
+        [ContextMenu("Populate From Children")]
+        void PopulateFromChildren()
+        {
+            int count = transform.childCount;
+            Targets = new GameObject[count];
+            for(int i = 0; i < count; i++)
+            {
+                Targets[i] = transform.GetChild(i).gameObject;
+            }
+        }
     }
 }

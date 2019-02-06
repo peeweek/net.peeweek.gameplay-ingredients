@@ -85,6 +85,7 @@ namespace GameplayIngredients.LevelStreaming
         {
             LogDebugInformation("START LOAD/UNLOAD FOR LEVELS...");
             SetProgressBar(0.0f, true);
+            yield return new WaitForEndOfFrame();
 
             if(DelayBeforeLoad >= 0.0f)
                 yield return new WaitForSeconds(DelayBeforeLoad);
