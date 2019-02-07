@@ -4,36 +4,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameplayIngredients.Interactive
+namespace GameplayIngredients.Interactions
 {
     public abstract class Interactive : EventBase
     {
         [Header("Events")]
         [SerializeField, ReorderableList]
-        protected Callable OnInteract;
+        protected Callable[] OnInteract;
 
         protected virtual void OnEnable()
         {
-            Manager.Get<InteractiveManager>().RegisterInteractive(this);
+            InteractionManager.RegisterInteractive(this);
         }
 
         protected virtual void OnDisable()
         {
-            Manager.Get<InteractiveManager>().RemoveInteractive(this);
+            InteractionManager.RemoveInteractive(this);
         }
 
         public bool Interact(InteractiveUser user)
         {
             if (user.CanInteract(this) && CanInteract(user))
             {
-                Callable.Call(OnInteract);
+                Callable.Call(OnInteract, user.gameObject);
                 return true;
             }
             else
                 return false;
         }
 
-        protected abstract bool CanInteract(InteractiveUser user);
+        public abstract bool CanInteract(InteractiveUser user);
 
     }
 }

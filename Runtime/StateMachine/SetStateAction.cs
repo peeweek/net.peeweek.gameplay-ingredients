@@ -9,12 +9,20 @@ namespace GameplayIngredients.Actions
     {
         [NonNullCheck]
         public StateMachine StateMachine;
-        public string State = "State";
+
+        public string state
+        {
+            get { return m_State; }
+            set { m_State = value; }
+        }
+
+        [SerializeField]
+        protected string m_State = "State";
 
         public override void Execute(GameObject instigator = null)
         {
             if(StateMachine != null)
-                StateMachine.SetState(State);
+                StateMachine.SetState(m_State);
         }
     }
 }

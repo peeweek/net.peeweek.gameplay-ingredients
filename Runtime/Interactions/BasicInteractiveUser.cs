@@ -1,8 +1,8 @@
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameplayIngredients.Interactive
+namespace GameplayIngredients.Interactions
 {
     public class BasicInteractiveUser : InteractiveUser
     {
@@ -13,6 +13,11 @@ namespace GameplayIngredients.Interactive
         {
             Vector3 toInteractive = (interactive.transform.position - Camera.transform.position).normalized;
             return Mathf.Acos(Vector3.Dot(toInteractive, Camera.transform.forward)) < InteractionAngle;
+        }
+
+        public override Interactive[] SortCandidates(IEnumerable<Interactive> candidates)
+        {
+            return candidates.OrderBy(a => Vector3.Distance(a.gameObject.transform.position, this.transform.position)).ToArray();
         }
     }
 }

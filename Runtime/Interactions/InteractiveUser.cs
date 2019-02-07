@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameplayIngredients.Interactive
+namespace GameplayIngredients.Interactions
 {
     public abstract class InteractiveUser : MonoBehaviour
     {
         public abstract bool CanInteract(Interactive interactive);
 
-        protected void Interact()
+        public abstract Interactive[] SortCandidates(IEnumerable<Interactive> candidates);
+
+        public void Interact()
         {
-            Manager.Get<InteractiveManager>().Interact(this);
+            InteractionManager.Interact(this);
         }
     }
 }
