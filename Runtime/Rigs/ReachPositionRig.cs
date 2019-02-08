@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Rigs
 {
-    public class FollowPositionRig : MonoBehaviour
+    public class ReachPositionRig : MonoBehaviour
     {
         public Transform target => m_Target;
 
