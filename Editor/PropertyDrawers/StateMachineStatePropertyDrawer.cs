@@ -24,26 +24,40 @@ namespace GameplayIngredients.Editor
             }
             else
             {
-                string currentValue = property.stringValue;
-                int count = stateMachine.States.Length;
-                int[] indices = new int[count];
-                GUIContent[] labels = new GUIContent[count];
-                int selected = -1;
-                for(int i = 0; i< count; i++)
+                if(stateMachine != null && stateMachine.States != null)
                 {
-                    string stateName = stateMachine.States[i].StateName;
-                    if (stateName == currentValue)
-                        selected = i;
-                    indices[i] = i;
-                    labels[i] = new GUIContent(stateName);
+                    string currentValue = property.stringValue;
+                    int count = stateMachine.States.Length;
+                    int[] indices = new int[count];
+                    GUIContent[] labels = new GUIContent[count];
+                    int selected = -1;
+                    for (int i = 0; i < count; i++)
+                    {
+                        indices[i] = i;
+                        if (stateMachine.States[i] != null)
+                        {
+                            string stateName = stateMachine.States[i].StateName;
 
+                            if (stateName == currentValue)
+                                selected = i;
+                            
+                            labels[i] = new GUIContent(stateName);
+                        }
+                        else
+                            labels[i] = new GUIContent("(Null State, please fix)");
+                    }
+
+                    int newIdx = EditorGUI.IntPopup(position, new GUIContent(property.displayName), selected, labels, indices);
+                    if (GUI.changed && stateMachine.States[newIdx] != null)
+                    {
+                        property.stringValue = stateMachine.States[newIdx].StateName;
+                    }
+                }
+                else
+                {
+                    EditorGUI.HelpBox(position, "State machine is null or has no states", MessageType.Error);
                 }
 
-                int newIdx = EditorGUI.IntPopup(position, new GUIContent(property.displayName), selected, labels, indices);
-                if(GUI.changed)
-                {
-                    property.stringValue = stateMachine.States[newIdx].StateName;
-                }
             }
         }
 
