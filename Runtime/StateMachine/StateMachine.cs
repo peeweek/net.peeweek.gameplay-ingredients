@@ -7,7 +7,8 @@ namespace GameplayIngredients.StateMachines
 {
     public class StateMachine : MonoBehaviour
     {
-        public State DefaultState;
+        [StateMachineState]
+        public string DefaultState;
 
         [ReorderableList]
         public State[] States;
@@ -19,12 +20,12 @@ namespace GameplayIngredients.StateMachines
             foreach (var state in States)
                 state.gameObject.SetActive(false);
 
-            SetState(DefaultState.StateName);
+            SetState(DefaultState);
         }
 
         public void SetState(string stateName)
         {
-            State newState = States.First(o => o.StateName == stateName);
+            State newState = States.FirstOrDefault(o => o.StateName == stateName);
 
             if(newState != null)
             {
@@ -45,6 +46,8 @@ namespace GameplayIngredients.StateMachines
                 // Finally, call State enter
                 Callable.Call(m_CurrentState.OnStateEnter, gameObject);
             }
+            else
+                Debug.LogWarning(string.Format("{0} : Trying to set unknown state {1}", gameObject.name, stateName), gameObject);
         }
 
         public void Update()

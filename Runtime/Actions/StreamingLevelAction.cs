@@ -8,7 +8,7 @@ namespace GameplayIngredients.Actions
 {
     public class StreamingLevelAction : ActionBase
     {
-        [ReorderableList]
+        [ReorderableList, Scene]
         public string[] Scenes;
         public string SceneToActivate;
         public LevelStreamingManager.StreamingAction Action = LevelStreamingManager.StreamingAction.Load;

@@ -16,7 +16,7 @@ namespace GameplayIngredients.Actions
             set { m_State = value; }
         }
 
-        [SerializeField]
+        [SerializeField, StateMachineState("StateMachine")]
         protected string m_State = "State";
 
         public override void Execute(GameObject instigator = null)
