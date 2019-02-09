@@ -16,11 +16,27 @@ namespace GameplayIngredients.Controllers
 
         public abstract Vector2 Look { get; }
         public abstract Vector2 Movement { get; }
-        public abstract ButtonState Pause { get; }
         public abstract ButtonState Jump { get; }
-        public abstract ButtonState Shoot { get; }
-        public abstract ButtonState Action { get; }
 
         public abstract void UpdateInput();
+
+        protected static ButtonState GetButtonState(string Button)
+        {
+            if (Input.GetButton(Button))
+            {
+                if (Input.GetButtonDown(Button))
+                    return ButtonState.JustPressed;
+                else
+                    return ButtonState.Pressed;
+            }
+            else
+            {
+                if (Input.GetButtonUp(Button))
+                    return ButtonState.JustReleased;
+                else
+                    return ButtonState.Released;
+
+            }
+        }
     }
 }

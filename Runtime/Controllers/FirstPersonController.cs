@@ -17,23 +17,23 @@ namespace GameplayIngredients.Controllers
 
         [Header("Metrics")]
         [Range(1.0f, 2.5f)]
-        public float PlayerHeight;
+        public float PlayerHeight = 1.82f;
         [Range(0.35f, 2.0f)]
-        public float PlayerRadius;
+        public float PlayerRadius = 0.5f;
         public float PlayerWeight = 3.0f;
 
         [Header("Movement")]
         [Range(0.0f, 12.5f)]
-        public float MoveSpeed;
-        public float TerminalVelocity = 54.16f;
-        public float TurnSpeed = 30;
+        public float MoveSpeed = 3.0f;
+        public float MaximumFallVelocity = 12f;
+        public float TurnSpeed = 180;
 
         [Header("Jump")]
-        public bool EnableJump = false;
+        public bool EnableJump = true;
         public float JumpImpulse = 7.0f;
 
         [Header("Look")]
-        public float PitchSpeed = 30;
+        public float PitchSpeed = 180;
         public float MaxPitch = 80;
 
         private CharacterController m_Controller;
@@ -89,7 +89,7 @@ namespace GameplayIngredients.Controllers
             Vector3 move = (transform.forward * m_Input.Movement.y + transform.right * m_Input.Movement.x) * MoveSpeed;
 
             m_Fall += PlayerWeight * 9.80665f * Time.deltaTime;
-            m_Fall = Mathf.Min(m_Fall, TerminalVelocity);
+            m_Fall = Mathf.Min(m_Fall, MaximumFallVelocity);
             move += m_Fall * (-transform.up);
 
             if (m_Grounded)
