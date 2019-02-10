@@ -9,8 +9,12 @@ namespace GameplayIngredients
     [ManagerDefaultPrefab("GameSaveManager")]
     public class GameSaveManager : Manager
     {
-        private const string systemSaveName = "system.sav";
-        private const string userSaveName = "user{0}.sav";
+        [SerializeField, Tooltip("The path where system and user saves will be stored. Relative to the Executable_Data folder (or Assets folder for editor). Default is '/../' next to the executable or at the root of the project.")]
+        private string savePath = "/../";
+        [SerializeField, Tooltip("The file name of the System Save.")]
+        private string systemSaveName = "System.sav";
+        [SerializeField, Tooltip("The file format for a user save, use the {0} to specify where the numbering happens.")]
+        private string userSaveName = "User{0}.sav";
 
         Dictionary<string, System.Object> systemSaveEntries;
         Dictionary<string, System.Object> currentUserSaveEntries;
@@ -144,14 +148,14 @@ namespace GameplayIngredients
 
         Dictionary<string, object> LoadFile(string fileName)
         {
-            if(!File.Exists(Application.dataPath + "/../" + fileName))
+            if(!File.Exists(Application.dataPath + savePath + fileName))
             {
                 SaveFile(fileName, new Dictionary<string, object>());
             }
 
             var dict = new Dictionary<string, System.Object>();
 
-            string contents= File.ReadAllText(Application.dataPath + "/../" + fileName);
+            string contents= File.ReadAllText(Application.dataPath + savePath + fileName);
 
             SerializableOutput data = JsonUtility.FromJson<SerializableOutput>(contents);
 
@@ -203,7 +207,7 @@ namespace GameplayIngredients
                 i++;
             }
 
-            File.WriteAllText(Application.dataPath + "/../" + filename, JsonUtility.ToJson(data));
+            File.WriteAllText(Application.dataPath + savePath + filename, JsonUtility.ToJson(data));
         }
 
         [System.Serializable]
