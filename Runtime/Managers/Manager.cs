@@ -23,6 +23,7 @@ namespace GameplayIngredients
         [RuntimeInitializeOnLoadMethod]
         static void AutoCreateAll()
         {
+            Debug.Log("Initializing all Managers...");
             foreach(var type in kAllManagerTypes)
             {
                 var attrib =type.GetCustomAttribute<ManagerDefaultPrefabAttribute>(); 
@@ -56,6 +57,8 @@ namespace GameplayIngredients
                 GameObject.DontDestroyOnLoad(gameObject);
                 var comp = (Manager)gameObject.GetComponent(type);
                 s_Managers.Add(type,comp);
+
+                Debug.Log(string.Format(" -> <{0}> OK", type.Name));
             }
         }
 
