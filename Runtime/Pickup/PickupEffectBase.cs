@@ -4,13 +4,8 @@ using UnityEngine;
 
 namespace GameplayIngredients.Pickup
 {
-    public abstract class PickupEffectBase : ScriptableObject
+    public abstract class PickupEffectBase : MonoBehaviour
     {
-        public float Duration = 0.0f;
-
-        public void ApplyPickupEffect(PickupOwnerBase owner)
-        {
-            owner.ApplyEffect(this);
-        }
+        public abstract void ApplyPickupEffect(PickupOwnerBase owner);
     }
 }
