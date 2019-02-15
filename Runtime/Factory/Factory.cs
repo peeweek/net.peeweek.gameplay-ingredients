@@ -94,10 +94,10 @@ namespace GameplayIngredients
                 m_RespawnCoroutines.RemoveAll(o => o == null);
             }
 
-            m_RespawnCoroutines.Add(StartCoroutine("Respawn", RespawnDelay));
+            m_RespawnCoroutines.Add(StartCoroutine(Respawn(RespawnDelay)));
         }
 
-        private IEnumerable Respawn(float time)
+        private IEnumerator Respawn(float time)
         {
             yield return new WaitForSeconds(time);
             Callable.Call(OnRespawn, this.gameObject);
