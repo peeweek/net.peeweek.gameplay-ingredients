@@ -11,10 +11,13 @@ namespace GameplayIngredients.Editor
     public class PickupItemEditor : UnityEditor.Editor
     {
         ReorderableList m_RList;
+        SerializedProperty m_OnPickup;
+
         private void OnEnable()
         {
             m_RList = new ReorderableList(((PickupItem)serializedObject.targetObject).effects, typeof(PickupEffectBase), false, true, false, false);
             m_RList.drawElementCallback = DrawElement;
+            m_OnPickup = serializedObject.FindProperty("OnPickup");
         }
 
         void DrawElement(Rect rect, int index, bool isActive, bool isFocused)
@@ -26,6 +29,10 @@ namespace GameplayIngredients.Editor
         {
             GUILayout.Space(8);
             m_RList.DoLayoutList();
+
+            serializedObject.Update();
+            EditorGUILayout.PropertyField(m_OnPickup,true);
+            serializedObject.ApplyModifiedProperties();
         }
 
     }
