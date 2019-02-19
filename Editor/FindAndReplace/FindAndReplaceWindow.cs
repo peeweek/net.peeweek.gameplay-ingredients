@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 
@@ -232,14 +233,23 @@ namespace GameplayIngredients.Editor
             }
         }
 
+        static GameObject[] FindAllSceneObjects()
+        {
+            var all = Resources.FindObjectsOfTypeAll<GameObject>();
+            all = all.Where(o => o.scene.isLoaded).ToArray();
+            return all;
+        }
+
         void Search(SearchOp op, SearchBy by, object criteria)
         {
             List<GameObject> query = new List<GameObject>();
-            
-            switch(by)
+
+            var all = FindAllSceneObjects();
+
+            switch (by)
             {
                 case SearchBy.Name:
-                    foreach(var go in FindObjectsOfType<GameObject>())
+                    foreach(var go in all)
                     {
                         if (go.name.Contains((string)criteria))
                             query.Add(go);
@@ -249,7 +259,7 @@ namespace GameplayIngredients.Editor
                     query.AddRange(GameObject.FindGameObjectsWithTag((string)criteria));
                     break;
                 case SearchBy.Layer:
-                    foreach (var go in FindObjectsOfType<GameObject>())
+                    foreach (var go in all)
                     {
                         if (go.layer == LayerMask.NameToLayer((string)criteria))
                             query.Add(go);
@@ -261,12 +271,12 @@ namespace GameplayIngredients.Editor
                         Type t = s_assemblyTypes[(string)criteria];
                         if( typeof(Component).IsAssignableFrom(t))
                         {
-                            Component[] components = (Component[])FindObjectsOfType(t);
+                            Component[] components = (Component[])Resources.FindObjectsOfTypeAll(t);
                             if(components != null)
                             {
                                 foreach(var c in components)
                                 {
-                                    if (!query.Contains(c.gameObject))
+                                    if (c.gameObject.scene != null && !query.Contains(c.gameObject))
                                         query.Add(c.gameObject);
                                 }
                             }
@@ -275,7 +285,7 @@ namespace GameplayIngredients.Editor
                     break;
                 case SearchBy.Mesh:
                     Mesh mesh = (Mesh)criteria;
-                    foreach (var go in FindObjectsOfType<GameObject>())
+                    foreach (var go in all)
                     {
                         MeshFilter filter = go.GetComponent<MeshFilter>();
                         if (filter != null && filter.sharedMesh == mesh)
@@ -286,7 +296,7 @@ namespace GameplayIngredients.Editor
                     break;
                 case SearchBy.Material:
                     Material mat = (Material)criteria;
-                    foreach (var go in FindObjectsOfType<GameObject>())
+                    foreach (var go in all)
                     {
                         Renderer renderer = go.GetComponent<Renderer>();
                         if (renderer != null)
