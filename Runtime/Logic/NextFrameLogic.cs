@@ -8,7 +8,7 @@ namespace GameplayIngredients.Logic
     public class NextFrameLogic : LogicBase
     {
         [ReorderableList]
-        public Callable[] OnComplete;
+        public Callable[] OnNextFrame;
         IEnumerator m_Coroutine;
 
         public override void Execute(GameObject instigator = null)
@@ -20,7 +20,7 @@ namespace GameplayIngredients.Logic
         IEnumerator RunDelay(GameObject instigator = null)
         {
             yield return new WaitForEndOfFrame();
-            Callable.Call(OnComplete, instigator);
+            Callable.Call(OnNextFrame, instigator);
             m_Coroutine = null;
         }
     }

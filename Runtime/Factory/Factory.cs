@@ -30,6 +30,7 @@ namespace GameplayIngredients
         public BlueprintSelectionMode blueprintSelecionMode = BlueprintSelectionMode.Random;
 
         public bool RespawnTarget = true;
+        public bool AttachToTarget = true;
         public float RespawnDelay = 3.0f;
 
         [Min(1), SerializeField]
@@ -56,7 +57,11 @@ namespace GameplayIngredients
             if (m_Instances.Count <= MaxInstances)
             {
                 GameObject newInstance = Spawn(SelectBlueprint(), SpawnTarget);
+                if (AttachToTarget)
+                    newInstance.transform.parent = SpawnTarget.transform;
+
                 m_Instances.Add(newInstance);
+                
                 Callable.Call(OnSpawn, newInstance);
             }
 
