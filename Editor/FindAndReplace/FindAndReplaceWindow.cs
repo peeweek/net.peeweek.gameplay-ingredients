@@ -49,6 +49,7 @@ namespace GameplayIngredients.Editor
         private void OnEnable()
         {
             titleContent = Contents.title;
+            minSize = new Vector2(640, 280);
         }
 
         private void OnGUI()
@@ -103,8 +104,8 @@ namespace GameplayIngredients.Editor
         void SearchControlsGUI()
         {
             EditorGUIUtility.labelWidth = 120;
-            GUILayout.Space(8);
-            GUILayout.Label("Search and Filter", EditorStyles.boldLabel);
+
+            GUILayout.Label("Search and Filter", Styles.boldLabel);
             searchBy = (SearchBy)EditorGUILayout.EnumPopup(Contents.searchBy, searchBy);
             switch(searchBy)
             {
@@ -136,10 +137,45 @@ namespace GameplayIngredients.Editor
 
 
             GUILayout.FlexibleSpace();
-            GUILayout.Label("Replace By", EditorStyles.boldLabel);
+            GUILayout.Label("Replace By", Styles.boldLabel);
             prefabReplacement = (GameObject)EditorGUILayout.ObjectField(Contents.prefabReplacement, prefabReplacement, typeof(GameObject), true);
-            GUILayout.Button("Replace All", GUILayout.Height(32));
+            if (GUILayout.Button("Replace All", GUILayout.Height(32)) && prefabReplacement != null)
+            {
+                Undo.RecordObjects(searchResults.ToArray(), "Replace Objects");
+
+                for(int i = 0; i < searchResults.Count; i++)
+                {
+                    var obj = searchResults[i];
+                    var newObj = SwapObject(obj, prefabReplacement, searchResults);
+                    searchResults[i] = newObj;
+                }
+            }
             GUILayout.Space(8);
+        }
+
+        GameObject SwapObject(GameObject toReplace, GameObject replacement, List<GameObject> others)
+        {
+            var newObj = Instantiate<GameObject>(replacement);
+            newObj.name = replacement.name;
+            newObj.transform.position = toReplace.transform.position;
+            newObj.transform.rotation = toReplace.transform.rotation;
+            newObj.transform.parent = toReplace.transform.parent;
+            newObj.transform.localScale = toReplace.transform.localScale;
+            newObj.tag = toReplace.tag;
+            newObj.layer = toReplace.layer;
+            newObj.isStatic = toReplace.isStatic;
+
+            foreach(var other in others)
+            {
+                if(other.transform.parent == toReplace.transform)
+                {
+                    other.transform.parent = newObj.transform;
+                }
+            }
+
+            DestroyImmediate(toReplace);
+
+            return newObj;
         }
 
         void SearchButtonsGUI(SearchBy by, object criteria)
@@ -256,16 +292,15 @@ namespace GameplayIngredients.Editor
 
         void SearchResultsGUI()
         {
-            GUILayout.Space(8);
             using (new GUILayout.HorizontalScope())
             {
-                GUILayout.Label("Search Results", EditorStyles.boldLabel);
+                GUILayout.Label("Search Results", Styles.boldLabel);
                 GUILayout.FlexibleSpace();
-                if(GUILayout.Button("From Selection"))
+                if(GUILayout.Button("From Selection", GUILayout.Height(24)))
                 {
                     searchResults = Selection.gameObjects.ToList();
                 }
-                if(GUILayout.Button("Select"))
+                if(GUILayout.Button("Select", GUILayout.Height(24)))
                 {
                     Selection.objects = searchResults.ToArray();
                 }
@@ -274,6 +309,9 @@ namespace GameplayIngredients.Editor
             scroll = GUILayout.BeginScrollView(scroll, EditorStyles.helpBox);
             {
                 GameObject toRemove = null;
+
+                // Trim all nulls
+                searchResults = searchResults.Where(o => o != null).ToList();
 
                 foreach(var obj in searchResults)
                 {
@@ -306,6 +344,19 @@ namespace GameplayIngredients.Editor
             public static GUIContent materialSearch = new GUIContent("Material");
 
             public static GUIContent prefabReplacement = new GUIContent("Prefab Replacement");
+        }
+
+        static class Styles
+
+        {
+            public static readonly GUIStyle boldLabel = GetBoldLabel();
+
+            static GUIStyle GetBoldLabel()
+            {
+                var style = new GUIStyle(EditorStyles.boldLabel);
+                style.fontSize = 14;
+                return style;
+            }
         }
     }
 }
