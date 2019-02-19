@@ -94,6 +94,21 @@ namespace GameplayIngredients.Editor
         [SerializeField]
         Material materialSearch;
 
+        [SerializeField]
+        bool replacePosition = true;
+        [SerializeField]
+        bool replaceRotation = true;
+        [SerializeField]
+        bool replaceScale = false;
+        [SerializeField]
+        bool replaceParenting = true;
+        [SerializeField]
+        bool replaceTag = false;
+        [SerializeField]
+        bool replaceLayer = true;
+        [SerializeField]
+        bool replaceStatic = false;
+
         enum SearchOp
         {
             Find,
@@ -104,7 +119,7 @@ namespace GameplayIngredients.Editor
         void SearchControlsGUI()
         {
             EditorGUIUtility.labelWidth = 120;
-
+            GUILayout.Space(4);
             GUILayout.Label("Search and Filter", Styles.boldLabel);
             searchBy = (SearchBy)EditorGUILayout.EnumPopup(Contents.searchBy, searchBy);
             switch(searchBy)
@@ -139,7 +154,22 @@ namespace GameplayIngredients.Editor
             GUILayout.FlexibleSpace();
             GUILayout.Label("Replace By", Styles.boldLabel);
             prefabReplacement = (GameObject)EditorGUILayout.ObjectField(Contents.prefabReplacement, prefabReplacement, typeof(GameObject), true);
-            if (GUILayout.Button("Replace All", GUILayout.Height(32)) && prefabReplacement != null)
+
+            using (new GUILayout.HorizontalScope())
+            {
+                replacePosition = GUILayout.Toggle(replacePosition, "Position", EditorStyles.miniButtonLeft, GUILayout.Height(16));
+                replaceRotation = GUILayout.Toggle(replaceRotation, "Rotation", EditorStyles.miniButtonMid, GUILayout.Height(16));
+                replaceScale = GUILayout.Toggle(replaceScale, "Scale", EditorStyles.miniButtonMid, GUILayout.Height(16));
+                replaceParenting = GUILayout.Toggle(replaceParenting, "Parenting", EditorStyles.miniButtonRight, GUILayout.Height(16));
+            }
+            using (new GUILayout.HorizontalScope())
+            {
+                replaceTag = GUILayout.Toggle(replaceTag, "Tag", EditorStyles.miniButtonLeft, GUILayout.Height(16));
+                replaceLayer = GUILayout.Toggle(replaceLayer, "Layer", EditorStyles.miniButtonMid, GUILayout.Height(16));
+                replaceStatic = GUILayout.Toggle(replaceStatic, "Static Flag", EditorStyles.miniButtonRight, GUILayout.Height(16));
+            }
+
+            if (GUILayout.Button("Replace All", Styles.bigButton, GUILayout.Height(24)) && prefabReplacement != null)
             {
                 Undo.RecordObjects(searchResults.ToArray(), "Replace Objects");
 
@@ -157,13 +187,21 @@ namespace GameplayIngredients.Editor
         {
             var newObj = Instantiate<GameObject>(replacement);
             newObj.name = replacement.name;
-            newObj.transform.position = toReplace.transform.position;
-            newObj.transform.rotation = toReplace.transform.rotation;
-            newObj.transform.parent = toReplace.transform.parent;
-            newObj.transform.localScale = toReplace.transform.localScale;
-            newObj.tag = toReplace.tag;
-            newObj.layer = toReplace.layer;
-            newObj.isStatic = toReplace.isStatic;
+            if(replacePosition)
+                newObj.transform.position = toReplace.transform.position;
+            if(replaceRotation)
+                newObj.transform.rotation = toReplace.transform.rotation;
+            if(replaceParenting)
+                newObj.transform.parent = toReplace.transform.parent;
+            if(replaceScale)
+                newObj.transform.localScale = toReplace.transform.localScale;
+
+            if(replaceTag)
+                newObj.tag = toReplace.tag;
+            if(replaceLayer)
+                newObj.layer = toReplace.layer;
+            if(replaceStatic)
+                newObj.isStatic = toReplace.isStatic;
 
             foreach(var other in others)
             {
@@ -182,13 +220,13 @@ namespace GameplayIngredients.Editor
         {
             using (new GUILayout.HorizontalScope())
             {
-                if (GUILayout.Button("Find", GUILayout.Height(32)))
+                if (GUILayout.Button("Find", Styles.bigButton, GUILayout.Height(24)))
                     Search(SearchOp.Find, by, criteria);
 
-                if (GUILayout.Button("Add", GUILayout.Height(32)))
+                if (GUILayout.Button("Add", Styles.bigButton, GUILayout.Height(24)))
                     Search(SearchOp.Add, by, criteria);
 
-                if (GUILayout.Button("Refine", GUILayout.Height(32)))
+                if (GUILayout.Button("Refine", Styles.bigButton, GUILayout.Height(24)))
                     Search(SearchOp.Refine, by, criteria);
 
             }
@@ -347,13 +385,20 @@ namespace GameplayIngredients.Editor
         }
 
         static class Styles
-
         {
             public static readonly GUIStyle boldLabel = GetBoldLabel();
+            public static readonly GUIStyle bigButton = GetBigButton();
 
             static GUIStyle GetBoldLabel()
             {
                 var style = new GUIStyle(EditorStyles.boldLabel);
+                style.fontSize = 14;
+                return style;
+            }
+
+            static GUIStyle GetBigButton()
+            {
+                var style = new GUIStyle(EditorStyles.miniButton);
                 style.fontSize = 14;
                 return style;
             }
