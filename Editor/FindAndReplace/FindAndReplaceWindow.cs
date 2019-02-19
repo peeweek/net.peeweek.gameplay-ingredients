@@ -1,4 +1,6 @@
-using System.Collections;
+using System.Reflection;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -13,6 +15,26 @@ namespace GameplayIngredients.Editor
         {
             GetWindow<FindAndReplaceWindow>();
         }
+
+        static readonly Dictionary<string, Type> s_assemblyTypes = GetTypes();
+
+        private static Dictionary<string,Type> GetTypes()
+        {
+            Dictionary<string, Type> all = new Dictionary<string, Type>();
+
+            foreach(var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach(Type t in assembly.GetTypes())
+                {
+                    if(typeof(Component).IsAssignableFrom(t) && !all.ContainsKey(t.Name))
+                        all.Add(t.Name, t);
+                }
+            }
+
+            return all;
+        }
+
+
 
         public enum SearchBy
         {
@@ -71,6 +93,12 @@ namespace GameplayIngredients.Editor
         [SerializeField]
         Material materialSearch;
 
+        enum SearchOp
+        {
+            Find,
+            Add,
+            Refine
+        }
 
         void SearchControlsGUI()
         {
@@ -82,36 +110,144 @@ namespace GameplayIngredients.Editor
             {
                 case SearchBy.Name:
                     nameSearch = EditorGUILayout.TextField(Contents.nameSearch, nameSearch);
+                    SearchButtonsGUI(searchBy, nameSearch);
                     break;
                 case SearchBy.Tag:
                     tagSearch = EditorGUILayout.TextField(Contents.tagSearch, tagSearch);
+                    SearchButtonsGUI(searchBy, tagSearch);
                     break;
                 case SearchBy.Layer:
                     layerSearch = EditorGUILayout.TextField(Contents.layerSearch, layerSearch);
+                    SearchButtonsGUI(searchBy, layerSearch);
                     break;
                 case SearchBy.ComponentType:
                     componentSearch = EditorGUILayout.TextField(Contents.componentSearch, componentSearch);
+                    SearchButtonsGUI(searchBy, componentSearch);
                     break;
                 case SearchBy.Mesh:
                     meshSearch = (Mesh)EditorGUILayout.ObjectField(Contents.meshSearch, meshSearch, typeof(Mesh), true);
+                    SearchButtonsGUI(searchBy, meshSearch);
                     break;
                 case SearchBy.Material:
                     materialSearch = (Material)EditorGUILayout.ObjectField(Contents.materialSearch, materialSearch, typeof(Material), true);
-
+                    SearchButtonsGUI(searchBy, materialSearch);
                     break;
             }
 
-            using (new GUILayout.HorizontalScope())
-            {
-                GUILayout.Button("Find",GUILayout.Height(32));
-                GUILayout.Button("Refine",GUILayout.Height(32));
-            }
 
             GUILayout.FlexibleSpace();
             GUILayout.Label("Replace By", EditorStyles.boldLabel);
             prefabReplacement = (GameObject)EditorGUILayout.ObjectField(Contents.prefabReplacement, prefabReplacement, typeof(GameObject), true);
             GUILayout.Button("Replace All", GUILayout.Height(32));
             GUILayout.Space(8);
+        }
+
+        void SearchButtonsGUI(SearchBy by, object criteria)
+        {
+            using (new GUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button("Find", GUILayout.Height(32)))
+                    Search(SearchOp.Find, by, criteria);
+
+                if (GUILayout.Button("Add", GUILayout.Height(32)))
+                    Search(SearchOp.Add, by, criteria);
+
+                if (GUILayout.Button("Refine", GUILayout.Height(32)))
+                    Search(SearchOp.Refine, by, criteria);
+
+            }
+        }
+
+        void Search(SearchOp op, SearchBy by, object criteria)
+        {
+            List<GameObject> query = new List<GameObject>();
+            
+            switch(by)
+            {
+                case SearchBy.Name:
+                    foreach(var go in FindObjectsOfType<GameObject>())
+                    {
+                        if (go.name.Contains((string)criteria))
+                            query.Add(go);
+                    }
+                    break;
+                case SearchBy.Tag:
+                    query.AddRange(GameObject.FindGameObjectsWithTag((string)criteria));
+                    break;
+                case SearchBy.Layer:
+                    foreach (var go in FindObjectsOfType<GameObject>())
+                    {
+                        if (go.layer == LayerMask.NameToLayer((string)criteria))
+                            query.Add(go);
+                    }
+                    break;
+                case SearchBy.ComponentType:
+                    if(s_assemblyTypes.ContainsKey((string)criteria))
+                    {
+                        Type t = s_assemblyTypes[(string)criteria];
+                        if( typeof(Component).IsAssignableFrom(t))
+                        {
+                            Component[] components = (Component[])FindObjectsOfType(t);
+                            if(components != null)
+                            {
+                                foreach(var c in components)
+                                {
+                                    if (!query.Contains(c.gameObject))
+                                        query.Add(c.gameObject);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case SearchBy.Mesh:
+                    Mesh mesh = (Mesh)criteria;
+                    foreach (var go in FindObjectsOfType<GameObject>())
+                    {
+                        MeshFilter filter = go.GetComponent<MeshFilter>();
+                        if (filter != null && filter.sharedMesh == mesh)
+                        {
+                            query.Add(go);
+                        }
+                    }
+                    break;
+                case SearchBy.Material:
+                    Material mat = (Material)criteria;
+                    foreach (var go in FindObjectsOfType<GameObject>())
+                    {
+                        Renderer renderer = go.GetComponent<Renderer>();
+                        if (renderer != null)
+                        {
+                            if(renderer.sharedMaterials.Contains(mat))
+                            {
+                                query.Add(go);
+                            }
+                        }
+                    }
+                    break;
+            }
+
+            switch (op)
+            {
+                case SearchOp.Find:
+                    searchResults = query;
+                    break;
+                case SearchOp.Add:
+                    foreach(var item in query)
+                    {
+                        if (!searchResults.Contains(item))
+                            searchResults.Add(item);
+                    }
+                    break;
+                case SearchOp.Refine:
+                    List<GameObject> refined = new List<GameObject>();
+                    foreach (var item in searchResults)
+                    {
+                        if (query.Contains(item))
+                            refined.Add(item);
+                    }
+                    searchResults = refined;
+                    break;
+            }
         }
 
         [SerializeField]
@@ -121,19 +257,41 @@ namespace GameplayIngredients.Editor
         void SearchResultsGUI()
         {
             GUILayout.Space(8);
-            GUILayout.Label("Search Results", EditorStyles.boldLabel);
-
-            using (new GUILayout.ScrollViewScope(scroll, EditorStyles.helpBox))
+            using (new GUILayout.HorizontalScope())
             {
-                foreach(var obj in searchResults)
+                GUILayout.Label("Search Results", EditorStyles.boldLabel);
+                GUILayout.FlexibleSpace();
+                if(GUILayout.Button("From Selection"))
                 {
-                    using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
-                    {
-                        GUILayout.Label(obj.name);
-                        GUILayout.Button("X", GUILayout.Width(32));
-                    }
+                    searchResults = Selection.gameObjects.ToList();
+                }
+                if(GUILayout.Button("Select"))
+                {
+                    Selection.objects = searchResults.ToArray();
                 }
             }
+
+            scroll = GUILayout.BeginScrollView(scroll, EditorStyles.helpBox);
+            {
+                GameObject toRemove = null;
+
+                foreach(var obj in searchResults)
+                {
+                    using (new GUILayout.HorizontalScope(EditorStyles.textField))
+                    {
+                        GUILayout.Label(obj.name, EditorStyles.label);
+                        if(GUILayout.Button("X", GUILayout.Width(32)))
+                        {
+                            toRemove = obj;
+                        }
+                    }
+                }
+
+                if (toRemove != null)
+                    searchResults.Remove(toRemove);
+            }
+            GUILayout.EndScrollView();
+
         }
 
         static class Contents
