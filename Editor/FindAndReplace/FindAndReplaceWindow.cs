@@ -104,6 +104,8 @@ namespace GameplayIngredients.Editor
         [SerializeField]
         bool replaceParenting = true;
         [SerializeField]
+        bool replaceName = true;
+        [SerializeField]
         bool replaceTag = false;
         [SerializeField]
         bool replaceLayer = true;
@@ -165,7 +167,8 @@ namespace GameplayIngredients.Editor
             }
             using (new GUILayout.HorizontalScope())
             {
-                replaceTag = GUILayout.Toggle(replaceTag, "Tag", EditorStyles.miniButtonLeft, GUILayout.Height(16));
+                replaceName = GUILayout.Toggle(replaceName, "Name", EditorStyles.miniButtonLeft, GUILayout.Height(16));
+                replaceTag = GUILayout.Toggle(replaceTag, "Tag", EditorStyles.miniButtonMid, GUILayout.Height(16));
                 replaceLayer = GUILayout.Toggle(replaceLayer, "Layer", EditorStyles.miniButtonMid, GUILayout.Height(16));
                 replaceStatic = GUILayout.Toggle(replaceStatic, "Static Flag", EditorStyles.miniButtonRight, GUILayout.Height(16));
             }
@@ -187,7 +190,12 @@ namespace GameplayIngredients.Editor
         GameObject SwapObject(GameObject toReplace, GameObject replacement, List<GameObject> others)
         {
             var newObj = Instantiate<GameObject>(replacement);
-            newObj.name = replacement.name;
+
+            if (replaceName)
+                newObj.name = replacement.name;
+            else
+                newObj.name = toReplace.name;
+
             if(replacePosition)
                 newObj.transform.position = toReplace.transform.position;
             if(replaceRotation)
