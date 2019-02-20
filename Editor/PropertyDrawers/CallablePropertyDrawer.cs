@@ -3,8 +3,7 @@ using UnityEditor;
 
 namespace GameplayIngredients.Editor
 {
-    
-
+  
     [CustomPropertyDrawer(typeof(Callable))]
     public class CallablePropertyDrawer : PropertyDrawer
     {
@@ -19,14 +18,14 @@ namespace GameplayIngredients.Editor
             }
 
             var pickRect = new Rect(position);
-            pickRect.xMin = pickRect.xMax - 84;
+            pickRect.xMin = pickRect.xMax - 184;
             pickRect.xMax -= 30;
 
             var gotoRect = new Rect(position);
             gotoRect.xMin = gotoRect.xMax - 24;
 
             var objRect = new Rect(position);
-            objRect.xMax -= 88;
+            objRect.xMax -= 188;
 
             var obj = EditorGUI.ObjectField(objRect, property.objectReferenceValue, typeof(Callable), true);
 
@@ -37,7 +36,7 @@ namespace GameplayIngredients.Editor
             {
                 Selection.activeObject = property.objectReferenceValue;
             }
-            if (GUI.Button(pickRect, "Select"))
+            if (GUI.Button(pickRect, (property.objectReferenceValue as Callable).Name, EditorStyles.popup))
             {
                 ShowMenu(property);
             }
