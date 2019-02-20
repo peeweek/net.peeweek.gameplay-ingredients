@@ -22,6 +22,14 @@ namespace GameplayIngredients
             All
         }
 
+        public enum SpawnLocation
+        {
+            Default,
+            SameSceneAsTarget,
+            ChildOfTarget,
+            DontDestroyOnLoad
+        }
+
         [ReorderableList, NonNullCheck]
         public GameObject[] FactoryBlueprints;
         [NonNullCheck]
@@ -30,8 +38,9 @@ namespace GameplayIngredients
         public BlueprintSelectionMode blueprintSelecionMode = BlueprintSelectionMode.Random;
 
         public bool RespawnTarget = true;
-        public bool AttachToTarget = true;
+        public SpawnLocation spawnLocation = SpawnLocation.SameSceneAsTarget;
         public float RespawnDelay = 3.0f;
+        public bool ReapInstancesOnDestroy = true;
 
         [Min(1), SerializeField]
         private int MaxInstances = 1;
@@ -42,6 +51,18 @@ namespace GameplayIngredients
         public Callable[] OnRespawn;
 
         List<GameObject> m_Instances;
+
+        private void OnDestroy()
+        {
+            if(ReapInstancesOnDestroy)
+            {
+                foreach(var instance in m_Instances)
+                {
+                    if (instance != null)
+                        Destroy(instance);
+                }
+            }
+        }
 
         public void Spawn()
         {
@@ -57,8 +78,21 @@ namespace GameplayIngredients
             if (m_Instances.Count <= MaxInstances)
             {
                 GameObject newInstance = Spawn(SelectBlueprint(), SpawnTarget);
-                if (AttachToTarget)
-                    newInstance.transform.parent = SpawnTarget.transform;
+
+                switch(spawnLocation)
+                {
+                    case SpawnLocation.Default:
+                        break;
+                    case SpawnLocation.SameSceneAsTarget:
+                        UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene( newInstance, SpawnTarget.scene);
+                        break;
+                    case SpawnLocation.ChildOfTarget:
+                        newInstance.transform.parent = SpawnTarget.transform;
+                        break;
+                    case SpawnLocation.DontDestroyOnLoad:
+                        DontDestroyOnLoad(newInstance);
+                        break;
+                }
 
                 m_Instances.Add(newInstance);
                 

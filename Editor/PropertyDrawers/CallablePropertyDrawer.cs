@@ -32,13 +32,24 @@ namespace GameplayIngredients.Editor
             if (GUI.changed)
                 property.objectReferenceValue = obj;
 
-            if (GUI.Button(gotoRect, ">"))
+
+            if(property.objectReferenceValue != null)
             {
-                Selection.activeObject = property.objectReferenceValue;
+                if (GUI.Button(gotoRect, ">"))
+                {
+                    Selection.activeObject = property.objectReferenceValue;
+                }
+
+                if (GUI.Button(pickRect, (property.objectReferenceValue as Callable).Name, EditorStyles.popup))
+                {
+                    ShowMenu(property);
+                }
             }
-            if (GUI.Button(pickRect, (property.objectReferenceValue as Callable).Name, EditorStyles.popup))
+            else
             {
-                ShowMenu(property);
+                EditorGUI.BeginDisabledGroup(true);
+                GUI.Label(pickRect, "No Callable Selected", EditorStyles.popup);
+                EditorGUI.EndDisabledGroup();
             }
         }
 
