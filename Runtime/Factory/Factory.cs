@@ -75,7 +75,7 @@ namespace GameplayIngredients
             if (m_Instances == null)
                 m_Instances = new List<GameObject>();
 
-            if (m_Instances.Count <= MaxInstances)
+            if (m_Instances.Count < MaxInstances)
             {
                 GameObject newInstance = Spawn(SelectBlueprint(), SpawnTarget);
 
