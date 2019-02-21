@@ -1,5 +1,5 @@
 using NaughtyAttributes;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,50 +25,85 @@ namespace GameplayIngredients.Rigs
         public bool StopOnSteps = false;
         public float Speed = 2.0f;
 
-        [ReorderableList, SerializeField]
+        [ReorderableList, SerializeField, NonNullCheck]
         protected GameObject[] Path;
 
         public PlayMode initialPlayMode = PlayMode.Playing;
         PlayMode m_PlayMode;
-        [SerializeField]
-        float progress;
+        float m_Progress;
+
+        public void SetProgress(float progress)
+        {
+            m_Progress = Mathf.Clamp(progress, 0, Path.Length - 1);
+        }
+
+        public void Play(float progress = -1.0f)
+        {
+            if (progress >= 0.0f)
+                SetProgress(progress);
+
+            m_PlayMode = PlayMode.Playing;
+        }
+
+        public void Reverse(float progress = -1.0f)
+        {
+            if (progress >= 0.0f)
+                SetProgress(progress);
+
+            m_PlayMode = PlayMode.Reverse;
+
+        }
+
+        public void Stop(float progress = -1.0f)
+        {
+            if (progress >= 0.0f)
+                SetProgress(progress);
+
+            m_PlayMode = PlayMode.Stopped;
+
+        }
 
         private void Start()
         {
             m_PlayMode = initialPlayMode;
-            progress = 0.0f;
+            m_Progress = 0.0f;
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if(m_PlayMode != PlayMode.Stopped)
             {
+                if(Path.Where(o => o == null).Count() > 0)
+                {
+                    Debug.LogWarning("Path contains null objects. Cannot Compute.", this);
+                }
+
                 // Process loopMode and boundary reach
                 switch(loopMode)
                 {
                     case LoopMode.Hold:
-                        if((m_PlayMode == PlayMode.Playing && progress == Path.Length - 1) || (m_PlayMode == PlayMode.Reverse && progress == 0.0f))
+                        if((m_PlayMode == PlayMode.Playing && m_Progress == Path.Length - 1) || (m_PlayMode == PlayMode.Reverse && m_Progress == 0.0f))
                         {
                             m_PlayMode = PlayMode.Stopped;
                             return;
                         }
                         break;
                     case LoopMode.Loop:
-                        if (m_PlayMode == PlayMode.Playing && progress == Path.Length -1)
+                        if (m_PlayMode == PlayMode.Playing && m_Progress == Path.Length -1)
                         {
-                            progress = 0.0f;
+                            m_Progress = 0.0f;
                         }
-                        else if (m_PlayMode == PlayMode.Reverse && progress == 0.0f)
+                        else if (m_PlayMode == PlayMode.Reverse && m_Progress == 0.0f)
                         {
-                            progress = Path.Length -1;
+                            m_Progress = Path.Length -1;
                         }
                         break;
                     case LoopMode.PingPong:
-                        if (m_PlayMode == PlayMode.Playing && progress == Path.Length -1)
+                        if (m_PlayMode == PlayMode.Playing && m_Progress == Path.Length -1)
                         {
                             m_PlayMode = PlayMode.Reverse;
                         }
-                        else if (m_PlayMode == PlayMode.Reverse && progress == 0.0f)
+                        else if (m_PlayMode == PlayMode.Reverse && m_Progress == 0.0f)
                         {
                             m_PlayMode = PlayMode.Playing;
                         }
@@ -82,23 +117,28 @@ namespace GameplayIngredients.Rigs
                 if (m_PlayMode == PlayMode.Reverse)
                     sign = -1.0f;
 
-                int idx = (int)Mathf.Floor(progress);
+                int idx = Mathf.Clamp( sign > 0? (int)Mathf.Floor(m_Progress) : (int)Mathf.Ceil(m_Progress), 0 , Path.Length-1);
                 int nextidx = idx + (int)sign;
 
                 Vector3 inPos = Path[idx].transform.position;
                 Vector3 outPos = Path[nextidx].transform.position;
 
                 Vector3 dir = ( outPos - inPos ).normalized;
-                Vector3 pos = Vector3.Lerp(inPos, outPos, (sign > 0)? progress % 1.0f : 1.0f-(progress % 1.0f));
+                Vector3 pos = Vector3.Lerp( sign > 0? inPos : outPos, sign > 0? outPos : inPos, m_Progress % 1.0f);
                 Vector3 move = dir * Speed * Time.deltaTime;
                 float moveT = move.magnitude / (outPos - inPos).magnitude * sign;
 
-                progress = Mathf.Clamp(progress + moveT * sign, idx, nextidx);
+                m_Progress = Mathf.Clamp(m_Progress + moveT, (sign > 0)? idx : nextidx, (sign > 0) ? nextidx : idx);
 
-                if(progress == nextidx)
+                if(m_Progress == nextidx)
                     transform.position = outPos;
                 else
-                    transform.position = Vector3.Lerp(inPos, outPos, (sign > 0) ? progress % 1.0f : 1.0f - (progress % 1.0f));
+                    transform.position = Vector3.Lerp(inPos, outPos, (sign > 0) ? m_Progress % 1.0f : 1.0f - (m_Progress % 1.0f));
+
+                if((m_Progress %1.0f == 0.0f) && StopOnSteps)
+                {
+                    m_PlayMode = PlayMode.Stopped;
+                }
 
             }
         }
