@@ -2,63 +2,100 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
 namespace GameplayIngredients.Rigs
 {
     public class DirectorControlRig : MonoBehaviour
     {
+        public enum PlayMode
+        {
+            Stop,
+            Play,
+            Reverse
+        }
+
+        public enum WrapMode
+        {
+            Stop,
+            Loop,
+            PingPong
+        }
+
         [NonNullCheck]
         public PlayableDirector director;
 
-        public bool Playing = false;
-        public bool Reverse = false;
+        public PlayMode InitialPlayMode = PlayMode.Play;
+        public float InitialTime = 0.0f;
         public bool UnscaledGameTime = false;
 
-        public DirectorWrapMode wrapMode = DirectorWrapMode.Hold;
+        public WrapMode wrapMode = WrapMode.Stop;
         
-        float nextPauseTime = -1.0f;
+        public PlayMode playMode { get { return m_PlayMode; } set { m_PlayMode = value; } }
+        public float stopTime { get { return m_StopTime; } set { m_StopTime = value; } }
+        public float time { get { return (float)director.time; } set { director.time = value; } }
+        public TimelineAsset timeline { get { return director.playableAsset as TimelineAsset; } set { director.playableAsset = value; } }
+
+        float m_StopTime = -1.0f;
+        PlayMode m_PlayMode;
 
         private void OnEnable()
         {
             if (director != null)
+            {
+                m_PlayMode = InitialPlayMode;
                 director.timeUpdateMode = DirectorUpdateMode.Manual;
-        }
-
-        public void Play(PlayableAsset asset = null, bool reverse = false, float time = 0.0f)
-        {
-            Playing = true;
-            Reverse = reverse;
-
-            director.time = time;
-
-            if(asset != null)
-                director.playableAsset = asset;
-        }
-
-        public void Play(PlayableAsset asset = null)
-        {
-            Play(asset, Reverse, (float)director.time);
-        }
-
-        public void Pause()
-        {
-            director.Pause();
-        }
-
-        public void SetTime(float time, bool Reverse = false)
-        {
-            director.time = time;
-            director.Evaluate();
+                director.time = InitialTime;
+            }
         }
 
         public void Update()
         {
-            if(Playing)
+            if(m_PlayMode != PlayMode.Stop)
             {
                 float dt = UnscaledGameTime? Time.unscaledDeltaTime : Time.deltaTime;
 
-                director.time += Reverse ? -1.0f : 1.0f * dt;
+                float prevTime = (float)director.time;
+                float newTime = prevTime + (m_PlayMode == PlayMode.Reverse ? -1.0f : 1.0f) * dt;
+
+                if (m_StopTime >= 0.0f && 
+                    ( (m_PlayMode == PlayMode.Play && prevTime < m_StopTime && m_StopTime <= newTime) 
+                    || (m_PlayMode == PlayMode.Reverse && newTime <= m_StopTime && m_StopTime < prevTime)
+                    ))
+                {
+                    director.time = m_StopTime;
+                    m_PlayMode = PlayMode.Stop;
+                    m_StopTime = -1.0f;
+                }
+                else
+                    director.time = newTime; 
+
                 director.Evaluate();
+
+                if((director.time <= 0.0f && m_PlayMode == PlayMode.Reverse) ||
+                    (director.time >= director.playableAsset.duration && m_PlayMode == PlayMode.Play))
+                {
+                    switch(wrapMode)
+                    {
+                        case WrapMode.Loop:
+                            if (director.time <= 0.0f)
+                                director.time = director.playableAsset.duration;
+                            else
+                                director.time = 0.0f;
+                            break;
+                        case WrapMode.PingPong:
+                            if (m_PlayMode == PlayMode.Play)
+                                m_PlayMode = PlayMode.Reverse;
+                            else if (m_PlayMode == PlayMode.Reverse)
+                                m_PlayMode = PlayMode.Play;
+                            break;
+                        case WrapMode.Stop:
+                            m_PlayMode = PlayMode.Stop;
+                            break;
+                    }
+                }
+
+
             }
         }
     }
