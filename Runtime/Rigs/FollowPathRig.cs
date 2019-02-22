@@ -157,7 +157,7 @@ namespace GameplayIngredients.Rigs
 
         void DrawGizmosPath()
         {
-            if(Path != null && Path.Length > 1)
+            if(Path != null && Path.Length > 1 && Path.Where(o => o == null).Count() == 0)
             {
                 for(int i = 0; i < Path.Length -1; i++)
                 {
