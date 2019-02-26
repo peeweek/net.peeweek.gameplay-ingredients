@@ -43,11 +43,10 @@ namespace GameplayIngredients.Editor
             return false;
         }
 
-
         [MenuItem("Assets/Create/Editor Scene Setup", priority = 200)]
-        public static void CreateAsset()
+        static void CreateAsset()
         {
-            AssetDatabase.CreateAsset(CreateInstance<EditorSceneSetup>(), "Assets/New Editor Scene Setup.asset");
+            AssetFactory.CreateAssetInProjectWindow<EditorSceneSetup>("SceneSet Icon", "New SceneSetup.asset");
         }
         
         public int ActiveScene;
