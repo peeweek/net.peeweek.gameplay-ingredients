@@ -19,7 +19,7 @@ namespace GameplayIngredients
 
         private Coroutine m_Coroutine;
 
-        public void Fade(float duration, FadeMode mode, Callable[] OnComplete)
+        public void Fade(float duration, FadeMode mode, Callable[] OnComplete, GameObject instigator = null)
         {
             if (m_Coroutine != null)
             {
@@ -42,17 +42,17 @@ namespace GameplayIngredients
                 }
                 FullScreenFadePlane.gameObject.SetActive(color.a == 1.0f);
                 FullScreenFadePlane.color = color;
-                Callable.Call(OnComplete);
+                Callable.Call(OnComplete, instigator);
             }
             else
             {
                 switch (mode)
                 {
                     case FadeMode.ToBlack:
-                        m_Coroutine = StartCoroutine(FadeCoroutine(duration, 1.0f, 1.0f, OnComplete));
+                        m_Coroutine = StartCoroutine(FadeCoroutine(duration, 1.0f, 1.0f, OnComplete, instigator));
                         break;
                     case FadeMode.FromBlack:
-                        m_Coroutine = StartCoroutine(FadeCoroutine(duration, 0.0f, -1.0f, OnComplete));
+                        m_Coroutine = StartCoroutine(FadeCoroutine(duration, 0.0f, -1.0f, OnComplete, instigator));
                         break;
                     default: throw new NotImplementedException();
                 }
@@ -60,7 +60,7 @@ namespace GameplayIngredients
 
         }
 
-        IEnumerator FadeCoroutine(float duration, float target, float sign, Callable[] OnComplete)
+        IEnumerator FadeCoroutine(float duration, float target, float sign, Callable[] OnComplete, GameObject instigator)
         {
             FullScreenFadePlane.gameObject.SetActive(true);
             Color c = FullScreenFadePlane.color;
@@ -76,7 +76,7 @@ namespace GameplayIngredients
             Color finalColor = FullScreenFadePlane.color;
             finalColor.a = target;
             FullScreenFadePlane.color = finalColor;
-            Callable.Call(OnComplete);
+            Callable.Call(OnComplete, instigator);
             FullScreenFadePlane.gameObject.SetActive(target != 0.0f);
 
             yield return new WaitForEndOfFrame();
