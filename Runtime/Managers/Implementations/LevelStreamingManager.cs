@@ -108,7 +108,7 @@ namespace GameplayIngredients.LevelStreaming
                 yield return new WaitForEndOfFrame();
 
             // Then change active scene
-            if (sceneToActivate != "")
+            if (!string.IsNullOrEmpty(sceneToActivate) )
             {
                 var newActive = SceneManager.GetSceneByName(sceneToActivate);
                 SceneManager.SetActiveScene(newActive);
