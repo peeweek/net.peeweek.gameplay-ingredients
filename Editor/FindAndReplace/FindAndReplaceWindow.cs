@@ -111,6 +111,8 @@ namespace GameplayIngredients.Editor
         bool replaceLayer = true;
         [SerializeField]
         bool replaceStatic = false;
+        [SerializeField]
+        bool unpackPrefab = false;
 
         enum SearchOp
         {
@@ -170,7 +172,8 @@ namespace GameplayIngredients.Editor
                 replaceName = GUILayout.Toggle(replaceName, "Name", EditorStyles.miniButtonLeft, GUILayout.Height(16));
                 replaceTag = GUILayout.Toggle(replaceTag, "Tag", EditorStyles.miniButtonMid, GUILayout.Height(16));
                 replaceLayer = GUILayout.Toggle(replaceLayer, "Layer", EditorStyles.miniButtonMid, GUILayout.Height(16));
-                replaceStatic = GUILayout.Toggle(replaceStatic, "Static Flag", EditorStyles.miniButtonRight, GUILayout.Height(16));
+                replaceStatic = GUILayout.Toggle(replaceStatic, "Static", EditorStyles.miniButtonMid, GUILayout.Height(16));
+                unpackPrefab = GUILayout.Toggle(unpackPrefab, "Unpack Prefab", EditorStyles.miniButtonRight, GUILayout.Height(16));
             }
 
             if (GUILayout.Button("Replace All", Styles.bigButton, GUILayout.Height(24)) && prefabReplacement != null)
@@ -189,7 +192,12 @@ namespace GameplayIngredients.Editor
 
         GameObject SwapObject(GameObject toReplace, GameObject replacement, List<GameObject> others)
         {
-            var newObj = Instantiate<GameObject>(replacement);
+            GameObject newObj;
+
+            if (PrefabUtility.GetPrefabAssetType(replacement) != PrefabAssetType.NotAPrefab && !unpackPrefab)
+                newObj = (GameObject)PrefabUtility.InstantiatePrefab(replacement);
+            else
+                newObj = (GameObject)Instantiate<GameObject>(replacement);
 
             if (replaceName)
                 newObj.name = replacement.name;
