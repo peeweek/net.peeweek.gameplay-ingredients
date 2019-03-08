@@ -31,6 +31,14 @@ namespace GameplayIngredients.Editor
             return PlayFromHere.IsReady;
         }
 
+        #region EXCLUSION LIST
+        [MenuItem("Assets/Create/Gameplay Ingredients/Manager Exclusion List")]
+        static void CreateExclusionList()
+        {
+            AssetFactory.CreateAssetInProjectWindow<ManagerExclusionList>(string.Empty, "ManagerExclusionList.asset");
+        }
+        #endregion
+
         #region GROUP_UNGROUP
 
         const int kGroupMenuIndex = 500;

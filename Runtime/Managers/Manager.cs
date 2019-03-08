@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -23,9 +23,16 @@ namespace GameplayIngredients
         [RuntimeInitializeOnLoadMethod]
         static void AutoCreateAll()
         {
+            var exclusionList = Resources.Load<ManagerExclusionList>("ManagerExclusionList");
+
             Debug.Log("Initializing all Managers...");
             foreach(var type in kAllManagerTypes)
             {
+                if(exclusionList != null && exclusionList.ExcludedManagers.ToList().Contains(type.Name))
+                {
+                    Debug.LogWarning($"Found Manager : {type.Name} in Exclusion List, ignoring Creation");
+                    continue;
+                }
                 var attrib =type.GetCustomAttribute<ManagerDefaultPrefabAttribute>(); 
                 GameObject gameObject;
 
