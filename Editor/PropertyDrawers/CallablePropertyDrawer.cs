@@ -17,6 +17,12 @@ namespace GameplayIngredients.Editor
                 setNextObjectValue = null;
             }
 
+            if(property.objectReferenceValue == null)
+            {
+                GUI.backgroundColor = Color.red;
+                EditorGUI.DrawRect(position, new Color(1.0f,0,0,0.25f));
+            }
+
             var pickRect = new Rect(position);
             pickRect.xMin = pickRect.xMax - 184;
             pickRect.xMax -= 30;
@@ -26,6 +32,8 @@ namespace GameplayIngredients.Editor
 
             var objRect = new Rect(position);
             objRect.xMax -= 188;
+
+
 
             var obj = EditorGUI.ObjectField(objRect, property.objectReferenceValue, typeof(Callable), true);
 
@@ -51,6 +59,9 @@ namespace GameplayIngredients.Editor
                 GUI.Label(pickRect, "No Callable Selected", EditorStyles.popup);
                 EditorGUI.EndDisabledGroup();
             }
+            
+            GUI.backgroundColor = Color.white;
+            
         }
 
         void ShowMenu(SerializedProperty property)
