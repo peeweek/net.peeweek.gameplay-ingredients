@@ -14,7 +14,8 @@ namespace GameplayIngredients.Logic
             Greater,
             GreaterOrEqual,
             Less,
-            LessOrEqual
+            LessOrEqual,
+            Exists
         }
 
         public Evaluation Test = Evaluation.Equal;
@@ -22,64 +23,92 @@ namespace GameplayIngredients.Logic
         public GameSaveManager.ValueType ValueType = GameSaveManager.ValueType.String;
         public string Key = "SomeKey";
 
+        bool isBool() {return ValueType == GameSaveManager.ValueType.Bool;}
+        bool isInt() {return ValueType == GameSaveManager.ValueType.Int;}
+        bool isFloat() {return ValueType == GameSaveManager.ValueType.Float;}
+        bool isString() {return ValueType == GameSaveManager.ValueType.String;}
+
+        [ShowIf("isBool")]
         public bool BoolTargetValue;
+        [ShowIf("isInt")]
         public int IntTargetValue;
+        [ShowIf("isFloat")]
         public float FloatTargetValue;
+        [ShowIf("isString")]
         public string StringTargetValue;
 
         [ReorderableList]
         public Callable[] OnTestSuccess;
         [ReorderableList]
-        public Callable[] OnTesFail;
+        public Callable[] OnTestFail;
 
         public override void Execute(GameObject instigator = null)
         {
             var gsm = Manager.Get<GameSaveManager>();
             bool result = false;
 
-            switch(ValueType)
+            if(Test == Evaluation.Exists)
             {
-                case GameSaveManager.ValueType.Bool:
-                    if (!gsm.HasBool(Key, SaveLocation))
-                    {
-                        WarnNotExist(Key, ValueType, SaveLocation); 
-                    }
-                    else
-                    {
-                        result = TestValue(gsm.GetBool(Key, SaveLocation), BoolTargetValue);
-                    }
-                    break;
-                case GameSaveManager.ValueType.Int:
-                    if (!gsm.HasInt(Key, SaveLocation))
-                    {
-                        WarnNotExist(Key, ValueType, SaveLocation); 
-                    }
-                    else
-                    {
-                        result = TestValue(gsm.GetInt(Key, SaveLocation), IntTargetValue);
-                    }
-                    break;
-                case GameSaveManager.ValueType.Float:
-                    if (!gsm.HasFloat(Key, SaveLocation))
-                    {
-                        WarnNotExist(Key, ValueType, SaveLocation); 
-                    }
-                    else
-                    {
-                        result = TestValue(gsm.GetFloat(Key, SaveLocation), FloatTargetValue);
-                    }
-                    break;
-                case GameSaveManager.ValueType.String:
-                    if (!gsm.HasSting(Key, SaveLocation))
-                    {
-                        WarnNotExist(Key, ValueType, SaveLocation); 
-                    }
-                    else
-                    {
-                        result = TestValue(gsm.GetString(Key, SaveLocation), StringTargetValue);
-                    }
-                    break;
+                switch(ValueType)
+                {
+                    case GameSaveManager.ValueType.Bool: result = gsm.HasBool(Key, SaveLocation); break;
+                    case GameSaveManager.ValueType.Float: result = gsm.HasFloat(Key, SaveLocation); break;
+                    case GameSaveManager.ValueType.Int: result = gsm.HasInt(Key, SaveLocation); break;
+                    case GameSaveManager.ValueType.String: result = gsm.HasString(Key, SaveLocation); break;
+                }
+
             }
+            else
+            {
+                switch(ValueType)
+                {
+                    case GameSaveManager.ValueType.Bool:
+                        if (!gsm.HasBool(Key, SaveLocation))
+                        {
+                            WarnNotExist(Key, ValueType, SaveLocation); 
+                        }
+                        else
+                        {
+                            result = TestValue(gsm.GetBool(Key, SaveLocation), BoolTargetValue);
+                        }
+                        break;
+                    case GameSaveManager.ValueType.Int:
+                        if (!gsm.HasInt(Key, SaveLocation))
+                        {
+                            WarnNotExist(Key, ValueType, SaveLocation); 
+                        }
+                        else
+                        {
+                            result = TestValue(gsm.GetInt(Key, SaveLocation), IntTargetValue);
+                        }
+                        break;
+                    case GameSaveManager.ValueType.Float:
+                        if (!gsm.HasFloat(Key, SaveLocation))
+                        {
+                            WarnNotExist(Key, ValueType, SaveLocation); 
+                        }
+                        else
+                        {
+                            result = TestValue(gsm.GetFloat(Key, SaveLocation), FloatTargetValue);
+                        }
+                        break;
+                    case GameSaveManager.ValueType.String:
+                        if (!gsm.HasString(Key, SaveLocation))
+                        {
+                            WarnNotExist(Key, ValueType, SaveLocation); 
+                        }
+                        else
+                        {
+                            result = TestValue(gsm.GetString(Key, SaveLocation), StringTargetValue);
+                        }
+                        break;
+                }
+            }
+
+            if (result)
+                Callable.Call(OnTestSuccess, instigator);
+            else
+                Callable.Call(OnTestFail, instigator);
 
         }
 

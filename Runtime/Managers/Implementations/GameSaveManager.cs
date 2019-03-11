@@ -79,7 +79,7 @@ namespace GameplayIngredients
         public bool HasBool(string name, Location location) { return HasValue<bool>(name, location); }
         public bool HasInt(string name, Location location) { return HasValue<int>(name, location); }
         public bool HasFloat(string name, Location location) { return HasValue<float>(name, location); }
-        public bool HasSting(string name, Location location) { return HasValue<string>(name, location); }
+        public bool HasString(string name, Location location) { return HasValue<string>(name, location); }
 
         public bool GetBool(string name, Location location) { return GetValue<bool>(name, location); }
         public int GetInt(string name, Location location) { return GetValue<int>(name, location); }
