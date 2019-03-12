@@ -48,7 +48,7 @@ namespace GameplayIngredients.Editor
                     }
 
                     int newIdx = EditorGUI.IntPopup(position, new GUIContent(property.displayName), selected, labels, indices);
-                    if (GUI.changed && newIdx > 0 && stateMachine.States[newIdx] != null)
+                    if (GUI.changed && newIdx >= 0 && stateMachine.States[newIdx] != null)
                     {
                         property.stringValue = stateMachine.States[newIdx].StateName;
                     }

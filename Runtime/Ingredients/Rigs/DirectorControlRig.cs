@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
+using NaughtyAttributes;
 
 namespace GameplayIngredients.Rigs
 {
@@ -33,6 +34,7 @@ namespace GameplayIngredients.Rigs
         
         public PlayMode playMode { get { return m_PlayMode; } set { m_PlayMode = value; } }
         public float stopTime { get { return m_StopTime; } set { m_StopTime = value; } }
+        [ShowNativeProperty]
         public float time { get { return (float)director.time; } set { director.time = value; } }
         public TimelineAsset timeline { get { return director.playableAsset as TimelineAsset; } set { director.playableAsset = value; } }
 
