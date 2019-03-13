@@ -13,7 +13,7 @@ namespace GameplayIngredients.Editor
         const int kPlayMenuPriority = 160;
         const int kMenuPriority = 330;
 
-        [MenuItem("Edit/Select None &D", priority = kSelectMenuPriority)]
+        [MenuItem("Edit/Unelect All #D", priority = kSelectMenuPriority)]
         static void UnselectAll()
         {
             Selection.activeObject = null;
