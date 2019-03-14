@@ -64,6 +64,14 @@ namespace GameplayIngredients
             }
         }
 
+        public void SetTarget(GameObject target)
+        {
+            if(target != null)
+            {
+                SpawnTarget = target;
+            }
+        }
+
         public void Spawn()
         {
             if(SpawnTarget == null || FactoryBlueprints == null  || FactoryBlueprints.Length == 0)
