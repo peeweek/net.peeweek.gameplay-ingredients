@@ -11,7 +11,7 @@ namespace GameplayIngredients.Rigs
         public float Dampen = 1.0f;
         public float MaximumVelocity = 1.0f;
 
-        void Update()
+        void LateUpdate()
         {
             if(m_Target != null)
             {
