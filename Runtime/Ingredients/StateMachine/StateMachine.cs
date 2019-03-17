@@ -10,7 +10,7 @@ namespace GameplayIngredients.StateMachines
         [StateMachineState]
         public string DefaultState;
 
-        [ReorderableList]
+        [ReorderableList, NonNullCheck]
         public State[] States;
 
         State m_CurrentState;
@@ -18,7 +18,10 @@ namespace GameplayIngredients.StateMachines
         void Start()
         {
             foreach (var state in States)
-                state.gameObject.SetActive(false);
+            {
+                if(state.gameObject.activeSelf)
+                    state.gameObject.SetActive(false);
+            }
 
             SetState(DefaultState);
         }
