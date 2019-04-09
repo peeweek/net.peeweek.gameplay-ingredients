@@ -4,6 +4,8 @@ namespace GameplayIngredients.Interactions
 {
     public static class InteractionManager
     {
+        public static IEnumerable<Interactive> interactives { get { return s_Interactives; } }
+
         static List<Interactive> s_Interactives = new List<Interactive>();
         
         public static void RegisterInteractive(Interactive interactive)
@@ -25,7 +27,7 @@ namespace GameplayIngredients.Interactions
             }
         }
 
-        private static Interactive[] GetCandidates(InteractiveUser user)
+        public static Interactive[] GetCandidates(InteractiveUser user)
         {
             List<Interactive> candidates = new List<Interactive>();
 
@@ -39,5 +41,6 @@ namespace GameplayIngredients.Interactions
 
             return user.SortCandidates(candidates.ToArray());
         }
+
     }
 }

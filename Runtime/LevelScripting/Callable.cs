@@ -20,8 +20,8 @@ namespace GameplayIngredients
         {
             foreach (var call in calls)
             {
-                if(Debug.isDebugBuild || Application.isEditor)
-                    Debug.Log($"Callable : {call.gameObject.name} :> {call.GetType().Name} ({call.Name})");
+                if (Debug.isDebugBuild || Application.isEditor)
+                    Debug.Log($"[CALL] : {call.gameObject.scene.name} : {call.gameObject.name} :> {call.GetType().Name} ({call.Name})");
 
                 if(call != null)
                     call.Execute(instigator);

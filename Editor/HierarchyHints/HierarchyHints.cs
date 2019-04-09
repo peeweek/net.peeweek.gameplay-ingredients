@@ -91,7 +91,7 @@ namespace GameplayIngredients.Editor
             if (!Active) return;
 
             var fullRect = selectionRect;
-            fullRect.xMin = 0;
+            fullRect.xMin = 24;
             fullRect.xMax = EditorGUIUtility.currentViewWidth;
             GameObject o = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             if (o == null) return;
@@ -99,7 +99,7 @@ namespace GameplayIngredients.Editor
             var c = GUI.color;
             if (o.isStatic)
             {
-                GUI.Label(fullRect, "(s)");
+                GUI.Label(fullRect, " S");
                 EditorGUI.DrawRect(fullRect, Colors.dimGray);
             }
 
