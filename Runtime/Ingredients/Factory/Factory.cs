@@ -72,6 +72,14 @@ namespace GameplayIngredients
             }
         }
 
+        public GameObject GetInstance(int index)
+        {
+            if (m_Instances.Count > index)
+                return m_Instances[index];
+            else
+                return null;
+        }
+
         public void Spawn()
         {
             if(SpawnTarget == null || FactoryBlueprints == null  || FactoryBlueprints.Length == 0)
@@ -109,7 +117,7 @@ namespace GameplayIngredients
 
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if(m_Instances != null)
             {
@@ -125,7 +133,9 @@ namespace GameplayIngredients
                 foreach (var index in todelete)
                 {
                     m_Instances.RemoveAt(index);
-                    AddRespawnCoroutine();
+
+                    if(RespawnTarget)
+                        AddRespawnCoroutine();
                 }
             }
         }
