@@ -1,8 +1,9 @@
 {
     "name": "GameplayIngredients",
     "references": [
-        "NaughtyAttributes",
-        "Cinemachine"
+        "GUID:8159fdb6c7801b34fb01c3bf046a6e57",
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:f06555f75b070af458a003d92f9efb00"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
@@ -11,5 +12,6 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": []
+    "defineConstraints": [],
+    "versionDefines": []
 }
