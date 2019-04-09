@@ -109,7 +109,7 @@ namespace GameplayIngredients
 
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if(m_Instances != null)
             {
@@ -125,7 +125,9 @@ namespace GameplayIngredients
                 foreach (var index in todelete)
                 {
                     m_Instances.RemoveAt(index);
-                    AddRespawnCoroutine();
+
+                    if(RespawnTarget)
+                        AddRespawnCoroutine();
                 }
             }
         }
