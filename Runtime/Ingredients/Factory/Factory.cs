@@ -72,6 +72,14 @@ namespace GameplayIngredients
             }
         }
 
+        public GameObject GetInstance(int index)
+        {
+            if (m_Instances.Count > index)
+                return m_Instances[index];
+            else
+                return null;
+        }
+
         public void Spawn()
         {
             if(SpawnTarget == null || FactoryBlueprints == null  || FactoryBlueprints.Length == 0)
