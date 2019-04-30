@@ -2,7 +2,6 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Linq;
@@ -15,7 +14,8 @@ namespace GameplayIngredients.LevelStreaming
         public enum StreamingAction
         {
             Load,
-            Unload
+            Unload,
+            Replace
         }
 
         [Header("UI Configuration")]
@@ -38,8 +38,7 @@ namespace GameplayIngredients.LevelStreaming
         private float[] percentages;
         private AsyncOperation[] asyncOperations;
 
-
-        public void LoadScenes(StreamingAction action, string[] scenes, string sceneToActivate, bool showUI, Callable[] onLoadComplete)
+        public void LoadScenes(StreamingAction action, string[] scenes, string sceneToActivate, bool showUI, Callable[] onLoadComplete, bool replace = false)
         {
             if (EnableDebug)
                 DebugText.gameObject.SetActive(true);
@@ -51,6 +50,7 @@ namespace GameplayIngredients.LevelStreaming
                 if (
                         (SceneManager.GetSceneByName(scene).isLoaded && action == StreamingAction.Unload)
                     || (!SceneManager.GetSceneByName(scene).isLoaded && action == StreamingAction.Load)
+                    || (action == StreamingAction.Replace)
                     )
                 {
                     requiredScenes.Add(scene);
@@ -58,8 +58,6 @@ namespace GameplayIngredients.LevelStreaming
             }
 
             int count = requiredScenes.Count;
-            percentages = new float[count];
-            asyncOperations = new AsyncOperation[count];
 
             if (showUI)
                 LoadingRoot.SetActive(true);
@@ -84,14 +82,24 @@ namespace GameplayIngredients.LevelStreaming
         IEnumerator LoadScenesCoroutine(StreamingAction action, List<string> scenes, string sceneToActivate, bool showUI, Callable[] onLoadComplete)
         {
             LogDebugInformation("START LOAD/UNLOAD FOR LEVELS...");
+            LoadingText.text = "Loading...";
             SetProgressBar(0.0f, true);
             yield return new WaitForEndOfFrame();
 
-            if(DelayBeforeLoad >= 0.0f)
+            if (DelayBeforeLoad >= 0.0f)
                 yield return new WaitForSeconds(DelayBeforeLoad);
+
+            int count = scenes.Count;
+
+            percentages = new float[count];
+            asyncOperations = new AsyncOperation[count];
 
             switch (action)
             {
+                case StreamingAction.Replace:
+                    LogDebugInformation("[*] ASYNC REPLACE FOR: " + scenes);
+                    StartCoroutine(LoadLevelCoroutine(scenes, sceneToActivate));
+                    break;
                 case StreamingAction.Load:
                     LogDebugInformation("[*] ASYNC LOAD FOR: " + scenes);
                     StartCoroutine(LoadLevelCoroutine(scenes));
@@ -103,12 +111,18 @@ namespace GameplayIngredients.LevelStreaming
                 default: throw new NotImplementedException("LoadScenesCoroutine does not handle mode " + action.ToString());
             }
 
+            if(action == StreamingAction.Replace)
+            {
+                while (!asyncOperations[0].isDone)
+                    yield return new WaitForEndOfFrame();
+            }
+
             // Wait for all scenes to be loaded
             while (asyncOperations.Any(a => !a.isDone))
                 yield return new WaitForEndOfFrame();
 
             // Then change active scene
-            if (!string.IsNullOrEmpty(sceneToActivate) )
+            if (!string.IsNullOrEmpty(sceneToActivate) && action != StreamingAction.Replace)
             {
                 var newActive = SceneManager.GetSceneByName(sceneToActivate);
                 SceneManager.SetActiveScene(newActive);
@@ -135,19 +149,35 @@ namespace GameplayIngredients.LevelStreaming
         {
             for (int i = 0; i < asyncOperations.Length; i++)
                 percentages[i] = asyncOperations[i].progress;
+
             float percentage = percentages.Sum() / percentages.Length;
             SetProgressBar(percentage);
         }
 
-        private IEnumerator LoadLevelCoroutine(List<string> sceneNames)
+        private IEnumerator LoadLevelCoroutine(List<string> sceneNames, string singleScene = "")
         {
-            for (int i = 0; i < sceneNames.Count; i++)
+            // Manage Single Scene Loading
+            int offset = 0;
+            if (sceneNames.Contains(singleScene))
             {
-                asyncOperations[i] = SceneManager.LoadSceneAsync(sceneNames[i], LoadSceneMode.Additive);
-                asyncOperations[i].allowSceneActivation = false;
+                asyncOperations[0] = SceneManager.LoadSceneAsync(singleScene, LoadSceneMode.Single);
+                asyncOperations[0].allowSceneActivation = true;
+                sceneNames.Remove(singleScene);
+
+                while (!asyncOperations[0].isDone)
+                {
+                    SetProgressBar(asyncOperations[0].progress / sceneNames.Count);
+                    yield return new WaitForEndOfFrame();
+                }
+
+                offset = 1;
             }
 
-            LoadingText.text = "Loading...";
+            for (int i = 0; i < sceneNames.Count; i++)
+            {
+                asyncOperations[i + offset] = SceneManager.LoadSceneAsync(sceneNames[i], LoadSceneMode.Additive);
+                asyncOperations[i + offset].allowSceneActivation = false;
+            }
 
             while (asyncOperations.Any(a => a.progress < 0.9f))
             {
