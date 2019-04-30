@@ -54,7 +54,7 @@ namespace GameplayIngredients
 
         private void OnDestroy()
         {
-            if(ReapInstancesOnDestroy)
+            if(ReapInstancesOnDestroy && m_Instances != null)
             {
                 foreach(var instance in m_Instances)
                 {
