@@ -6,8 +6,8 @@ namespace GameplayIngredients.Controllers
 {
     public class KeyboardGamepadPlayerInput : PlayerInput
     {
-        public bool useKeyboardAndMouse = true;
-        public bool useGamepad = true;
+        public bool useKeyboardAndMouse { get; set; } = true;
+        public bool useGamepad { get; set; } = true;
 
         [Header("Behaviour")]
         public float LookExponent = 2.0f;

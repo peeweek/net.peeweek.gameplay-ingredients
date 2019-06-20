@@ -166,7 +166,7 @@ namespace GameplayIngredients.LevelStreaming
 
                 while (!asyncOperations[0].isDone)
                 {
-                    SetProgressBar(asyncOperations[0].progress / sceneNames.Count);
+                    SetProgressBar(asyncOperations[0].progress / Math.Max(sceneNames.Count,1));
                     yield return new WaitForEndOfFrame();
                 }
 

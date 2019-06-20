@@ -2,9 +2,9 @@
     "name": "GameplayIngredients-Editor",
     "references": [
         "NaughtyAttributes",
-        "GameplayIngredients"
+        "GameplayIngredients",
+        "Unity.ugui"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"
     ],
@@ -13,5 +13,6 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": []
+    "defineConstraints": [],
+    "versionDefines": []
 }

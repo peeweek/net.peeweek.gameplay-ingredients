@@ -118,7 +118,7 @@ namespace GameplayIngredients.Editor
             }
 
             // If we have a VirtualCameraManager, manage its state here
-            if(Manager.Get<VirtualCameraManager>() != null)
+            if(Application.isPlaying && Manager.Get<VirtualCameraManager>() != null)
             {
                 var camera = Manager.Get<VirtualCameraManager>().gameObject;
 

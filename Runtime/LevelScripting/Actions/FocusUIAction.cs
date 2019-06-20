@@ -10,7 +10,9 @@ namespace GameplayIngredients.Actions
         public override void Execute(GameObject instigator = null)
         {
             if (UIObjectToFocus != null)
+            {
                 UIObjectToFocus.Select();
+            }
         }
     }
 }

@@ -4,12 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Experimental.VFX;
 using UnityEditor;
-using GameplayIngredients;
+using GameplayIngredients.StateMachines;
 using UnityEngine.Playables;
 
 namespace GameplayIngredients.Editor
 {
-
     [InitializeOnLoad]
     public static class HierarchyHints
     {
@@ -84,6 +83,8 @@ namespace GameplayIngredients.Editor
             { typeof(Image), "Image Icon"},
             { typeof(Text), "Text Icon"},
             { typeof(Button), "Button Icon"},
+            { typeof(StateMachine), "Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-StateMachine.png"},
+            { typeof(State), "Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-State.png"},
         };
 
         static void HierarchyOnGUI(int instanceID, Rect selectionRect)
@@ -91,7 +92,7 @@ namespace GameplayIngredients.Editor
             if (!Active) return;
 
             var fullRect = selectionRect;
-            fullRect.xMin = 24;
+            fullRect.xMin = 16;
             fullRect.xMax = EditorGUIUtility.currentViewWidth;
             GameObject o = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             if (o == null) return;
@@ -126,7 +127,16 @@ namespace GameplayIngredients.Editor
 
             public static void AddIcon(Type type, string IconName)
             {
-                s_Icons.Add(type, EditorGUIUtility.IconContent(IconName));
+                GUIContent icon;
+
+                Texture texture = AssetDatabase.LoadAssetAtPath<Texture>(IconName);
+
+                if (texture == null)
+                    icon = EditorGUIUtility.IconContent(IconName);
+                else
+                    icon = new GUIContent(texture);
+
+                s_Icons.Add(type, icon);
             }
 
             public static GUIContent GetContent(Type t)

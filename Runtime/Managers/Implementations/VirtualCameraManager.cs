@@ -10,26 +10,13 @@ namespace GameplayIngredients
     [ManagerDefaultPrefab("VirtualCameraManager")]
     public class VirtualCameraManager : Manager
     {
-        public Camera Camera
-        {
-            get
-            {
-                return m_Camera;
-            }
-        }
-
-        Camera m_Camera;
-        CinemachineBrain m_Brain;
+        public Camera Camera { get; private set; }
+        public CinemachineBrain Brain { get; private set; }
 
         private void Awake()
         {
-            m_Camera = GetComponent<Camera>();
-            m_Brain = GetComponent<CinemachineBrain>();
-        }
-
-        public void BlendToCamera(CinemachineVirtualCamera camera, float delay)
-        {
-            
+            Camera = GetComponent<Camera>();
+            Brain = GetComponent<CinemachineBrain>();
         }
 
     }
