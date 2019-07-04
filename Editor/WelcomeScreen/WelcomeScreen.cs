@@ -18,10 +18,20 @@ namespace GameplayIngredients.Editor
         static readonly Texture2D header = (Texture2D)EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Editor/WelcomeScreen/welcome-title.png");
 
         [InitializeOnLoadMethod]
-        static void ShowOnStartup()
+        static void InitShowAtStartup()
         {
             if (showOnStartup)
-                GetWindow<WelcomeScreen>(true, "Gameplay Ingredients");
+                EditorApplication.update += ShowAtStartup;
+                
+        }
+
+        static void ShowAtStartup()
+        {
+            if(!Application.isPlaying)
+            {
+                ShowFromMenu();
+            }
+            EditorApplication.update -= ShowAtStartup;
         }
 
         [MenuItem("Window/Gameplay Ingredients/Startup Wizard")]
