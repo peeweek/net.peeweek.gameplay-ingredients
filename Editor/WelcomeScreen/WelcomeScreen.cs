@@ -8,6 +8,8 @@ namespace GameplayIngredients.Editor
     class WelcomeScreen : EditorWindow
     {
         const string kShowOnStartupPreference = "GameplayIngredients.Welcome.ShowAtStartup";
+        const int WindowWidth = 640;
+        const int WindowHeight = 520;
 
         static bool showOnStartup
         {
@@ -42,9 +44,9 @@ namespace GameplayIngredients.Editor
 
         private void OnEnable()
         {
-            this.position = new Rect((Screen.width / 2.0f) - 320, (Screen.height / 2.0f) - 200, 640, 400);
-            this.minSize = new Vector2(640, 400);
-            this.maxSize = new Vector2(640, 400);
+            this.position = new Rect((Screen.width / 2.0f) - WindowWidth/2, (Screen.height / 2.0f) - WindowHeight/2, WindowWidth, WindowHeight);
+            this.minSize = new Vector2(WindowWidth, WindowHeight);
+            this.maxSize = new Vector2(WindowWidth, WindowHeight);
         }
 
         private enum WizardMode
@@ -58,18 +60,21 @@ namespace GameplayIngredients.Editor
 
         private void OnGUI()
         {
-            Rect headerRect = GUILayoutUtility.GetRect(640, 128);
+            Rect headerRect = GUILayoutUtility.GetRect(640, 215);
             GUI.DrawTexture(headerRect, header);
-            GUILayout.Space(8);
-            using (new GUILayout.HorizontalScope())
+            RectOffset headerButtonsOffset = new RectOffset(200, 200, 160, 16);
+            using (new GUILayout.AreaScope(new Rect(160, 180, 320, 32)))
             {
-                GUILayout.FlexibleSpace();
-                if (GUILayout.Button("Tips", Styles.buttonLeft)) wizardMode = WizardMode.TipOfTheDay;
-                EditorGUI.BeginDisabledGroup(true);
-                if (GUILayout.Button("Setup", Styles.buttonMid)) wizardMode = WizardMode.FirstTimeSetup;
-                if (GUILayout.Button("Configuration", Styles.buttonRight)) wizardMode = WizardMode.Configuration;
-                EditorGUI.EndDisabledGroup();
-                GUILayout.FlexibleSpace();
+                using (new GUILayout.HorizontalScope())
+                {
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("  Tips  ", Styles.buttonLeft)) wizardMode = WizardMode.TipOfTheDay;
+                    EditorGUI.BeginDisabledGroup(true);
+                    if (GUILayout.Button("  Setup  ", Styles.buttonMid)) wizardMode = WizardMode.FirstTimeSetup;
+                    if (GUILayout.Button("  Configuration  ", Styles.buttonRight)) wizardMode = WizardMode.Configuration;
+                    EditorGUI.EndDisabledGroup();
+                    GUILayout.FlexibleSpace();
+                }
             }
             GUILayout.Space(8);
 
@@ -87,7 +92,7 @@ namespace GameplayIngredients.Editor
             EditorGUI.DrawRect(line, Color.black);
             using (new GUILayout.HorizontalScope())
             {
-                showOnStartup = GUILayout.Toggle(showOnStartup, "Show this window on startup");
+                showOnStartup = GUILayout.Toggle(showOnStartup, " Show this window on startup");
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button("Close"))
                 {
@@ -129,10 +134,12 @@ namespace GameplayIngredients.Editor
         void FirstTimeSetupGUI()
         {
             GUILayout.Label("First Time Setup", EditorStyles.boldLabel);
+            GUILayout.FlexibleSpace();
         }
         void ConfigurationGUI()
         {
             GUILayout.Label("Configuration", EditorStyles.boldLabel);
+            GUILayout.FlexibleSpace();
         }
 
         struct Tip
