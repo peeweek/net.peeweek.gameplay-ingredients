@@ -15,7 +15,10 @@ namespace GameplayIngredients
             if(s_Managers.ContainsKey(typeof(T)))
                 return (T)s_Managers[typeof(T)];
             else
+            {
+                Debug.LogError($"Manager of type '{typeof(T)}' could not be accessed. Check the excludedManagers list in your GameplayIngredientsSettings configuration file.");
                 return null;
+            }
         }
 
         static readonly Type[] kAllManagerTypes = GetAllManagerTypes();
@@ -23,17 +26,17 @@ namespace GameplayIngredients
         [RuntimeInitializeOnLoadMethod]
         static void AutoCreateAll()
         {
-            var exclusionList = Resources.Load<ManagerExclusionList>("ManagerExclusionList");
+            var exclusionList = GameplayIngredientsSettings.currentSettings.excludedeManagers;
 
             Debug.Log("Initializing all Managers...");
             foreach(var type in kAllManagerTypes)
             {
-                if(exclusionList != null && exclusionList.ExcludedManagers.ToList().Contains(type.Name))
+                if(exclusionList != null && exclusionList.ToList().Contains(type.Name))
                 {
-                    Debug.LogWarning($"Found Manager : {type.Name} in Exclusion List, ignoring Creation");
+                    Debug.Log($"Manager : {type.Name} is in GameplayIngredientSettings.excludedeManagers List: ignoring Creation");
                     continue;
                 }
-                var attrib =type.GetCustomAttribute<ManagerDefaultPrefabAttribute>(); 
+                var attrib = type.GetCustomAttribute<ManagerDefaultPrefabAttribute>(); 
                 GameObject gameObject;
 
                 if(attrib != null)

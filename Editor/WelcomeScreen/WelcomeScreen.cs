@@ -47,6 +47,14 @@ namespace GameplayIngredients.Editor
             this.position = new Rect((Screen.width / 2.0f) - WindowWidth/2, (Screen.height / 2.0f) - WindowHeight/2, WindowWidth, WindowHeight);
             this.minSize = new Vector2(WindowWidth, WindowHeight);
             this.maxSize = new Vector2(WindowWidth, WindowHeight);
+
+            if (!GameplayIngredientsSettings.hasSettingAsset)
+                wizardMode = WizardMode.FirstTimeSetup;
+        }
+
+        private void OnDestroy()
+        {
+            EditorApplication.update -= ShowAtStartup;
         }
 
         private enum WizardMode
@@ -56,6 +64,7 @@ namespace GameplayIngredients.Editor
             Configuration = 2,
         }
 
+        [SerializeField]
         private WizardMode wizardMode = WizardMode.TipOfTheDay;
 
         private void OnGUI()
@@ -69,8 +78,8 @@ namespace GameplayIngredients.Editor
                 {
                     GUILayout.FlexibleSpace();
                     if (GUILayout.Button("  Tips  ", Styles.buttonLeft)) wizardMode = WizardMode.TipOfTheDay;
-                    EditorGUI.BeginDisabledGroup(true);
                     if (GUILayout.Button("  Setup  ", Styles.buttonMid)) wizardMode = WizardMode.FirstTimeSetup;
+                    EditorGUI.BeginDisabledGroup(true);
                     if (GUILayout.Button("  Configuration  ", Styles.buttonRight)) wizardMode = WizardMode.Configuration;
                     EditorGUI.EndDisabledGroup();
                     GUILayout.FlexibleSpace();
@@ -109,9 +118,9 @@ namespace GameplayIngredients.Editor
             using (new GUILayout.VerticalScope(EditorStyles.helpBox))
             {
                 var tip = tips[tipIndex];
-                GUILayout.Label(tip.Title, Styles.tipTitle);
+                GUILayout.Label(tip.Title, Styles.title);
                 GUILayout.Space(12);
-                GUILayout.Label(tip.Body, Styles.tipBody);
+                GUILayout.Label(tip.Body, Styles.body);
                 GUILayout.FlexibleSpace();
                 using (new GUILayout.HorizontalScope())
                 {
@@ -134,7 +143,31 @@ namespace GameplayIngredients.Editor
         void FirstTimeSetupGUI()
         {
             GUILayout.Label("First Time Setup", EditorStyles.boldLabel);
-            GUILayout.FlexibleSpace();
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                GUILayout.Label("Welcome to Gameplay Ingredients !", Styles.title);
+                GUILayout.Space(12);
+                GUILayout.Label(@"This wizard will help you set up your project so you can use and customize scripts.
+
+GameplayIngredients is a framework that comes with a variety of features : these can be configured in a <b>GameplayIngredientsSettings</b> asset.
+
+This asset needs to be stored in a Resources folder.
+While this is not mandatory we advise you to create it in order to be able to modify it.
+", Styles.body);
+                GUILayout.Space(8);
+                using (new GUILayout.HorizontalScope())
+                {
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("Create GameplayIngredientsSettings Asset"))
+                    {
+                        GameplayIngredientsSettings asset = Instantiate<GameplayIngredientsSettings>(GameplayIngredientsSettings.defaultSettings);
+                        AssetDatabase.CreateAsset(asset, "Assets/Resources/GameplayIngredientsSettings.asset");
+                        Selection.activeObject = asset;
+                    }
+                }
+                GUILayout.FlexibleSpace();
+            }
         }
         void ConfigurationGUI()
         {
@@ -168,8 +201,8 @@ namespace GameplayIngredients.Editor
         public static GUIStyle buttonLeft;
         public static GUIStyle buttonMid;
         public static GUIStyle buttonRight;
-        public static GUIStyle tipTitle;
-        public static GUIStyle tipBody;
+        public static GUIStyle title;
+        public static GUIStyle body;
 
         static Styles()
         {
@@ -180,12 +213,13 @@ namespace GameplayIngredients.Editor
             buttonMid.fontSize = 12;
             buttonRight.fontSize = 12;
 
-            tipTitle = new GUIStyle(EditorStyles.label);    
-            tipTitle.fontSize = 22;
+            title = new GUIStyle(EditorStyles.label);    
+            title.fontSize = 22;
 
-            tipBody = new GUIStyle(EditorStyles.label);
-            tipBody.fontSize = 12;
-            tipBody.wordWrap = true;
+            body = new GUIStyle(EditorStyles.label);
+            body.fontSize = 12;
+            body.wordWrap = true;
+            body.richText = true;
         }
     }
 }

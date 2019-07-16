@@ -21,15 +21,13 @@ namespace GameplayIngredients
         {
             foreach (var call in calls)
             {
-#if CALLABLE_DEBUG
-                if (Debug.isDebugBuild || Application.isEditor)
+                if (GameplayIngredientsSettings.currentSettings.verboseCalls)
                     Debug.Log($"[CALL] : {call.gameObject.scene.name} : {call.gameObject.name} :> {call.GetType().Name} ({call.Name})");
-#endif
 
                 if(call != null)
                     call.Execute(instigator);
                 else
-                    Debug.LogError("Cannot execute call: Null or Missing");
+                    Debug.LogError($"Cannot execute Call: Null or Missing");
             }
         }
 
