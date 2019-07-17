@@ -6,7 +6,7 @@
   "unity": "2019.1",
   "description": "Gameplay ingredients - A Collection of scripts for the editor and runtime to set-up gameplay actions and logic in your games",
   "dependencies": {
-    "com.unity.cinemachine": "2.2.8"
+    "com.unity.cinemachine": "2.3.4"
   },
   "keywords": [
     "Gameplay",
