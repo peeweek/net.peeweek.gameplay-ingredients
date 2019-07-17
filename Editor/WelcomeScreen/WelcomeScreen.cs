@@ -5,7 +5,7 @@ using UnityEditor;
 
 namespace GameplayIngredients.Editor
 {
-    class WelcomeScreen : EditorWindow
+    partial class WelcomeScreen : EditorWindow
     {
         const string kShowOnStartupPreference = "GameplayIngredients.Welcome.ShowAtStartup";
         const int WindowWidth = 640;
@@ -24,19 +24,19 @@ namespace GameplayIngredients.Editor
         {
             if (showOnStartup)
                 EditorApplication.update += ShowAtStartup;
-                
+
         }
 
         static void ShowAtStartup()
         {
-            if(!Application.isPlaying)
+            if (!Application.isPlaying)
             {
                 ShowFromMenu();
             }
             EditorApplication.update -= ShowAtStartup;
         }
 
-        [MenuItem("Window/Gameplay Ingredients/Startup Wizard")]
+        [MenuItem("Window/Gameplay Ingredients")]
         static void ShowFromMenu()
         {
             GetWindow<WelcomeScreen>(true, "Gameplay Ingredients");
@@ -44,12 +44,14 @@ namespace GameplayIngredients.Editor
 
         private void OnEnable()
         {
-            this.position = new Rect((Screen.width / 2.0f) - WindowWidth/2, (Screen.height / 2.0f) - WindowHeight/2, WindowWidth, WindowHeight);
+            this.position = new Rect((Screen.width / 2.0f) - WindowWidth / 2, (Screen.height / 2.0f) - WindowHeight / 2, WindowWidth, WindowHeight);
             this.minSize = new Vector2(WindowWidth, WindowHeight);
             this.maxSize = new Vector2(WindowWidth, WindowHeight);
 
             if (!GameplayIngredientsSettings.hasSettingAsset)
                 wizardMode = WizardMode.FirstTimeSetup;
+
+            InitTips();
         }
 
         private void OnDestroy()
@@ -61,7 +63,7 @@ namespace GameplayIngredients.Editor
         {
             TipOfTheDay = 0,
             FirstTimeSetup = 1,
-            Configuration = 2,
+            About = 2,
         }
 
         [SerializeField]
@@ -77,11 +79,23 @@ namespace GameplayIngredients.Editor
                 using (new GUILayout.HorizontalScope())
                 {
                     GUILayout.FlexibleSpace();
-                    if (GUILayout.Button("  Tips  ", Styles.buttonLeft)) wizardMode = WizardMode.TipOfTheDay;
-                    if (GUILayout.Button("  Setup  ", Styles.buttonMid)) wizardMode = WizardMode.FirstTimeSetup;
-                    EditorGUI.BeginDisabledGroup(true);
-                    if (GUILayout.Button("  Configuration  ", Styles.buttonRight)) wizardMode = WizardMode.Configuration;
-                    EditorGUI.EndDisabledGroup();
+                    bool value = false;
+
+                    value = wizardMode == WizardMode.TipOfTheDay;
+                    value = GUILayout.Toggle(value, "  Tips  ", Styles.buttonLeft); 
+                    if(value)
+                        wizardMode = WizardMode.TipOfTheDay;
+
+                    value = wizardMode == WizardMode.FirstTimeSetup;
+                    value = GUILayout.Toggle(value, "  Setup  ", Styles.buttonMid);
+                    if (value)
+                        wizardMode = WizardMode.FirstTimeSetup;
+
+                    value = wizardMode == WizardMode.About;
+                    value = GUILayout.Toggle(value, "  About  ", Styles.buttonRight);
+                    if(value)
+                        wizardMode = WizardMode.About;
+
                     GUILayout.FlexibleSpace();
                 }
             }
@@ -89,11 +103,14 @@ namespace GameplayIngredients.Editor
 
             switch (wizardMode)
             {
-                case WizardMode.TipOfTheDay: TipOfTheDayGUI();
+                case WizardMode.TipOfTheDay:
+                    OnTipsGUI();
                     break;
-                case WizardMode.FirstTimeSetup: FirstTimeSetupGUI();
+                case WizardMode.FirstTimeSetup:
+                    OnSetupGUI();
                     break;
-                case WizardMode.Configuration: ConfigurationGUI();
+                case WizardMode.About:
+                    OnAboutGUI();
                     break;
             }
 
@@ -110,90 +127,40 @@ namespace GameplayIngredients.Editor
             }
         }
 
-        int tipIndex = 0;
-
-        void TipOfTheDayGUI()
+        void OnAboutGUI()
         {
-            GUILayout.Label("Tip of the Day", EditorStyles.boldLabel);
-            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            GUILayout.Label("About", EditorStyles.boldLabel);
+
+            using (new GUILayout.VerticalScope(Styles.helpBox))
             {
-                var tip = tips[tipIndex];
-                GUILayout.Label(tip.Title, Styles.title);
-                GUILayout.Space(12);
-                GUILayout.Label(tip.Body, Styles.body);
-                GUILayout.FlexibleSpace();
+
+                GUILayout.Label("Gameplay Ingredients", Styles.centeredTitle);
+                GUILayout.Label(@"Simple, Organic, Open Source
+
+A set of Runtime and Editor Tools for your unity prototypes and games. Released under MIT License as a unity package.
+
+This package also makes use of the following third party components:
+* Naughty Attributes by Denis Rizov (https://github.com/dbrizov) 
+* Fugue Icons by Yusuke Kamiyamane (https://p.yusukekamiyamane.com/).
+* Header art background 'Chef's Station' made by Todd Quackenbush, released on unspash.com (https://unsplash.com/photos/x5SRhkFajrA).
+", Styles.centeredBody);
+
                 using (new GUILayout.HorizontalScope())
                 {
                     GUILayout.FlexibleSpace();
-                    if(GUILayout.Button("<<"))
-                    {
-                        tipIndex--;
-                        if (tipIndex < 0)
-                            tipIndex = tips.Count - 1;
-                    }
-                    if(GUILayout.Button(">>"))
-                    {
-                        tipIndex++;
-                        if (tipIndex == tips.Count)
-                            tipIndex = 0;
-                    }
-                }
-            }
-        }
-        void FirstTimeSetupGUI()
-        {
-            GUILayout.Label("First Time Setup", EditorStyles.boldLabel);
+                    if (GUILayout.Button("  Github Page  ", Styles.buttonLeft))
+                        Application.OpenURL("https://github.com/peeweek/net.peeweek.gameplay-ingredients");
+                    if (GUILayout.Button("  Report a Bug  ", Styles.buttonMid))
+                        Application.OpenURL("https://github.com/peeweek/net.peeweek.gameplay-ingredients/issues");
+                    if (GUILayout.Button("  LICENSE  ", Styles.buttonRight))
+                        Application.OpenURL("https://github.com/peeweek/net.peeweek.gameplay-ingredients/blob/master/LICENSE");
 
-            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-            {
-                GUILayout.Label("Welcome to Gameplay Ingredients !", Styles.title);
-                GUILayout.Space(12);
-                GUILayout.Label(@"This wizard will help you set up your project so you can use and customize scripts.
-
-GameplayIngredients is a framework that comes with a variety of features : these can be configured in a <b>GameplayIngredientsSettings</b> asset.
-
-This asset needs to be stored in a Resources folder.
-While this is not mandatory we advise you to create it in order to be able to modify it.
-", Styles.body);
-                GUILayout.Space(8);
-                using (new GUILayout.HorizontalScope())
-                {
                     GUILayout.FlexibleSpace();
-                    if (GUILayout.Button("Create GameplayIngredientsSettings Asset"))
-                    {
-                        GameplayIngredientsSettings asset = Instantiate<GameplayIngredientsSettings>(GameplayIngredientsSettings.defaultSettings);
-                        AssetDatabase.CreateAsset(asset, "Assets/Resources/GameplayIngredientsSettings.asset");
-                        Selection.activeObject = asset;
-                    }
                 }
+
                 GUILayout.FlexibleSpace();
             }
         }
-        void ConfigurationGUI()
-        {
-            GUILayout.Label("Configuration", EditorStyles.boldLabel);
-            GUILayout.FlexibleSpace();
-        }
-
-        struct Tip
-        {
-            public string Title;
-            public string Body;
-        }
-
-        static List<Tip> tips = new List<Tip>()
-        {
-            new Tip(){ Title = "Show Gizmos", Body = "You can toggle Gizmos on and off by using the Ctrl + , key shortcut."},
-            new Tip(){ Title = "Editor Scene Setups", Body = "You can save your current multi-scene setup to an asset by using the File/Save Current Scene Setup As... or create an Editor Scene Setup asset from the Project View. These assets can be double-clicked to restore all scenes at once."},
-            new Tip(){ Title = "Find And Replace", Body = "You can use the Find and Replace window to select, add, and/or refine list of objects in your scene based on different criteria (name, components, etc.). You can then turn this search result into a selection, or replace every object from this list by a prefab or a copy of another game object."},
-            new Tip(){ Title = "Game View Link", Body = "Game View link enables you to link your scene view and your game view. To enable it use Ctrl + . or click the 'Game' button in the additional Scene View toolbar. You can define a prefab (named LinkGameViewCamera) containing a camera to setup this camera (for instance if you use HD Render Pipeline and Postprocessing)"},
-            new Tip(){ Title = "Hierarchy Window Hints", Body = "You can toggle Hierarchy Window hints by selecting them in the Edit menu. These hints will display an icon for most common components on your game object."},
-            new Tip(){ Title = "Scene View POVs", Body = "Scene View POVs enable storing custom point of views in your scenes. To use it, select the POV dropdown in the additional custom toolbar."},
-            new Tip(){ Title = "Selection History", Body = "Selection History keeps track of your previously selected objects. You can also star/unstar objects in order to go back at them more easily"},
-            new Tip(){ Title = "Play From Here", Body = "Play From Here enables a custom callback when starting your Editor Play Session. Implement the callback and use the scene view camera position and forward vector to generate your custom start function."},
-            new Tip(){ Title = "Events, Logic and Actions", Body = "Gameplay Ingredients ships with many Actions, Logic and Events in order to set-up your scenes. Actions perform various actions on your scene objects, Logic trigger actions based on conditions, Events trigger Actions and Logic based on scene interaction (eg: On Trigger Enter)"},
-            new Tip(){ Title = "Managers", Body = "Managers are Monobehaviors that instantiate themselves automatically upon startup. You can define a []"},
-        };
     }
 
     static class Styles
@@ -203,6 +170,10 @@ While this is not mandatory we advise you to create it in order to be able to mo
         public static GUIStyle buttonRight;
         public static GUIStyle title;
         public static GUIStyle body;
+
+        public static GUIStyle centeredTitle;
+        public static GUIStyle centeredBody;
+        public static GUIStyle helpBox;
 
         static Styles()
         {
@@ -216,10 +187,19 @@ While this is not mandatory we advise you to create it in order to be able to mo
             title = new GUIStyle(EditorStyles.label);    
             title.fontSize = 22;
 
+            centeredTitle = new GUIStyle(title);
+            centeredTitle.alignment = TextAnchor.UpperCenter;
+
             body = new GUIStyle(EditorStyles.label);
             body.fontSize = 12;
             body.wordWrap = true;
             body.richText = true;
+
+            centeredBody = new GUIStyle(body);
+            centeredBody.alignment = TextAnchor.UpperCenter;
+
+            helpBox = new GUIStyle(EditorStyles.helpBox);
+            helpBox.padding = new RectOffset(12,12,12,12);
         }
     }
 }
