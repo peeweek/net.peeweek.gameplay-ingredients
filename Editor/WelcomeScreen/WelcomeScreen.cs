@@ -11,6 +11,8 @@ namespace GameplayIngredients.Editor
         const int WindowWidth = 640;
         const int WindowHeight = 520;
 
+        static WelcomeScreen s_Instance;
+
         static bool showOnStartup
         {
             get { return EditorPrefs.GetBool(kShowOnStartupPreference, true); }
@@ -39,7 +41,7 @@ namespace GameplayIngredients.Editor
         [MenuItem("Window/Gameplay Ingredients")]
         static void ShowFromMenu()
         {
-            GetWindow<WelcomeScreen>(true, "Gameplay Ingredients");
+            s_Instance = GetWindow<WelcomeScreen>(true, "Gameplay Ingredients");
         }
 
         private void OnEnable()
@@ -52,6 +54,12 @@ namespace GameplayIngredients.Editor
                 wizardMode = WizardMode.FirstTimeSetup;
 
             InitTips();
+        }
+
+        private void OnDisable()
+        {
+            if (s_Instance != null)
+                s_Instance.Close();
         }
 
         private void OnDestroy()

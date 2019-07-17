@@ -68,7 +68,7 @@ While this is not mandatory we advise you to create it in order to be able to mo
                 if (GUILayout.Button("Create GameplayIngredientsSettings Asset"))
                 {
                     bool create = true;
-                    if(System.IO.File.Exists(Application.dataPath +"/"+ kSettingsAssetPath))
+                    if(System.IO.File.Exists(Application.dataPath +"/../"+ kSettingsAssetPath))
                     {
                         if (!EditorUtility.DisplayDialog("GameplayIngredientsSettings Asset Overwrite", "A GameplayIngredientsSettings Asset already exists, do you want to overwrite it?", "Yes", "No"))
                             create = false;
@@ -76,7 +76,7 @@ While this is not mandatory we advise you to create it in order to be able to mo
 
                     if(create)
                     {
-                        if(!System.IO.Directory.Exists(Application.dataPath+"/Assets/Resources"))
+                        if(!System.IO.Directory.Exists(Application.dataPath+"/Resources"))
                             AssetDatabase.CreateFolder("Assets", "Resources");
 
                         GameplayIngredientsSettings asset = Instantiate<GameplayIngredientsSettings>(GameplayIngredientsSettings.defaultSettings);
