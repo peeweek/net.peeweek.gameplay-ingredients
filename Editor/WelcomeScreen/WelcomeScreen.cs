@@ -135,14 +135,14 @@ namespace GameplayIngredients.Editor
             {
 
                 GUILayout.Label("Gameplay Ingredients", Styles.centeredTitle);
-                GUILayout.Label(@"Simple, Organic, Open Source
+                GUILayout.Label(@"(and cooking ustensils)
 
-A set of Runtime and Editor Tools for your unity prototypes and games. Released under MIT License as a unity package.
+A set of Open Source Runtime and Editor Tools for your Unity prototypes and games. These scripts are maintained by Thomas Iche and released under MIT License as a unity package. 
 
-This package also makes use of the following third party components:
-* Naughty Attributes by Denis Rizov (https://github.com/dbrizov) 
-* Fugue Icons by Yusuke Kamiyamane (https://p.yusukekamiyamane.com/).
-* Header art background 'Chef's Station' made by Todd Quackenbush, released on unspash.com (https://unsplash.com/photos/x5SRhkFajrA).
+<b>This package also makes use of the following third party components:</b>
+- <i>Naughty Attributes</i> by Denis Rizov (https://github.com/dbrizov) 
+- <i>Fugue Icons</i> by Yusuke Kamiyamane (https://p.yusukekamiyamane.com/).
+- <i>Header art background 'Chef's Station'</i> by Todd Quackenbush (https://unsplash.com/photos/x5SRhkFajrA).
 ", Styles.centeredBody);
 
                 using (new GUILayout.HorizontalScope())
