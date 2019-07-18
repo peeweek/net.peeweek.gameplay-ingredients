@@ -15,7 +15,7 @@ namespace GameplayIngredients.Editor
         [InitializeOnLoadMethod]
         static void Initialize()
         {
-           SceneView.onSceneGUIDelegate += OnSceneGUI;
+           SceneView.duringSceneGui += OnSceneGUI;
         }
 
         private static void OnSceneGUI(SceneView sceneView)

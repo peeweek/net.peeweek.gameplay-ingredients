@@ -57,7 +57,7 @@ namespace GameplayIngredients.Editor
         [InitializeOnLoadMethod]
         static void Initialize()
         {
-            SceneView.onSceneGUIDelegate += Update;
+            SceneView.duringSceneGui += Update;
             EditorApplication.playModeStateChanged += OnPlayModeChanged;
         }
 
