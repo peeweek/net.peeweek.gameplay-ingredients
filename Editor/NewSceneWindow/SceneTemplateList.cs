@@ -25,5 +25,6 @@ namespace GameplayIngredients.Editor
         public string Description;
         [NonNullCheck]
         public SceneAsset Scene;
+
     }
 }

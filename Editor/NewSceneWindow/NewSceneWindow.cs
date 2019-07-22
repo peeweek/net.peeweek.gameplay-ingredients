@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 using UnityEditor.SceneManagement;
 
 namespace GameplayIngredients.Editor
@@ -11,7 +12,7 @@ namespace GameplayIngredients.Editor
         const int WindowWidth = 640;
         const int WindowHeight = 380;
 
-        [MenuItem("File/New Scene From Template... &%N", priority = 1)]
+        [MenuItem("File/New Scene From Template... &%N", priority = 150)]
         static void ShowNewSceneWindow()
         {
             GetWindow<NewSceneWindow>(true);
@@ -28,15 +29,20 @@ namespace GameplayIngredients.Editor
 
         private void OnGUI()
         {
-            GUILayout.Label("Available Templates");
+            using (new GUILayout.HorizontalScope())
+            {
+                    GUILayout.Label("Available Templates", EditorStyles.boldLabel, GUILayout.Width(188));
+                    GUILayout.Label("Description", EditorStyles.boldLabel);
+            }
+
             using (new GUILayout.HorizontalScope(GUILayout.ExpandHeight(true)))
             {
-                using (new GUILayout.VerticalScope(Styles.helpBox, GUILayout.Width(180)))
+                using (new GUILayout.VerticalScope(Styles.listBox, GUILayout.Width(180)))
                 {
                     DrawTemplateList();
                 }
                 GUILayout.Space(8);
-                using (new GUILayout.VerticalScope(Styles.helpBox))
+                using (new GUILayout.VerticalScope(Styles.detailBox))
                 {
                     DrawTemplateDetails();
                 }
@@ -44,12 +50,57 @@ namespace GameplayIngredients.Editor
             using (new GUILayout.HorizontalScope())
             {
                 GUILayout.FlexibleSpace();
-                if(GUILayout.Button("Create"))
+                EditorGUI.BeginDisabledGroup(selectedTemplate.Scene == null);
+
+
+                if (GUILayout.Button("  Create  ", Styles.buttonLeft))
                 {
-                    // Do Something
+                    // Creates a new map and replaces the current setup
+                    CreateSceneFromTemplate(selectedTemplate.Scene);
                     this.Close();
                 }
+
+                if (GUILayout.Button("  Append  ", Styles.buttonRight))
+                {
+                    bool canCreateScene = false;
+
+                    if (EditorSceneManager.GetActiveScene().path == string.Empty)
+                    {
+                        // We need to save active scene First
+                        if(EditorUtility.DisplayDialog("Create new Scene", "You can only append a new scene if the current active scene has been saved, do you want to save it first?","Yes","No"))
+                        {
+                            string path = EditorUtility.SaveFilePanelInProject("Save Scene", "New Scene", "unity", "New Scene");
+                            if(path != string.Empty)
+                            {
+                                if(EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene(), path))
+                                    canCreateScene = true;
+                            }
+                        }
+                    }
+
+                    if(canCreateScene)
+                    {
+                        // Creates a new map that is added to the current setup
+                        CreateSceneFromTemplate(selectedTemplate.Scene,true);
+                        this.Close();
+                    }
+                }
+
+                EditorGUI.EndDisabledGroup();
             }
+        }
+
+        static void CreateSceneFromTemplate(SceneAsset template, bool append = false)
+        {
+            var newScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, append? NewSceneMode.Additive: NewSceneMode.Single);
+            var temp = EditorSceneManager.OpenScene(AssetDatabase.GetAssetPath(template), OpenSceneMode.Additive);
+            var objects = temp.GetRootGameObjects();
+            foreach(var obj in objects)
+            {
+                SceneManager.MoveGameObjectToScene(obj, newScene);
+            }
+            EditorSceneManager.CloseScene(temp, true);
+            
         }
 
         public static void ReloadList()
@@ -67,19 +118,55 @@ namespace GameplayIngredients.Editor
         }
 
         static List<SceneTemplateList> templateLists;
+        static SceneWindowTemplate selectedTemplate;
 
         Vector2 scrollList = Vector2.zero;
 
         void DrawTemplateList()
         {
             GUILayout.BeginScrollView(scrollList);
+            int i = 0;
+            foreach(var list in templateLists)
+            {
+                if(i > 0)
+                {
+                    GUILayout.Space(8);
+                }
 
+                GUILayout.Label(list.ListName, Styles.listHeader);
+                EditorGUI.indentLevel++;
+                foreach (var template in list.Templates)
+                {
+                    if(GUILayout.Button(template.Name, Styles.listItem))
+                    {
+                        selectedTemplate = template;
+                    }
+                    if(template.Name == selectedTemplate.Name && template.Scene == selectedTemplate.Scene)
+                    {
+                        Rect hl = GUILayoutUtility.GetLastRect();
+                        EditorGUI.DrawRect(hl, new Color(1, 1, 1, 0.05f));
+                    }
+                }
+                EditorGUI.indentLevel--;
+                i++;
+            }
             GUILayout.FlexibleSpace();
             GUILayout.EndScrollView();
         }
 
         void DrawTemplateDetails()
         {
+            if(selectedTemplate.Scene != null)
+            {
+                GUILayout.Label(selectedTemplate.Name, Styles.detailsTitle);
+                GUILayout.Space(16);
+                GUILayout.Label(selectedTemplate.Description, Styles.detailsBody);
+            }
+            else
+            {
+                GUILayout.Label("No Template Selected");
+            }
+
             GUILayout.FlexibleSpace();
         }
 
@@ -89,7 +176,13 @@ namespace GameplayIngredients.Editor
             public static GUIStyle buttonMid;
             public static GUIStyle buttonRight;
 
-            public static GUIStyle helpBox;
+            public static GUIStyle listBox;
+            public static GUIStyle listHeader;
+            public static GUIStyle listItem;
+            public static GUIStyle detailBox;
+
+            public static GUIStyle detailsTitle;
+            public static GUIStyle detailsBody;
 
             static Styles()
             {
@@ -100,8 +193,27 @@ namespace GameplayIngredients.Editor
                 buttonMid.fontSize = 12;
                 buttonRight.fontSize = 12;
 
-                helpBox = new GUIStyle(EditorStyles.helpBox);
-                helpBox.padding = new RectOffset(12, 12, 12, 12);
+                listHeader = new GUIStyle("ShurikenModuleTitle");
+                listHeader.padding= new RectOffset(0,0,2,2);
+                listHeader.fontSize = 12;
+                listHeader.stretchWidth = false;
+                listHeader.fixedWidth = 172;
+                listHeader.stretchHeight = true;
+                listHeader.fixedHeight = 24;
+                
+                listBox = new GUIStyle(EditorStyles.helpBox);
+                detailBox = new GUIStyle(listBox);
+                detailBox.padding = new RectOffset(12, 12, 12, 12);
+
+                listItem = new GUIStyle(EditorStyles.label);
+                listItem.padding = new RectOffset(16, 0, 1, 1);
+
+                detailsTitle = new GUIStyle(EditorStyles.label);
+                detailsTitle.fontSize = 24;
+
+                detailsBody = new GUIStyle(EditorStyles.wordWrappedLabel);
+                detailsBody.fontSize = 14;
+
             }
         }
     }
