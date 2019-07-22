@@ -20,6 +20,7 @@ namespace GameplayIngredients.LevelStreaming
 
         [Header("UI Configuration")]
         public GameObject LoadingRoot;
+        public GameObject LoadingIcon;
         public GameObject ProgressBar;
         public GameObject ProgressBarContainer;
         public Text LoadingText;
@@ -62,6 +63,9 @@ namespace GameplayIngredients.LevelStreaming
             if (showUI)
                 LoadingRoot.SetActive(true);
 
+            if (LoadingIcon != null)
+                LoadingIcon.SetActive(true);
+
             if (count > 0)
                 StartCoroutine(LoadScenesCoroutine(action, requiredScenes, sceneToActivate, showUI, onLoadComplete));
             else
@@ -73,6 +77,9 @@ namespace GameplayIngredients.LevelStreaming
 
                 if (showUI)
                     LoadingRoot.SetActive(false);
+
+                if (LoadingIcon != null)
+                    LoadingIcon.SetActive(false);
 
                 if (EnableDebug)
                     DebugText.gameObject.SetActive(false);
@@ -140,6 +147,9 @@ namespace GameplayIngredients.LevelStreaming
 
             if (showUI)
                 LoadingRoot.SetActive(false);
+
+            if (LoadingIcon != null)
+                LoadingIcon.SetActive(false);
 
             if (EnableDebug)
                 DebugText.gameObject.SetActive(false);
