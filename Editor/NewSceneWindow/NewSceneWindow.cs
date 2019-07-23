@@ -31,21 +31,24 @@ namespace GameplayIngredients.Editor
         {
             using (new GUILayout.HorizontalScope())
             {
-                    GUILayout.Label("Available Templates", EditorStyles.boldLabel, GUILayout.Width(188));
-                    GUILayout.Label("Description", EditorStyles.boldLabel);
+                GUILayout.Space(8);
+                GUILayout.Label("Available Templates", EditorStyles.boldLabel, GUILayout.Width(188));
+                GUILayout.Label("Description", EditorStyles.boldLabel);
             }
 
             using (new GUILayout.HorizontalScope(GUILayout.ExpandHeight(true)))
             {
+                GUILayout.Space(8);
                 using (new GUILayout.VerticalScope(Styles.listBox, GUILayout.Width(180)))
                 {
                     DrawTemplateList();
                 }
-                GUILayout.Space(8);
+                GUILayout.Space(4);
                 using (new GUILayout.VerticalScope(Styles.detailBox))
                 {
                     DrawTemplateDetails();
                 }
+                GUILayout.Space(4);
             }
             using (new GUILayout.HorizontalScope())
             {
@@ -87,7 +90,9 @@ namespace GameplayIngredients.Editor
                 }
 
                 EditorGUI.EndDisabledGroup();
+                GUILayout.Space(4);
             }
+            GUILayout.Space(8);
         }
 
         static void CreateSceneFromTemplate(SceneAsset template, bool append = false)
@@ -168,6 +173,15 @@ namespace GameplayIngredients.Editor
             }
 
             GUILayout.FlexibleSpace();
+
+            if(selectedTemplate.ScreenShot != null)
+            {
+                GUILayout.Box(GUIContent.none, GUILayout.ExpandWidth(true), GUILayout.Height(180));
+                Rect r = GUILayoutUtility.GetLastRect();
+                RectOffset off = new RectOffset(6, 6, 6, 6);
+                r = off.Remove(r);
+                EditorGUI.DrawPreviewTexture(r, selectedTemplate.ScreenShot, null, ScaleMode.ScaleAndCrop);
+            }
         }
 
         static class Styles

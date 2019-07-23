@@ -25,6 +25,6 @@ namespace GameplayIngredients.Editor
         public string Description;
         [NonNullCheck]
         public SceneAsset Scene;
-
+        public Texture2D ScreenShot;
     }
 }
