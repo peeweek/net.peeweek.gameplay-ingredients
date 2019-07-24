@@ -79,22 +79,26 @@ namespace GameplayIngredients.Editor
                 using (new GUILayout.HorizontalScope())
                 {
                     GUILayout.FlexibleSpace();
-                    bool value = false;
 
-                    value = wizardMode == WizardMode.TipOfTheDay;
-                    value = GUILayout.Toggle(value, "  Tips  ", Styles.buttonLeft); 
-                    if(value)
-                        wizardMode = WizardMode.TipOfTheDay;
+                    using (new GUILayout.HorizontalScope(EditorStyles.miniButton))
+                    {
+                        bool value = false;
 
-                    value = wizardMode == WizardMode.FirstTimeSetup;
-                    value = GUILayout.Toggle(value, "  Setup  ", Styles.buttonMid);
-                    if (value)
-                        wizardMode = WizardMode.FirstTimeSetup;
+                        value = wizardMode == WizardMode.TipOfTheDay;
+                        value = GUILayout.Toggle(value, "  Tips  ", Styles.buttonLeft); 
+                        if(value)
+                            wizardMode = WizardMode.TipOfTheDay;
 
-                    value = wizardMode == WizardMode.About;
-                    value = GUILayout.Toggle(value, "  About  ", Styles.buttonRight);
-                    if(value)
-                        wizardMode = WizardMode.About;
+                        value = wizardMode == WizardMode.FirstTimeSetup;
+                        value = GUILayout.Toggle(value, "  Setup  ", Styles.buttonMid);
+                        if (value)
+                            wizardMode = WizardMode.FirstTimeSetup;
+
+                        value = wizardMode == WizardMode.About;
+                        value = GUILayout.Toggle(value, "  About  ", Styles.buttonRight);
+                        if(value)
+                            wizardMode = WizardMode.About;
+                    }
 
                     GUILayout.FlexibleSpace();
                 }
