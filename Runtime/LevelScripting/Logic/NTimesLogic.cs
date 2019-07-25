@@ -16,10 +16,10 @@ namespace GameplayIngredients.Logic
 
         void Awake()
         {
-            Reset();
+            ResetCount();
         }
 
-        public void Reset()
+        public void ResetCount()
         {
             m_RemainingCount = Count;
         }
