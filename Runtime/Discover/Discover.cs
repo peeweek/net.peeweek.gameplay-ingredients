@@ -1,12 +1,16 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameObjectToggle = GameplayIngredients.Actions.ToggleGameObjectAction.GameObjectToggle;
 
 public class Discover : MonoBehaviour
 {
     public string Name = "Discover";
     public string Category = "Category";
     public bool AlignViewToTransform = false;
+
+    public GameObjectToggle[] ObjectsToToggle;
     [Multiline]
     public string Description = "Some Description of the Component\n\nCan be set as multiple lines.";
     public int Priority = 0;

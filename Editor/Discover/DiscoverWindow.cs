@@ -339,7 +339,43 @@ namespace GameplayIngredients.Editor
                                         }
                                     }
 
+                                    // Reverse Toggle previous GameObjects state
+                                    foreach(var go in selectedDiscover.ObjectsToToggle)
+                                    {
+                                        switch(go.State)
+                                        {
+                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Disable:
+                                                go.GameObject.SetActive(true);
+                                                break;
+                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Enable:
+                                                go.GameObject.SetActive(false);
+                                                break;
+                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Toggle:
+                                                go.GameObject.SetActive(go.GameObject.activeSelf);
+                                                break;
+                                        }
+                                    }
+
+
+                                    // Set the new item
                                     selectedDiscover = item;
+
+                                    // Toggle Next GameObjects State
+                                    foreach (var go in selectedDiscover.ObjectsToToggle)
+                                    {
+                                        switch (go.State)
+                                        {
+                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Disable:
+                                                go.GameObject.SetActive(false);
+                                                break;
+                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Enable:
+                                                go.GameObject.SetActive(true);
+                                                break;
+                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Toggle:
+                                                go.GameObject.SetActive(go.GameObject.activeSelf);
+                                                break;
+                                        }
+                                    }
                                     Rect r = GUILayoutUtility.GetLastRect();
                                     int c = EditorGUIUtility.isProSkin ? 1 : 0;
                                     EditorGUI.DrawRect(r, new Color(c, c, c, 0.1f));
