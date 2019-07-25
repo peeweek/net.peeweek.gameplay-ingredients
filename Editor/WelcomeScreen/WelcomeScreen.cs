@@ -73,7 +73,6 @@ namespace GameplayIngredients.Editor
         {
             Rect headerRect = GUILayoutUtility.GetRect(640, 215);
             GUI.DrawTexture(headerRect, header);
-            RectOffset headerButtonsOffset = new RectOffset(200, 200, 160, 16);
             using (new GUILayout.AreaScope(new Rect(160, 180, 320, 32)))
             {
                 using (new GUILayout.HorizontalScope())
@@ -161,45 +160,45 @@ A set of Open Source Runtime and Editor Tools for your Unity prototypes and game
                 GUILayout.FlexibleSpace();
             }
         }
-    }
 
-    static class Styles
-    {
-        public static GUIStyle buttonLeft;
-        public static GUIStyle buttonMid;
-        public static GUIStyle buttonRight;
-        public static GUIStyle title;
-        public static GUIStyle body;
-
-        public static GUIStyle centeredTitle;
-        public static GUIStyle centeredBody;
-        public static GUIStyle helpBox;
-
-        static Styles()
+        static class Styles
         {
-            buttonLeft = new GUIStyle(EditorStyles.miniButtonLeft);
-            buttonMid = new GUIStyle(EditorStyles.miniButtonMid);
-            buttonRight = new GUIStyle(EditorStyles.miniButtonRight);
-            buttonLeft.fontSize = 12;
-            buttonMid.fontSize = 12;
-            buttonRight.fontSize = 12;
+            public static GUIStyle buttonLeft;
+            public static GUIStyle buttonMid;
+            public static GUIStyle buttonRight;
+            public static GUIStyle title;
+            public static GUIStyle body;
 
-            title = new GUIStyle(EditorStyles.label);    
-            title.fontSize = 22;
+            public static GUIStyle centeredTitle;
+            public static GUIStyle centeredBody;
+            public static GUIStyle helpBox;
 
-            centeredTitle = new GUIStyle(title);
-            centeredTitle.alignment = TextAnchor.UpperCenter;
+            static Styles()
+            {
+                buttonLeft = new GUIStyle(EditorStyles.miniButtonLeft);
+                buttonMid = new GUIStyle(EditorStyles.miniButtonMid);
+                buttonRight = new GUIStyle(EditorStyles.miniButtonRight);
+                buttonLeft.fontSize = 12;
+                buttonMid.fontSize = 12;
+                buttonRight.fontSize = 12;
 
-            body = new GUIStyle(EditorStyles.label);
-            body.fontSize = 12;
-            body.wordWrap = true;
-            body.richText = true;
+                title = new GUIStyle(EditorStyles.label);
+                title.fontSize = 22;
 
-            centeredBody = new GUIStyle(body);
-            centeredBody.alignment = TextAnchor.UpperCenter;
+                centeredTitle = new GUIStyle(title);
+                centeredTitle.alignment = TextAnchor.UpperCenter;
 
-            helpBox = new GUIStyle(EditorStyles.helpBox);
-            helpBox.padding = new RectOffset(12,12,12,12);
+                body = new GUIStyle(EditorStyles.label);
+                body.fontSize = 12;
+                body.wordWrap = true;
+                body.richText = true;
+
+                centeredBody = new GUIStyle(body);
+                centeredBody.alignment = TextAnchor.UpperCenter;
+
+                helpBox = new GUIStyle(EditorStyles.helpBox);
+                helpBox.padding = new RectOffset(12, 12, 12, 12);
+            }
         }
     }
 }

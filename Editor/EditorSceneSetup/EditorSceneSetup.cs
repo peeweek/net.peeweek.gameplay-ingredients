@@ -20,6 +20,9 @@ namespace GameplayIngredients.Editor
             
         }
 
+        public delegate void EditorSceneSetupLoadedDelegate(EditorSceneSetup setup);
+        public static event EditorSceneSetupLoadedDelegate onSetupLoaded;
+
         [OnOpenAsset]
         static bool OnOpenAsset(int instanceID, int line)
         {
@@ -94,6 +97,9 @@ namespace GameplayIngredients.Editor
             }
 
             EditorSceneManager.RestoreSceneManagerSetup(setups);
+
+            if(onSetupLoaded != null)
+                onSetupLoaded.Invoke(editorSetup);
         }
 
     }

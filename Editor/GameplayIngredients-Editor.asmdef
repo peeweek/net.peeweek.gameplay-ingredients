@@ -3,7 +3,8 @@
     "references": [
         "NaughtyAttributes",
         "GameplayIngredients",
-        "Unity.ugui"
+        "Unity.ugui",
+        "Unity.Timeline"
     ],
     "includePlatforms": [
         "Editor"
