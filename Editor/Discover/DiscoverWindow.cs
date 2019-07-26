@@ -203,28 +203,28 @@ namespace GameplayIngredients.Editor
             bool hasContent = discoverObjects != null && discoverObjects.Count > 0;
 
             // Draw Navigation
+            EditorGUI.BeginDisabledGroup(!hasContent);
             using (new GUILayout.AreaScope(new Rect(discoverAsset.WindowWidth - 168, 8, 160, 20)))
             {
                 using (new GUILayout.HorizontalScope(Styles.tabContainer))
                 {
                     bool value = forceGlobal;
                     EditorGUI.BeginChangeCheck();
-                    value = GUILayout.Toggle(forceGlobal, "Levels", Styles.buttonLeft);
+                    value = GUILayout.Toggle(forceGlobal || !hasContent, "Levels", Styles.buttonLeft);
                     if (EditorGUI.EndChangeCheck())
                     {
                         forceGlobal = true;
                     }
 
                     EditorGUI.BeginChangeCheck();
-                    value = GUILayout.Toggle(!forceGlobal, "Discover", Styles.buttonRight);
+                    value = GUILayout.Toggle(!forceGlobal && hasContent, "Discover", Styles.buttonRight);
                     if (EditorGUI.EndChangeCheck())
                     {
                         forceGlobal = false;
                     }
-
-
                 }
             }
+            EditorGUI.EndDisabledGroup();
 
             // Draw Content
             if (!hasContent || forceGlobal)
@@ -328,54 +328,70 @@ namespace GameplayIngredients.Editor
 
                                 if (value)
                                 {
-                                    if (EditorGUI.EndChangeCheck())
+                                    // Select the new one if not selected
+                                    if(selectedDiscover != item)
                                     {
-                                        if(discoverAsset.Debug)
-                                            Selection.activeObject = item;
-
-                                        if (SceneView.lastActiveSceneView != null && item.AlignViewToTransform)
+                                        if (EditorGUI.EndChangeCheck())
                                         {
-                                            SceneView.lastActiveSceneView.AlignViewToObject(item.transform);
+                                            if (discoverAsset.Debug)
+                                                Selection.activeObject = item;
+
+                                            if (SceneView.lastActiveSceneView != null && item.AlignViewToTransform)
+                                            {
+                                                SceneView.lastActiveSceneView.AlignViewToObject(item.transform);
+                                            }
+                                        }
+
+                                        if (selectedDiscover.ObjectsToToggle != null)
+                                        {
+                                            // Reverse Toggle previous GameObjects state
+                                            foreach (var go in selectedDiscover.ObjectsToToggle)
+                                            {
+                                                if (go.GameObject == null)
+                                                    continue;
+
+                                                switch (go.State)
+                                                {
+                                                    case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Disable:
+                                                        go.GameObject.SetActive(true);
+                                                        break;
+                                                    case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Enable:
+                                                        go.GameObject.SetActive(false);
+                                                        break;
+                                                    case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Toggle:
+                                                        go.GameObject.SetActive(go.GameObject.activeSelf);
+                                                        break;
+                                                }
+                                            }
+                                        }
+
+                                        // Set the new item
+                                        selectedDiscover = item;
+
+                                        if (selectedDiscover.ObjectsToToggle != null)
+                                        {
+                                            // Toggle Next GameObjects State
+                                            foreach (var go in selectedDiscover.ObjectsToToggle)
+                                            {
+                                                if (go.GameObject == null)
+                                                    continue;
+
+                                                switch (go.State)
+                                                {
+                                                    case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Disable:
+                                                        go.GameObject.SetActive(false);
+                                                        break;
+                                                    case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Enable:
+                                                        go.GameObject.SetActive(true);
+                                                        break;
+                                                    case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Toggle:
+                                                        go.GameObject.SetActive(go.GameObject.activeSelf);
+                                                        break;
+                                                }
+                                            }
                                         }
                                     }
 
-                                    // Reverse Toggle previous GameObjects state
-                                    foreach(var go in selectedDiscover.ObjectsToToggle)
-                                    {
-                                        switch(go.State)
-                                        {
-                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Disable:
-                                                go.GameObject.SetActive(true);
-                                                break;
-                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Enable:
-                                                go.GameObject.SetActive(false);
-                                                break;
-                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Toggle:
-                                                go.GameObject.SetActive(go.GameObject.activeSelf);
-                                                break;
-                                        }
-                                    }
-
-
-                                    // Set the new item
-                                    selectedDiscover = item;
-
-                                    // Toggle Next GameObjects State
-                                    foreach (var go in selectedDiscover.ObjectsToToggle)
-                                    {
-                                        switch (go.State)
-                                        {
-                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Disable:
-                                                go.GameObject.SetActive(false);
-                                                break;
-                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Enable:
-                                                go.GameObject.SetActive(true);
-                                                break;
-                                            case Actions.ToggleGameObjectAction.GameObjectToggle.GameObjectToggleState.Toggle:
-                                                go.GameObject.SetActive(go.GameObject.activeSelf);
-                                                break;
-                                        }
-                                    }
                                     Rect r = GUILayoutUtility.GetLastRect();
                                     int c = EditorGUIUtility.isProSkin ? 1 : 0;
                                     EditorGUI.DrawRect(r, new Color(c, c, c, 0.1f));
