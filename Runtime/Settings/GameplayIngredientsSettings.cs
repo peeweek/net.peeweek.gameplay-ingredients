@@ -9,10 +9,16 @@ namespace GameplayIngredients
     {
         public string[] excludedeManagers { get { return m_ExcludedManagers; } }
         public bool verboseCalls { get { return m_VerboseCalls; } }
+        public bool disableWelcomeScreenAutoStart { get { return m_DisableWelcomeScreenAutoStart; } }
+
+        [BoxGroup("Editor")]
+        [SerializeField]
+        protected bool m_DisableWelcomeScreenAutoStart;
 
         [BoxGroup("Managers")]
         [SerializeField, ReorderableList, TypeDropDown(typeof(Manager))]
         protected string[] m_ExcludedManagers;
+
         [BoxGroup("Callables")]
         [SerializeField, InfoBox("Verbose Calls enable logging at runtime, this can lead to performance drop, use only when debugging.",InfoBoxType.Warning, "m_VerboseCalls")]
         protected bool m_VerboseCalls;
@@ -56,6 +62,7 @@ namespace GameplayIngredients
             var defaultAsset = CreateInstance<GameplayIngredientsSettings>();
             defaultAsset.m_VerboseCalls = false;
             defaultAsset.m_ExcludedManagers = new string[0];
+            defaultAsset.m_DisableWelcomeScreenAutoStart = false;
             return defaultAsset;
         }
     }

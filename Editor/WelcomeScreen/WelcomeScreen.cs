@@ -22,7 +22,7 @@ namespace GameplayIngredients.Editor
         [InitializeOnLoadMethod]
         static void InitShowAtStartup()
         {
-            if (showOnStartup)
+            if (showOnStartup && !GameplayIngredientsSettings.currentSettings.disableWelcomeScreenAutoStart)
                 EditorApplication.update += ShowAtStartup;
 
         }
@@ -121,7 +121,10 @@ namespace GameplayIngredients.Editor
             EditorGUI.DrawRect(line, Color.black);
             using (new GUILayout.HorizontalScope())
             {
-                showOnStartup = GUILayout.Toggle(showOnStartup, " Show this window on startup");
+                if(!GameplayIngredientsSettings.currentSettings.disableWelcomeScreenAutoStart)
+                {
+                    showOnStartup = GUILayout.Toggle(showOnStartup, " Show this window on startup");
+                }
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button("Close"))
                 {

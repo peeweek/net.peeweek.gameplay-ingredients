@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Callbacks;
 
 namespace GameplayIngredients.Editor
 {
@@ -10,7 +11,20 @@ namespace GameplayIngredients.Editor
         [MenuItem("Assets/Create/Discover Asset", priority = 202)]
         static void Create()
         {
-            AssetFactory.CreateAssetInProjectWindow<DiscoverAsset>(null, "New DiscoverAsset");
+            AssetFactory.CreateAssetInProjectWindow<DiscoverAsset>(null, "New DiscoverAsset.asset");
+        }
+
+        [OnOpenAsset]
+        static bool OpenAsset(int instanceID, int line)
+        {
+            var asset = EditorUtility.InstanceIDToObject(instanceID);
+            if (asset is DiscoverAsset)
+            {
+                DiscoverWindow.ShowDiscoverWindow(asset as DiscoverAsset);
+                return true;
+            }
+            else
+                return false;
         }
 
         [Header("General Properties")]
