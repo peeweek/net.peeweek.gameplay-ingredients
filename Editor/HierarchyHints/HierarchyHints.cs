@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_2019_3_OR_NEWER
+using UnityEngine.VFX;
+#else
 using UnityEngine.Experimental.VFX;
+#endif
 using UnityEditor;
 using GameplayIngredients.StateMachines;
 using UnityEngine.Playables;

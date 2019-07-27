@@ -202,7 +202,7 @@ namespace GameplayIngredients.Editor
 
             bool hasContent = discoverObjects != null && discoverObjects.Count > 0;
 
-            // Draw Navigation
+            // Draw Navigation Bar
             EditorGUI.BeginDisabledGroup(!hasContent);
             using (new GUILayout.AreaScope(new Rect(discoverAsset.WindowWidth - 168, 8, 160, 20)))
             {
@@ -265,8 +265,11 @@ namespace GameplayIngredients.Editor
             }
         }
 
+        Vector2 globalContentScroll;
+
         void GlobalContentGUI()
         {
+            globalContentScroll = GUILayout.BeginScrollView(globalContentScroll);
             using (new GUILayout.VerticalScope(Styles.indent))
             {
                 GUILayout.Label(discoverAsset.Title, Styles.header);
@@ -302,6 +305,7 @@ namespace GameplayIngredients.Editor
                 }
             }
             GUILayout.FlexibleSpace();
+            GUILayout.EndScrollView();
         }
 
         Discover selectedDiscover;

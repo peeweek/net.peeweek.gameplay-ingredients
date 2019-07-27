@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+#if UNITY_2019_3_OR_NEWER
+using UnityEngine.VFX;
+#else
 using UnityEngine.Experimental.VFX;
+#endif
 using UnityEngine.Timeline;
 
 namespace GameplayIngredients.Editor
