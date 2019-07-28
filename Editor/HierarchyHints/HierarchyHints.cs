@@ -96,7 +96,11 @@ namespace GameplayIngredients.Editor
             if (!Active) return;
 
             var fullRect = selectionRect;
+#if UNITY_2019_3_OR_NEWER
+            fullRect.xMin = 32;
+#else
             fullRect.xMin = 16;
+#endif
             fullRect.xMax = EditorGUIUtility.currentViewWidth;
             GameObject o = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             if (o == null) return;
