@@ -19,15 +19,15 @@ namespace GameplayIngredients.Editor
 
         static readonly Dictionary<string, Type> s_assemblyTypes = GetTypes();
 
-        private static Dictionary<string,Type> GetTypes()
+        private static Dictionary<string, Type> GetTypes()
         {
             Dictionary<string, Type> all = new Dictionary<string, Type>();
 
-            foreach(var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                foreach(Type t in assembly.GetTypes())
+                foreach (Type t in assembly.GetTypes())
                 {
-                    if(typeof(Component).IsAssignableFrom(t) && !all.ContainsKey(t.Name))
+                    if (typeof(Component).IsAssignableFrom(t) && !all.ContainsKey(t.Name))
                         all.Add(t.Name, t);
                 }
             }
@@ -96,21 +96,21 @@ namespace GameplayIngredients.Editor
         Material materialSearch;
 
         [SerializeField]
-        bool replacePosition = true;
+        bool keepPosition = true;
         [SerializeField]
-        bool replaceRotation = true;
+        bool keepRotation = true;
         [SerializeField]
-        bool replaceScale = false;
+        bool keepScale = false;
         [SerializeField]
-        bool replaceParenting = true;
+        bool keepParenting = true;
         [SerializeField]
-        bool replaceName = true;
+        bool keepName = true;
         [SerializeField]
-        bool replaceTag = false;
+        bool keepTag = false;
         [SerializeField]
-        bool replaceLayer = true;
+        bool keepLayer = true;
         [SerializeField]
-        bool replaceStatic = false;
+        bool keepStatic = false;
         [SerializeField]
         bool unpackPrefab = false;
 
@@ -125,9 +125,9 @@ namespace GameplayIngredients.Editor
         {
             EditorGUIUtility.labelWidth = 120;
             GUILayout.Space(4);
-            GUILayout.Label("Search and Filter", Styles.boldLabel);
+            GUILayout.Label("Search Scene Objects", Styles.boldLabel);
             searchBy = (SearchBy)EditorGUILayout.EnumPopup(Contents.searchBy, searchBy);
-            switch(searchBy)
+            switch (searchBy)
             {
                 case SearchBy.Name:
                     nameSearch = EditorGUILayout.TextField(Contents.nameSearch, nameSearch);
@@ -157,23 +157,33 @@ namespace GameplayIngredients.Editor
 
 
             GUILayout.FlexibleSpace();
-            GUILayout.Label("Replace By", Styles.boldLabel);
+            GUILayout.Label("Replace Results", Styles.boldLabel);
             prefabReplacement = (GameObject)EditorGUILayout.ObjectField(Contents.prefabReplacement, prefabReplacement, typeof(GameObject), true);
+
+            if (prefabReplacement != null)
+            {
+                PrefabAssetType type = PrefabUtility.GetPrefabAssetType(prefabReplacement);
+                bool isAPrefab = type == PrefabAssetType.Model || type == PrefabAssetType.Regular || type == PrefabAssetType.Variant;
+                if(isAPrefab)
+                    unpackPrefab = EditorGUILayout.Toggle("Unpack Prefab", unpackPrefab);
+            }
+            EditorGUI.BeginDisabledGroup(prefabReplacement == null);
+             
+            GUILayout.Label("Keep Properties:");
 
             using (new GUILayout.HorizontalScope())
             {
-                replacePosition = GUILayout.Toggle(replacePosition, "Position", EditorStyles.miniButtonLeft, GUILayout.Height(16));
-                replaceRotation = GUILayout.Toggle(replaceRotation, "Rotation", EditorStyles.miniButtonMid, GUILayout.Height(16));
-                replaceScale = GUILayout.Toggle(replaceScale, "Scale", EditorStyles.miniButtonMid, GUILayout.Height(16));
-                replaceParenting = GUILayout.Toggle(replaceParenting, "Parenting", EditorStyles.miniButtonRight, GUILayout.Height(16));
+                keepPosition = GUILayout.Toggle(keepPosition, "Position", EditorStyles.miniButtonLeft, GUILayout.Height(16));
+                keepRotation = GUILayout.Toggle(keepRotation, "Rotation", EditorStyles.miniButtonMid, GUILayout.Height(16));
+                keepScale = GUILayout.Toggle(keepScale, "Scale", EditorStyles.miniButtonMid, GUILayout.Height(16));
+                keepParenting = GUILayout.Toggle(keepParenting, "Parenting", EditorStyles.miniButtonRight, GUILayout.Height(16));
             }
             using (new GUILayout.HorizontalScope())
             {
-                replaceName = GUILayout.Toggle(replaceName, "Name", EditorStyles.miniButtonLeft, GUILayout.Height(16));
-                replaceTag = GUILayout.Toggle(replaceTag, "Tag", EditorStyles.miniButtonMid, GUILayout.Height(16));
-                replaceLayer = GUILayout.Toggle(replaceLayer, "Layer", EditorStyles.miniButtonMid, GUILayout.Height(16));
-                replaceStatic = GUILayout.Toggle(replaceStatic, "Static", EditorStyles.miniButtonMid, GUILayout.Height(16));
-                unpackPrefab = GUILayout.Toggle(unpackPrefab, "Unpack Prefab", EditorStyles.miniButtonRight, GUILayout.Height(16));
+                keepName = GUILayout.Toggle(keepName, "Name", EditorStyles.miniButtonLeft, GUILayout.Height(16));
+                keepTag = GUILayout.Toggle(keepTag, "Tag", EditorStyles.miniButtonMid, GUILayout.Height(16));
+                keepLayer = GUILayout.Toggle(keepLayer, "Layer", EditorStyles.miniButtonMid, GUILayout.Height(16));
+                keepStatic = GUILayout.Toggle(keepStatic, "Static", EditorStyles.miniButtonRight, GUILayout.Height(16));
             }
 
             if (GUILayout.Button("Replace All", Styles.bigButton, GUILayout.Height(24)) && prefabReplacement != null)
@@ -187,6 +197,7 @@ namespace GameplayIngredients.Editor
                     searchResults[i] = newObj;
                 }
             }
+            EditorGUI.EndDisabledGroup();
             GUILayout.Space(8);
         }
 
@@ -197,27 +208,25 @@ namespace GameplayIngredients.Editor
             if (PrefabUtility.GetPrefabAssetType(replacement) != PrefabAssetType.NotAPrefab && !unpackPrefab)
                 newObj = (GameObject)PrefabUtility.InstantiatePrefab(replacement);
             else
-                newObj = (GameObject)Instantiate<GameObject>(replacement);
+                newObj = Instantiate(replacement);
 
-            if (replaceName)
-                newObj.name = replacement.name;
-            else
+            if (keepName)
                 newObj.name = toReplace.name;
 
-            if(replacePosition)
+            if(keepPosition)
                 newObj.transform.position = toReplace.transform.position;
-            if(replaceRotation)
+            if(keepRotation)
                 newObj.transform.rotation = toReplace.transform.rotation;
-            if(replaceParenting)
+            if(keepParenting)
                 newObj.transform.parent = toReplace.transform.parent;
-            if(replaceScale)
+            if(keepScale)
                 newObj.transform.localScale = toReplace.transform.localScale;
 
-            if(replaceTag)
+            if(keepTag)
                 newObj.tag = toReplace.tag;
-            if(replaceLayer)
+            if(keepLayer)
                 newObj.layer = toReplace.layer;
-            if(replaceStatic)
+            if(keepStatic)
                 newObj.isStatic = toReplace.isStatic;
 
             foreach(var other in others)
