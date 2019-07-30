@@ -95,13 +95,17 @@ namespace GameplayIngredients
             return cameraFade;
         }
 
-        public void SwitchLevel(int nextLevel, bool showUI = false, Callable[] onComplete = null)
+        public void SwitchLevel(int nextLevel, bool showUI = false, Callable[] onComplete = null, bool saveProgress = false)
         {
             if (m_CurrentLevelSwitch == null)
             {
                 var call = GetCurrentLevelSwitch(nextLevel, showUI, onComplete);
                 call.Execute();
                 currentLevel = nextLevel;
+
+                // Save Progression if not mainmenu
+                if(nextLevel != -1 && saveProgress)
+                    currentSaveProgress = currentLevel;
             }
             else
                 Debug.LogWarning("SwitchLevel : an Operation was still in progress and switching level could not be done. ");

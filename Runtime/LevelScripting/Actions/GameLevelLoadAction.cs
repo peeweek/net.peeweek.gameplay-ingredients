@@ -27,6 +27,8 @@ namespace GameplayIngredients.Actions
         [ShowIf("isGameSave")]
         public string UserSaveName = "Progress";
 
+        public bool SaveProgress = false;
+
         [ReorderableList]
         public Callable[] OnComplete;
 
@@ -54,7 +56,7 @@ namespace GameplayIngredients.Actions
                     break;
                 case Target.FromGameSave: index = manager.currentSaveProgress; break;
             }
-            manager.SwitchLevel(index, ShowUI, OnComplete);
+            manager.SwitchLevel(index, ShowUI, OnComplete, SaveProgress);
         }
     }
 }
