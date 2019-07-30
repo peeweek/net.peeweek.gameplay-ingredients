@@ -25,9 +25,8 @@ namespace GameplayIngredients
         [Header("Save")]
         public string ProgressSaveName = "Progress";
 
-        [Header("Messages")]
-        public string MainMenuStartMessage = "MAINMENU_START";
-        public string GameLevelStartMessage = "GAME_START";
+        public static string MainMenuStartMessage = "GAME_MANAGER_MAINMENU_START";
+        public static string GameLevelStartMessage = "GAME_MANAGER_GAME_START";
 
         public int currentLevel { get; private set; } = -2;
 
@@ -48,6 +47,17 @@ namespace GameplayIngredients
 
         Callable GetCurrentLevelSwitch(int targetLevel, bool showUI = false, Callable[] onComplete = null)
         {
+            if(targetLevel < 0 && MainMenuGameLevel == null)
+            {
+                Debug.LogError("GameManager : Could not load Main Menu.");
+                return null;
+            }
+            else if (targetLevel >= 0 && (MainGameLevels == null || MainGameLevels.Length < targetLevel + 1  || MainGameLevels[targetLevel] == null))
+            {
+                Debug.LogError($"GameManager : Could not load Level #{targetLevel}");
+                return null;
+            }
+
             GameObject go = new GameObject();
             go.name = $"LevelSwtich {currentLevel} -> {targetLevel}";
             go.transform.parent = this.transform;
