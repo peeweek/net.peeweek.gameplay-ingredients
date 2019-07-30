@@ -40,7 +40,8 @@ namespace GameplayIngredients
 
         public static void Send(string eventName)
         {
-            Debug.Log(string.Format("[MessageManager] Broadcast: {0}", eventName));
+            if(GameplayIngredientsSettings.currentSettings.verboseCalls)
+                Debug.Log(string.Format("[MessageManager] Broadcast: {0}", eventName));
 
             if (m_RegisteredMessages.ContainsKey(eventName))
             {
