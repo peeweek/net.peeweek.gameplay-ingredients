@@ -12,6 +12,8 @@ namespace GameplayIngredients.Editor
         const int kPlayMenuPriority = 160;
         const int kMenuPriority = 330;
 
+        #region PLAY HERE
+
         [MenuItem("Edit/Play from SceneView Position #%&P", priority = kPlayMenuPriority)]
         static void PlayHere()
         {
@@ -23,6 +25,8 @@ namespace GameplayIngredients.Editor
         {
             return PlayFromHere.IsReady;
         }
+
+        #endregion
 
         #region GROUP_UNGROUP
 
@@ -128,5 +132,14 @@ namespace GameplayIngredients.Editor
 
         #endregion
 
+        #region ASSETS
+
+        [UnityEditor.MenuItem("Assets/Create/Game Level")]
+        static void CreateGameLevel()
+        {
+            GameplayIngredients.Editor.AssetFactory.CreateAssetInProjectWindow<GameLevel>("", "New Game Level.asset");
+        }
+
+        #endregion
     }
 }
