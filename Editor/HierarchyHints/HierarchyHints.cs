@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_2019_3_OR_NEWER
+using UnityEngine.VFX;
+#else
 using UnityEngine.Experimental.VFX;
+#endif
 using UnityEditor;
 using GameplayIngredients.StateMachines;
 using UnityEngine.Playables;
@@ -92,7 +96,11 @@ namespace GameplayIngredients.Editor
             if (!Active) return;
 
             var fullRect = selectionRect;
+#if UNITY_2019_3_OR_NEWER
+            fullRect.xMin = 32;
+#else
             fullRect.xMin = 16;
+#endif
             fullRect.xMax = EditorGUIUtility.currentViewWidth;
             GameObject o = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             if (o == null) return;
