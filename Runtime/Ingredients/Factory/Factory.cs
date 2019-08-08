@@ -12,7 +12,8 @@ namespace GameplayIngredients
         {
             Random,
             Sequential,
-            Shuffle
+            Shuffle,
+            GameSave
         }
 
         public enum SpawnTargetSelection
@@ -30,15 +31,25 @@ namespace GameplayIngredients
             DontDestroyOnLoad
         }
 
+        [Header("Blueprint")]
         [ReorderableList, NonNullCheck]
         public GameObject[] FactoryBlueprints;
+        public BlueprintSelectionMode blueprintSelecionMode = BlueprintSelectionMode.Random;
+        [ShowIf("usesGameSave")]
+        public GameSaveManager.Location gameSaveLocation = GameSaveManager.Location.User;
+        [ShowIf("usesGameSave")]
+        public string gameSaveVariableName = "FactoryBPIndex";
+        [ShowIf("usesGameSave")]
+        public int defaultGameSaveIndex = 0;
+
+        [Header("Spawn Target")]
         [NonNullCheck]
         public GameObject SpawnTarget;
-
-        public BlueprintSelectionMode blueprintSelecionMode = BlueprintSelectionMode.Random;
-
-        public bool RespawnTarget = true;
         public SpawnLocation spawnLocation = SpawnLocation.SameSceneAsTarget;
+
+
+        [Header("Reap and Respawn")]
+        public bool RespawnTarget = true;
         public float RespawnDelay = 3.0f;
         public bool ReapInstancesOnDestroy = true;
 
@@ -64,6 +75,11 @@ namespace GameplayIngredients
             }
         }
 
+        bool usesGameSave()
+        {
+            return blueprintSelecionMode == BlueprintSelectionMode.GameSave;
+        }
+
         public void SetTarget(GameObject target)
         {
             if(target != null)
@@ -74,7 +90,7 @@ namespace GameplayIngredients
 
         public GameObject GetInstance(int index)
         {
-            if (m_Instances.Count > index)
+            if (m_Instances != null && m_Instances.Count > index)
                 return m_Instances[index];
             else
                 return null;
@@ -172,8 +188,15 @@ namespace GameplayIngredients
 
         private GameObject SelectBlueprint()
         {
+            if(FactoryBlueprints == null || FactoryBlueprints.Length == 0)
+            {
+                Debug.LogError($"Factory '{gameObject.name}' could not spawn anything as there are no blueprints set up");
+                return null;
+            }
+
             switch(blueprintSelecionMode)
             {
+                default:
                 case BlueprintSelectionMode.Random:
                     currentBlueprintIndex = Random.Range(0, FactoryBlueprints.Length);
                     break;
@@ -182,6 +205,9 @@ namespace GameplayIngredients
                     break;
                 case BlueprintSelectionMode.Shuffle:
                     currentBlueprintIndex = Shuffle(currentBlueprintIndex);
+                    break;
+                case BlueprintSelectionMode.GameSave:
+                    currentBlueprintIndex = GetFromGameSave();
                     break;
             }
             return FactoryBlueprints[currentBlueprintIndex];
@@ -196,6 +222,22 @@ namespace GameplayIngredients
                 shuffleIndices = Enumerable.Range(0, FactoryBlueprints.Length).OrderBy(x => Random.value).ToList();
             }
             return shuffleIndices[(shuffleIndices.IndexOf(i) + 1) % shuffleIndices.Count];
+        }
+
+        private int GetFromGameSave()
+        {
+            var gsm = Manager.Get<GameSaveManager>();
+            int index = -1;
+            if(gsm.HasInt(gameSaveVariableName, gameSaveLocation))
+            {
+                index = gsm.GetInt(gameSaveVariableName, gameSaveLocation);
+            }
+            else
+            {
+                index = defaultGameSaveIndex;
+            }
+
+            return Mathf.Clamp(index, 0, FactoryBlueprints.Length - 1);
         }
     }
 }
