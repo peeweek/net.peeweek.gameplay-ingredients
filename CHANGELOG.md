@@ -4,7 +4,7 @@
 
 #### Changed
 
-* **[Breaking]** Discover Assets now reference many Scenes/SceneSetups 
+* **[Breaking Change]** Discover Assets now reference many Scenes/SceneSetups 
   * Action to take: have to re-reference scenes in Discover Asset
 
 #### Added
