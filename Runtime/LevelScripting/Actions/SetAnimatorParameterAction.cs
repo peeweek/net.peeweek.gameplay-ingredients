@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using NaughtyAttributes;
 
-public enum AnimatorParameterType { Bool, Float, Int, Trigger };
 
 namespace GameplayIngredients.Actions
 {
+    public enum AnimatorParameterType { Bool, Float, Int, Trigger };
+
     public class SetAnimatorParameterAction : ActionBase
     {
         public Animator animator;
