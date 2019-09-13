@@ -12,46 +12,31 @@ namespace GameplayIngredients.Events
         [ReorderableList]
         public Callable[] onCollisionExit;
 
-        [ReorderableList]
-        public Callable[] onCollisionStay;
-
         public bool OnlyInteractWithTag = false;
         [EnableIf("OnlyInteractWithTag")]
         public string Tag = "Player";
 
-        private void OnCollisionEnter(Collider other)
+        private void OnCollisionEnter(Collision other)
         {
-            if (OnlyInteractWithTag && other.tag == Tag)
+            if (OnlyInteractWithTag && other.collider.tag == Tag)
             {
-                Callable.Call(onCollisionEnter, other.gameObject);
+                Callable.Call(onCollisionEnter, other.collider.gameObject);
             }
             if (!OnlyInteractWithTag)
             {
-                Callable.Call(onCollisionEnter, other.gameObject);
+                Callable.Call(onCollisionEnter, other.collider.gameObject);
             }
         }
 
-        private void OnCollisionExit(Collider other)
+        private void OnCollisionExit(Collision other)
         {
-            if (OnlyInteractWithTag && other.tag == Tag)
+            if (OnlyInteractWithTag && other.collider.tag == Tag)
             {
-                Callable.Call(onCollisionExit, other.gameObject);
+                Callable.Call(onCollisionExit, other.collider.gameObject);
             }
             if (!OnlyInteractWithTag)
             {
-                Callable.Call(onCollisionExit, other.gameObject);
-            }
-        }
-
-        private void OnCollisionStay(Collider other)
-        {
-            if (OnlyInteractWithTag && other.tag == Tag)
-            {
-                Callable.Call(onCollisionStay, other.gameObject);
-            }
-            if (!OnlyInteractWithTag)
-            {
-                Callable.Call(onCollisionStay, other.gameObject);
+                Callable.Call(onCollisionExit, other.collider.gameObject);
             }
         }
     }
