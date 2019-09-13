@@ -11,7 +11,11 @@ namespace GameplayIngredients.Events
         [ReorderableList]
         public Callable[] onTriggerExit;
 
+        [ReorderableList]
+        public Callable[] onTriggerStay;
+
         public bool OnlyInteractWithTag = true;
+        [EnableIf("OnlyInteractWithTag")]
         public string Tag = "Player";
 
         private void OnTriggerEnter(Collider other)
@@ -35,6 +39,18 @@ namespace GameplayIngredients.Events
             if (!OnlyInteractWithTag)
             {
                 Callable.Call(onTriggerExit, other.gameObject);
+            }
+        }
+
+        private void OnTriggerStaý(Collider other)
+        {
+            if (OnlyInteractWithTag && other.tag == Tag)
+            {
+                Callable.Call(onTriggerStay, other.gameObject);
+            }
+            if (!OnlyInteractWithTag)
+            {
+                Callable.Call(onTriggerStay, other.gameObject);
             }
         }
     }
