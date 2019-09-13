@@ -11,7 +11,7 @@ namespace GameplayIngredients.Actions
         public Animator animator;
         public string parameterName;
         [OnValueChanged("OnParameterTypeChanged")]
-        public AnimatorParameterType parameterType;
+        public AnimatorParameterType parameterType = AnimatorParameterType.Bool;
 
         bool showFloat;
         bool showInt;
@@ -47,22 +47,9 @@ namespace GameplayIngredients.Actions
 
         private void OnParameterTypeChanged()
         {
-            showBool = false;
-            showFloat = false;
-            showInt = false;
-
-            switch (parameterType)
-            {
-                case AnimatorParameterType.Bool:
-                    showBool = true;
-                    break;
-                case AnimatorParameterType.Float:
-                    showFloat = true;
-                    break;
-                case AnimatorParameterType.Int:
-                    showInt = true;
-                    break;
-            }
+            showbool = (parameterType == AnimatorParameterType.Bool);
+            showFloat = (parameterType == AnimatorParameterType.Float);
+            showInt = (parameterType == AnimatorParameterType.Int);
         }
     }
 }
