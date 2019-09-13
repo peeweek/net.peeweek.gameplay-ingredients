@@ -6,10 +6,10 @@ namespace GameplayIngredients.Logic
     public class FlipFlopLogic : LogicBase
     {
         [ReorderableList]
-        public Callable[] OnConditionValid;
+        public Callable[] OnFlip;
 
         [ReorderableList]
-        public Callable[] OnConditionInvalid;
+        public Callable[] OnFlop;
 
         private bool condition = true;
 
@@ -17,12 +17,12 @@ namespace GameplayIngredients.Logic
         {
             if (condition)
             {
-                Callable.Call(OnConditionValid, instigator);
+                Callable.Call(OnFlip, instigator);
                 condition = false;
             }
             else
             {
-                Callable.Call(OnConditionInvalid, instigator);
+                Callable.Call(OnFlop, instigator);
                 condition = true;
             }
         }
