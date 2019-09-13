@@ -9,7 +9,7 @@ namespace GameplayIngredients.Actions
     [ExecuteAlways]
     public class RigidbodyAction : ActionBase
     {
-        public Rigidbody rb;
+        public Rigidbody m_Rigidbody;
         [OnValueChanged("OnParameterTypeChanged")]
         public RigidbodyActionType actionType;
 
@@ -31,7 +31,7 @@ namespace GameplayIngredients.Actions
 
         public override void Execute(GameObject instigator = null)
         {
-            if (rb == null)
+            if (m_Rigidbody == null)
                 return;
 
             switch (actionType)
@@ -39,28 +39,28 @@ namespace GameplayIngredients.Actions
                 case RigidbodyActionType.Force:
                     if(actionSpace == ActionSpace.World)
                     {
-                        rb.AddForce(direction, forceMode);
+                        m_Rigidbody.AddForce(direction, forceMode);
                     }
                     if(actionSpace == ActionSpace.Local)
                     {
-                        rb.AddRelativeForce(direction, forceMode);
+                        m_Rigidbody.AddRelativeForce(direction, forceMode);
                     }
                     break;
                 case RigidbodyActionType.Torque:
                     if (actionSpace == ActionSpace.World)
                     {
-                        rb.AddTorque(direction, forceMode);
+                        m_Rigidbody.AddTorque(direction, forceMode);
                     }
                     if (actionSpace == ActionSpace.Local)
                     {
-                        rb.AddRelativeTorque(direction, forceMode);
+                        m_Rigidbody.AddRelativeTorque(direction, forceMode);
                     }
                     break;
                 case RigidbodyActionType.ExplosionForce:
-                    rb.AddExplosionForce(explosionForce, explositonPosition, explosionRadius, 0, forceMode);
+                    m_Rigidbody.AddExplosionForce(explosionForce, explositonPosition, explosionRadius, 0, forceMode);
                     break;
                 case RigidbodyActionType.Sleep:
-                    rb.Sleep();
+                    m_Rigidbody.Sleep();
                     break;
             }
         }
@@ -68,7 +68,7 @@ namespace GameplayIngredients.Actions
         private void OnParameterTypeChanged()
         {
             force = false;
-            explosion = false;
+            explosion = (actionType == RigidbodyActionType.ExplosionForce);
 
             switch (actionType)
             {
@@ -77,9 +77,6 @@ namespace GameplayIngredients.Actions
                     break;
                 case RigidbodyActionType.Torque:
                     force = true;
-                    break;
-                case RigidbodyActionType.ExplosionForce:
-                    explosion = true;
                     break;
             }
         }
