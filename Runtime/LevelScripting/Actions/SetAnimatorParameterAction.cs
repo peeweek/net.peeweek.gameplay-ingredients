@@ -47,7 +47,7 @@ namespace GameplayIngredients.Actions
 
         private void OnParameterTypeChanged()
         {
-            showbool = (parameterType == AnimatorParameterType.Bool);
+            showBool = (parameterType == AnimatorParameterType.Bool);
             showFloat = (parameterType == AnimatorParameterType.Float);
             showInt = (parameterType == AnimatorParameterType.Int);
         }
