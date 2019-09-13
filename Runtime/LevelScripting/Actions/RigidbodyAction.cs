@@ -67,18 +67,8 @@ namespace GameplayIngredients.Actions
 
         private void OnParameterTypeChanged()
         {
-            force = false;
+            force = (actionType == RigidbodyActionType.Force || RigidbodyActionType.Torque);
             explosion = (actionType == RigidbodyActionType.ExplosionForce);
-
-            switch (actionType)
-            {
-                case RigidbodyActionType.Force:
-                    force = true;
-                    break;
-                case RigidbodyActionType.Torque:
-                    force = true;
-                    break;
-            }
         }
     }
 }
