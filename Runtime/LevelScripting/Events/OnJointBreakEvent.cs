@@ -9,9 +9,9 @@ namespace GameplayIngredients.Events
         [ReorderableList]
         public Callable[] onJointBreak;
 
-        private void OnJointBreak(Collider other)
+        private void OnJointBreak(float breakForce)
         {
-            Callable.Call(onJointBreak, other.gameObject);
+            Callable.Call(onJointBreak, gameObject);
         }
     }
 }
