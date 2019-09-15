@@ -53,10 +53,15 @@ namespace GameplayIngredients.StateMachines
                 Debug.LogWarning(string.Format("{0} : Trying to set unknown state {1}", gameObject.name, stateName), gameObject);
         }
 
-        public void Update()
+        void Update()
         {
-            if (m_CurrentState != null)
+            if (GameplayIngredientsSettings.currentSettings.allowUpdateCalls 
+                && m_CurrentState != null 
+                && m_CurrentState.OnStateUpdate != null 
+                && m_CurrentState.OnStateUpdate.Length > 0)
+            {
                 Callable.Call(m_CurrentState.OnStateUpdate, this.gameObject);
+            }
         }
 
     }
