@@ -9,6 +9,8 @@ namespace GameplayIngredients.Actions
     [ExecuteAlways]
     public class RigidbodyAction : ActionBase
     {
+        public bool ApplyOnInstigator = false;
+        [HideIf("ApplyOnInstigator")]
         public Rigidbody m_Rigidbody;
         [OnValueChanged("OnParameterTypeChanged")]
         public RigidbodyActionType actionType;
@@ -31,36 +33,44 @@ namespace GameplayIngredients.Actions
 
         public override void Execute(GameObject instigator = null)
         {
-            if (m_Rigidbody == null)
+            Rigidbody target = m_Rigidbody;
+
+            if (ApplyOnInstigator)
+                target = instigator.GetComponent<Rigidbody>();
+
+            if (target == null)
+            {
+                Debug.LogWarning("Could not apply RigidbodyAction to null Rigidbody");
                 return;
+            }
 
             switch (actionType)
             {
                 case RigidbodyActionType.Force:
                     if(actionSpace == ActionSpace.World)
                     {
-                        m_Rigidbody.AddForce(direction, forceMode);
+                        target.AddForce(direction, forceMode);
                     }
                     if(actionSpace == ActionSpace.Local)
                     {
-                        m_Rigidbody.AddRelativeForce(direction, forceMode);
+                        target.AddRelativeForce(direction, forceMode);
                     }
                     break;
                 case RigidbodyActionType.Torque:
                     if (actionSpace == ActionSpace.World)
                     {
-                        m_Rigidbody.AddTorque(direction, forceMode);
+                        target.AddTorque(direction, forceMode);
                     }
                     if (actionSpace == ActionSpace.Local)
                     {
-                        m_Rigidbody.AddRelativeTorque(direction, forceMode);
+                        target.AddRelativeTorque(direction, forceMode);
                     }
                     break;
                 case RigidbodyActionType.ExplosionForce:
-                    m_Rigidbody.AddExplosionForce(explosionForce, explositonPosition, explosionRadius, 0, forceMode);
+                    target.AddExplosionForce(explosionForce, explositonPosition, explosionRadius, 0, forceMode);
                     break;
                 case RigidbodyActionType.Sleep:
-                    m_Rigidbody.Sleep();
+                    target.Sleep();
                     break;
             }
         }
