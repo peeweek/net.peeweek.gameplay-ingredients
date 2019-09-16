@@ -46,7 +46,8 @@ namespace GameplayIngredients
         [NonNullCheck]
         public GameObject SpawnTarget;
         public SpawnLocation spawnLocation = SpawnLocation.SameSceneAsTarget;
-
+        [Tooltip("Sacrifices oldest instance if necessary")]
+        public bool SacrificeOldest = false;
 
         [Header("Reap and Respawn")]
         public bool RespawnTarget = true;
@@ -106,6 +107,13 @@ namespace GameplayIngredients
 
             if (m_Instances == null)
                 m_Instances = new List<GameObject>();
+
+            if(m_Instances.Count == MaxInstances && SacrificeOldest)
+            {
+                var oldest = m_Instances[0];
+                m_Instances.RemoveAt(0);
+                Destroy(oldest);
+            }
 
             if (m_Instances.Count < MaxInstances)
             {
