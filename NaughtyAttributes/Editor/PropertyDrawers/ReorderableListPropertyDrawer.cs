@@ -35,11 +35,14 @@ namespace NaughtyAttributes.Editor
                         drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
                         {
                             var element = property.GetArrayElementAtIndex(index);
-                            rect.y += 1.0f;
-                            rect.x += 10.0f;
-                            rect.width -= 10.0f;
+                            if(element.hasChildren)
+                            {
+                                rect.y += 1.0f;
+                                rect.x += 10.0f;
+                                rect.width -= 10.0f;
+                            }
 
-                            EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, 0.0f), element, true);
+                            EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), element, true);
                         },
 
                         elementHeightCallback = (int index) =>
