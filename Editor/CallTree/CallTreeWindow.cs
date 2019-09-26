@@ -47,6 +47,11 @@ namespace GameplayIngredients
                 {
                     BuildCallTree();
                 }
+                if (GUILayout.Button("Filter Selected", EditorStyles.toolbarButton))
+                {
+                    m_TreeView.SetFilter(Selection.activeGameObject);
+                }
+
                 GUILayout.FlexibleSpace();
             }
             Rect r = GUILayoutUtility.GetRect(position.width, position.height - tbHeight);
@@ -78,7 +83,7 @@ namespace GameplayIngredients
 
         CallTreeNode GetNode(MonoBehaviour bhv)
         {
-            var rootNode = new CallTreeNode(bhv, GetType(bhv), $"{bhv.gameObject.name} : {bhv.GetType().Name}");
+            var rootNode = new CallTreeNode(bhv, GetType(bhv), $"{bhv.gameObject.name} ({bhv.GetType().Name})");
             var type = bhv.GetType();
             foreach (var field in type.GetFields())
             {
@@ -144,8 +149,7 @@ namespace GameplayIngredients
         {
             if (bhv == null)
                 return CallTreeNodeType.Callable;
-
-            if (bhv is EventBase)
+            else if (bhv is EventBase)
                 return CallTreeNodeType.Event;
             else if (bhv is LogicBase)
                 return CallTreeNodeType.Logic;
@@ -174,6 +178,22 @@ namespace GameplayIngredients
                 Type = type;
                 Children = new List<CallTreeNode>();
             }
+
+            public bool ContainsReference(GameObject go)
+            {
+                if (go == null)
+                    return true;
+                else
+                {
+                    if (this.Target.gameObject == go)
+                        return true;
+
+                    bool value = false;
+                    foreach (var node in Children)
+                        value = value || node.ContainsReference(go);
+                    return value;
+                }
+            }
         }
 
         public enum CallTreeNodeType
@@ -197,23 +217,38 @@ namespace GameplayIngredients
                 m_Roots = roots;
                 m_Bindings = new Dictionary<int, CallTreeNode>();
             }
+
+            GameObject m_filter = null;
+            public void SetFilter(GameObject filter = null)
+            {
+                m_filter = filter;
+                this.Reload();
+            }
             
             protected override TreeViewItem BuildRoot()
             {
                 int id = 0;
                 m_Bindings.Clear();
-                var treeRoot = new TreeViewItem(id++, -1, "~Root");
+                var treeRoot = new TreeViewItem(id, -1, "~Root");
                 foreach(var node in m_Roots)
                 {
-                    treeRoot.AddChild(GetNode(node, ref id, 0));
+                    if (node.ContainsReference(m_filter))
+                    {
+                        treeRoot.AddChild(GetNode(node, ref id, 0));
+                    }
+                }
+                if(treeRoot.children == null)
+                {
+                    treeRoot.AddChild(new TreeViewItem(1, 0, "(No Results)"));
                 }
                 return treeRoot;
             }
 
             TreeViewItem GetNode(CallTreeNode node, ref int id, int depth)
             {
-                var item = new TreeViewItem(id++, depth, $"{node.Name} ({node.Type})");
-                item.icon = GetIcon(node.Type);
+                id++;
+                var item = new TreeViewItem(id, depth, $"{node.Name}");
+                item.icon = GetIcon(node.Target, node.Type);
                 m_Bindings.Add(id, node);
 
                 foreach(var child in node.Children)
@@ -223,8 +258,15 @@ namespace GameplayIngredients
                 return item;
             }
 
-            Texture2D GetIcon(CallTreeNodeType type)
+            Texture2D GetIcon(MonoBehaviour bhv, CallTreeNodeType type)
             {
+                if(bhv != null && type != CallTreeNodeType.Callable)
+                {
+                    var texture = EditorGUIUtility.ObjectContent(bhv, bhv.GetType()).image;
+                    if (texture != null)
+                        return texture as Texture2D;
+                }
+
                 switch(type)
                 {
                     default:
