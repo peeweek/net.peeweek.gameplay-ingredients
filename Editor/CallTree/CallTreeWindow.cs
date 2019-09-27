@@ -48,14 +48,25 @@ namespace GameplayIngredients
                     ReloadCallHierarchy();
                 }
                 GUILayout.FlexibleSpace();
-                if (GUILayout.Button("Filter Selected", EditorStyles.toolbarButton))
+                Rect buttonRect = GUILayoutUtility.GetRect(64, 16);
+                if (GUI.Button(buttonRect, "Filter", EditorStyles.toolbarDropDown))
                 {
-                    m_TreeView.SetFilter(Selection.activeGameObject);
+                    GenericMenu menu = new GenericMenu();
+                    menu.AddItem(new GUIContent("Filter Selected"), false, () => {
+                        m_TreeView.SetAutoFilter(false);
+                        m_TreeView.SetFilter(Selection.activeGameObject);
+                    });
+                    menu.AddItem(new GUIContent("Clear Filter"), false, () => {
+                        m_TreeView.SetAutoFilter(false);
+                        m_TreeView.SetFilter(null);
+                    });
+                    menu.AddSeparator("");
+                    menu.AddItem(new GUIContent("Automatic Filter"), m_TreeView.AutoFilter, () => {
+                        m_TreeView.ToggleAutoFilter();
+                    });
+                    menu.DropDown(buttonRect);
                 }
-                if (GUILayout.Button("Clear", EditorStyles.toolbarButton))
-                {
-                    m_TreeView.SetFilter(null);
-                }
+
             }
             Rect r = GUILayoutUtility.GetRect(position.width, position.height - tbHeight);
             m_TreeView.OnGUI(r);
@@ -241,12 +252,39 @@ namespace GameplayIngredients
             }
 
             GameObject m_filter = null;
+            public bool AutoFilter { get; private set; }
+            public void ToggleAutoFilter()
+            {
+                SetAutoFilter(!AutoFilter);
+            }
+
+            public void SetAutoFilter(bool value)
+            {
+                AutoFilter = value;
+                if (AutoFilter)
+                {
+                    Selection.selectionChanged += UpdateAutoFilter;
+                    if(this.HasSelection())
+                    {
+                        SetFilter(m_Bindings[this.GetSelection()[0]].Target.gameObject);
+                    }
+                }
+                else
+                    Selection.selectionChanged -= UpdateAutoFilter;
+            }
+
+            void UpdateAutoFilter()
+            {
+                if (Selection.activeGameObject != null)
+                    SetFilter(Selection.activeGameObject);
+            }
+
             public void SetFilter(GameObject filter = null)
             {
                 m_filter = filter;
                 this.Reload();
             }
-            
+
             protected override TreeViewItem BuildRoot()
             {
                 int id = -1;
@@ -321,6 +359,9 @@ namespace GameplayIngredients
 
             protected override void SelectionChanged(IList<int> selectedIds)
             {
+                if (AutoFilter)
+                    return;
+
                 base.SelectionChanged(selectedIds);
                 if (selectedIds.Count > 0 && m_Bindings.ContainsKey(selectedIds[0]))
                     Selection.activeObject = m_Bindings[selectedIds[0]].Target;
