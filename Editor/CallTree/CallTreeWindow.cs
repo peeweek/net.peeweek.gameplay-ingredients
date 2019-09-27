@@ -26,16 +26,16 @@ namespace GameplayIngredients
 
         private void OnEnable()
         {
-            nodeRoots = new List<CallTreeNode>();
+            nodeRoots = new Dictionary<string, List<CallTreeNode>>();
             m_TreeView = new CallTreeView(nodeRoots);            
             titleContent = new GUIContent("Callable Tree Explorer");
-            BuildCallTree();
+            ReloadCallHierarchy();
             EditorSceneManager.sceneOpened += Reload;
         }
 
         void Reload(Scene scene, OpenSceneMode mode)
         {
-            BuildCallTree();
+            ReloadCallHierarchy();
         }
 
         private void OnGUI()
@@ -43,42 +43,60 @@ namespace GameplayIngredients
             int tbHeight = 24;
             using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Height(tbHeight)))
             {
-                if (GUILayout.Button("Update", EditorStyles.toolbarButton))
+                if (GUILayout.Button("Reload", EditorStyles.toolbarButton))
                 {
-                    BuildCallTree();
+                    ReloadCallHierarchy();
                 }
+                GUILayout.FlexibleSpace();
                 if (GUILayout.Button("Filter Selected", EditorStyles.toolbarButton))
                 {
                     m_TreeView.SetFilter(Selection.activeGameObject);
                 }
-
-                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Clear", EditorStyles.toolbarButton))
+                {
+                    m_TreeView.SetFilter(null);
+                }
             }
             Rect r = GUILayoutUtility.GetRect(position.width, position.height - tbHeight);
             m_TreeView.OnGUI(r);
         }
 
-        List<CallTreeNode> nodeRoots;
+        Dictionary<string, List<CallTreeNode>> nodeRoots;
 
-        void BuildCallTree()
+        void ReloadCallHierarchy()
         {
             if (nodeRoots == null)
-                nodeRoots = new List<CallTreeNode>();
+                nodeRoots = new Dictionary<string, List<CallTreeNode>>();
             else
                 nodeRoots.Clear();
 
-            var allEvents = Resources.FindObjectsOfTypeAll<EventBase>().ToList();
-            var allStateMachines = Resources.FindObjectsOfTypeAll<StateMachine>().ToList();
-            foreach (var evt in allEvents)
+            AddToCategory<EventBase>("Events");
+            AddToCategory<StateMachine>("State Machines");
+            AddToCategory<Factory>("Factories");
+
+            m_TreeView.Reload();
+        }
+
+        void AddToCategory<T>(string name) where T:MonoBehaviour
+        {
+            var list = Resources.FindObjectsOfTypeAll<T>().ToList();
+
+            if (list.Count > 0)
+                nodeRoots.Add(name, new List<CallTreeNode>());
+
+            var listRoot = nodeRoots[name];
+            foreach (var item in list)
             {
-                nodeRoots.Add(GetNode(evt));
+                if(typeof(T) == typeof(StateMachine))
+                {
+                    listRoot.Add(GetStateMachineNode(item as StateMachine));
+                }
+                else
+                {
+                    listRoot.Add(GetNode(item));
+                }
             }
 
-            foreach (var sm in allStateMachines)
-            {
-                nodeRoots.Add(GetStateMachineNode(sm));
-            }
-            m_TreeView.Reload();
         }
 
         CallTreeNode GetNode(MonoBehaviour bhv)
@@ -91,12 +109,16 @@ namespace GameplayIngredients
                 if (field.FieldType.IsAssignableFrom(typeof(Callable[])))
                 {
                     var node = new CallTreeNode(bhv, CallTreeNodeType.Callable, field.Name);
-                    rootNode.Children.Add(node);
-                    // Add Callables from this Callable[] array
                     var value = (Callable[])field.GetValue(bhv);
-                    foreach (var call in value)
+
+                    if (value != null && value.Length > 0)
                     {
-                        node.Children.Add(GetNode(call));
+                        rootNode.Children.Add(node);
+                        // Add Callables from this Callable[] array
+                        foreach (var call in value)
+                        {
+                            node.Children.Add(GetNode(call));
+                        }
                     }
                 }
             }
@@ -209,10 +231,10 @@ namespace GameplayIngredients
 
         class CallTreeView : TreeView
         {
-            List<CallTreeNode> m_Roots;
+            Dictionary<string, List<CallTreeNode>> m_Roots;
             Dictionary<int, CallTreeNode> m_Bindings;
 
-            public CallTreeView(List<CallTreeNode> roots) : base(new TreeViewState())
+            public CallTreeView(Dictionary<string, List<CallTreeNode>> roots) : base(new TreeViewState())
             {
                 m_Roots = roots;
                 m_Bindings = new Dictionary<int, CallTreeNode>();
@@ -227,20 +249,30 @@ namespace GameplayIngredients
             
             protected override TreeViewItem BuildRoot()
             {
-                int id = 0;
+                int id = -1;
                 m_Bindings.Clear();
-                var treeRoot = new TreeViewItem(id, -1, "~Root");
-                foreach(var node in m_Roots)
+                var treeRoot = new TreeViewItem(++id, -1, "~Root");
+
+                foreach(var kvp in m_Roots)
                 {
-                    if (node.ContainsReference(m_filter))
+                    if (kvp.Value == null || kvp.Value.Count == 0)
+                        continue;
+
+                    var currentRoot = new TreeViewItem(++id, 0, kvp.Key);
+                    treeRoot.AddChild(currentRoot);
+                    foreach (var node in kvp.Value)
                     {
-                        treeRoot.AddChild(GetNode(node, ref id, 0));
+                        if (node.ContainsReference(m_filter))
+                        {
+                            currentRoot.AddChild(GetNode(node, ref id, 1));
+                        }
                     }
                 }
-                if(treeRoot.children == null)
+                if (treeRoot.children == null)
                 {
                     treeRoot.AddChild(new TreeViewItem(1, 0, "(No Results)"));
                 }
+
                 return treeRoot;
             }
 
@@ -290,7 +322,7 @@ namespace GameplayIngredients
             protected override void SelectionChanged(IList<int> selectedIds)
             {
                 base.SelectionChanged(selectedIds);
-                if (selectedIds.Count > 0)
+                if (selectedIds.Count > 0 && m_Bindings.ContainsKey(selectedIds[0]))
                     Selection.activeObject = m_Bindings[selectedIds[0]].Target;
             }
 
