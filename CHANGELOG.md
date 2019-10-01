@@ -22,6 +22,7 @@
 
 * Fixed LinkGameView not working in play mode when excluding VirtualCameraManager.
 * Fixed Performance issue in GameplayIngredientsSettings when having a big list of Excluded managers.
+* Fixed ApplicationExitAction : Exits play mode when in Editor.
 
 ## 2019.1.2
 
