@@ -21,7 +21,16 @@ namespace GameplayIngredients.Editor
         [MenuItem("Window/Gameplay Ingredients/Callable Tree Explorer", priority = MenuItems.kWindowMenuPriority)]
         static void OpenWindow()
         {
-            GetWindow<CallTreeWindow>();
+            s_Instance = GetWindow<CallTreeWindow>();
+        }
+
+        public static bool visible = false;
+        static CallTreeWindow s_Instance;
+
+        private void OnDisable()
+        {
+            visible = false;
+            s_Instance = null;
         }
 
         private void OnEnable()
@@ -31,11 +40,24 @@ namespace GameplayIngredients.Editor
             titleContent = new GUIContent("Callable Tree Explorer");
             ReloadCallHierarchy();
             EditorSceneManager.sceneOpened += Reload;
+            EditorSceneSetup.onSetupLoaded += ReloadSetup;
+            visible = true;
         }
 
         void Reload(Scene scene, OpenSceneMode mode)
         {
             ReloadCallHierarchy();
+        }
+
+        void ReloadSetup(EditorSceneSetup setup)
+        {
+            ReloadCallHierarchy();
+        }
+
+        public static void Refresh()
+        {
+            s_Instance.ReloadCallHierarchy();
+            s_Instance.Repaint();
         }
 
         private void OnGUI()
@@ -98,10 +120,15 @@ namespace GameplayIngredients.Editor
 
             if (list.Count > 0)
                 nodeRoots.Add(name, new List<CallTreeNode>());
+            else
+                return;
 
             var listRoot = nodeRoots[name];
             foreach (var item in list)
             {
+                if (item.gameObject.scene == null || !item.gameObject.scene.isLoaded)
+                    continue;
+
                 var stack = new Stack<object>();
                 
                 if(typeof(T) == typeof(StateMachine))
@@ -343,7 +370,7 @@ namespace GameplayIngredients.Editor
             public void SetFilter(GameObject filter = null)
             {
                 m_filter = filter;
-                this.Reload();
+                Reload();
             }
 
             protected override TreeViewItem BuildRoot()
