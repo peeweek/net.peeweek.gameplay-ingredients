@@ -21,6 +21,7 @@
 #### Fixed
 
 * Fixed LinkGameView not working in play mode when excluding VirtualCameraManager.
+* Fixed Performance issue in GameplayIngredientsSettings when having a big list of Excluded managers.
 
 ## 2019.1.2
 
