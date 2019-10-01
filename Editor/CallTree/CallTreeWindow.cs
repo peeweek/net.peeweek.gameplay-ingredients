@@ -168,7 +168,7 @@ namespace GameplayIngredients.Editor
                             // Add Callables from this Callable[] array
                             foreach (var call in value)
                             {
-                                node.Children.Add(GetNode(call, stack));
+                                node.Children.Add(GetCallableNode(call, stack));
                             }
                         }
                     }
@@ -179,7 +179,40 @@ namespace GameplayIngredients.Editor
             {
                 return new CallTreeNode(bhv, GetType(bhv), $"RECURSED : {bhv.gameObject.name} ({bhv.GetType().Name})");
             }
+        }
 
+        CallTreeNode GetCallableNode(Callable c, Stack<object> stack)
+        {
+            if (!stack.Contains(c))
+            {
+                stack.Push(c);
+                var rootNode = new CallTreeNode(c, GetType(c), $"{c.Name} ({c.gameObject.name} : {c.GetType().Name})");
+                var type = c.GetType();
+                foreach (var field in type.GetFields())
+                {
+                    // Find Fields that are Callable[]
+                    if (field.FieldType.IsAssignableFrom(typeof(Callable[])))
+                    {
+                        var node = new CallTreeNode(c, CallTreeNodeType.Callable, field.Name);
+                        var value = (Callable[])field.GetValue(c);
+
+                        if (value != null && value.Length > 0)
+                        {
+                            rootNode.Children.Add(node);
+                            // Add Callables from this Callable[] array
+                            foreach (var call in value)
+                            {
+                                node.Children.Add(GetCallableNode(call, stack));
+                            }
+                        }
+                    }
+                }
+                return rootNode;
+            }
+            else
+            {
+                return new CallTreeNode(c, GetType(c), $"RECURSED : {c.Name} ({c.gameObject.name} : {c.GetType().Name})");
+            }
         }
 
         CallTreeNode GetMessageNode(SendMessageAction msg, Stack<object> stack)
@@ -302,7 +335,7 @@ namespace GameplayIngredients.Editor
                     return true;
                 else
                 {
-                    if (this.Target.gameObject == go && string.IsNullOrEmpty(filter)? true: this.Name.Contains(filter))
+                    if (this.Target.gameObject == go && (string.IsNullOrEmpty(filter)? true: this.Name.Contains(filter)))
                         return true;
 
                     bool value = false;
@@ -337,7 +370,9 @@ namespace GameplayIngredients.Editor
 
             public string stringFilter { get { return m_StringFilter; } set { m_StringFilter = value; this.Reload(); } }
 
+            [SerializeField]
             GameObject m_filter = null;
+            [SerializeField]
             string m_StringFilter = "";
 
             public bool AutoFilter { get; private set; }
