@@ -48,7 +48,9 @@ namespace GameplayIngredients.Editor
                     ReloadCallHierarchy();
                 }
                 GUILayout.FlexibleSpace();
-                Rect buttonRect = GUILayoutUtility.GetRect(64, 16);
+                m_TreeView.stringFilter = EditorGUILayout.DelayedTextField(m_TreeView.stringFilter, EditorStyles.toolbarSearchField);
+
+                Rect buttonRect = GUILayoutUtility.GetRect(52, 16);
                 if (GUI.Button(buttonRect, "Filter", EditorStyles.toolbarDropDown))
                 {
                     GenericMenu menu = new GenericMenu();
@@ -59,6 +61,7 @@ namespace GameplayIngredients.Editor
                     menu.AddItem(new GUIContent("Clear Filter"), false, () => {
                         m_TreeView.SetAutoFilter(false);
                         m_TreeView.SetFilter(null);
+                        m_TreeView.stringFilter = string.Empty;
                     });
                     menu.AddSeparator("");
                     menu.AddItem(new GUIContent("Automatic Filter"), m_TreeView.AutoFilter, () => {
@@ -99,101 +102,137 @@ namespace GameplayIngredients.Editor
             var listRoot = nodeRoots[name];
             foreach (var item in list)
             {
+                var stack = new Stack<object>();
+                
                 if(typeof(T) == typeof(StateMachine))
                 {
-                    listRoot.Add(GetStateMachineNode(item as StateMachine));
+                    listRoot.Add(GetStateMachineNode(item as StateMachine, stack));
                 }
                 else if(typeof(T) == typeof(SendMessageAction))
                 {
-                    listRoot.Add(GetMessageNode(item as SendMessageAction));
+                    listRoot.Add(GetMessageNode(item as SendMessageAction, stack));
                 }
                 else
                 {
-                    listRoot.Add(GetNode(item));
+                    listRoot.Add(GetNode(item, stack));
                 }
             }
 
         }
 
-        CallTreeNode GetNode(MonoBehaviour bhv)
+        CallTreeNode GetNode(MonoBehaviour bhv, Stack<object> stack)
         {
-            var rootNode = new CallTreeNode(bhv, GetType(bhv), $"{bhv.gameObject.name} ({bhv.GetType().Name})");
-            var type = bhv.GetType();
-            foreach (var field in type.GetFields())
+            if(!stack.Contains(bhv))
             {
-                // Find Fields that are Callable[]
-                if (field.FieldType.IsAssignableFrom(typeof(Callable[])))
+                stack.Push(bhv);
+                var rootNode = new CallTreeNode(bhv, GetType(bhv), $"{bhv.gameObject.name} ({bhv.GetType().Name})");
+                var type = bhv.GetType();
+                foreach (var field in type.GetFields())
                 {
-                    var node = new CallTreeNode(bhv, CallTreeNodeType.Callable, field.Name);
-                    var value = (Callable[])field.GetValue(bhv);
-
-                    if (value != null && value.Length > 0)
+                    // Find Fields that are Callable[]
+                    if (field.FieldType.IsAssignableFrom(typeof(Callable[])))
                     {
-                        rootNode.Children.Add(node);
-                        // Add Callables from this Callable[] array
-                        foreach (var call in value)
+                        var node = new CallTreeNode(bhv, CallTreeNodeType.Callable, field.Name);
+                        var value = (Callable[])field.GetValue(bhv);
+
+                        if (value != null && value.Length > 0)
                         {
-                            node.Children.Add(GetNode(call));
+                            rootNode.Children.Add(node);
+                            // Add Callables from this Callable[] array
+                            foreach (var call in value)
+                            {
+                                node.Children.Add(GetNode(call, stack));
+                            }
                         }
                     }
                 }
+                return rootNode;
             }
-            return rootNode;
+            else
+            {
+                return new CallTreeNode(bhv, GetType(bhv), $"RECURSED : {bhv.gameObject.name} ({bhv.GetType().Name})");
+            }
+
         }
 
-        CallTreeNode GetMessageNode(SendMessageAction sm)
+        CallTreeNode GetMessageNode(SendMessageAction msg, Stack<object> stack)
         {
-            var rootNode = new CallTreeNode(sm, CallTreeNodeType.Message, $"{sm.MessageToSend} : ({sm.gameObject.name}.{sm.Name})");
-            var all = Resources.FindObjectsOfTypeAll<OnMessageEvent>().Where(o=> o.MessageName == sm.MessageToSend).ToList();
-
-            foreach(var evt in all)
+            if (!stack.Contains(msg))
             {
-                rootNode.Children.Add(GetNode(evt));
-            }
-            return rootNode;
-        }
+                stack.Push(msg);
+                var rootNode = new CallTreeNode(msg, CallTreeNodeType.Message, $"{msg.MessageToSend} : ({msg.gameObject.name}.{msg.Name})");
+                var all = Resources.FindObjectsOfTypeAll<OnMessageEvent>().Where(o=> o.MessageName == msg.MessageToSend).ToList();
 
-
-        CallTreeNode GetStateMachineNode(StateMachine sm)
-        {
-            var rootNode = new CallTreeNode(sm, CallTreeNodeType.StateMachine, sm.gameObject.name);
-            var type = sm.GetType();
-            foreach (var field in type.GetFields())
-            {
-                // Find Fields that are State[]
-                if (field.FieldType.IsAssignableFrom(typeof(State[])))
+                foreach(var evt in all)
                 {
-                    // Add Callables from this Callable[] array
-                    var value = (State[])field.GetValue(sm);
-                    foreach (var state in value)
+                    rootNode.Children.Add(GetNode(evt, stack));
+                }
+                return rootNode;
+            }
+            else
+            {
+                return new CallTreeNode(msg, GetType(msg), $"RECURSED :{msg.MessageToSend} : ({msg.gameObject.name}.{msg.Name})");
+            }
+        }
+
+
+        CallTreeNode GetStateMachineNode(StateMachine sm, Stack<object> stack)
+        {
+            if (!stack.Contains(sm))
+            {
+                stack.Push(sm);
+                var rootNode = new CallTreeNode(sm, CallTreeNodeType.StateMachine, sm.gameObject.name);
+                var type = sm.GetType();
+                foreach (var field in type.GetFields())
+                {
+                    // Find Fields that are State[]
+                    if (field.FieldType.IsAssignableFrom(typeof(State[])))
                     {
-                        rootNode.Children.Add(GetStateNode(state));
+                        // Add Callables from this Callable[] array
+                        var value = (State[])field.GetValue(sm);
+                        foreach (var state in value)
+                        {
+                            rootNode.Children.Add(GetStateNode(state, stack));
+                        }
                     }
                 }
+                return rootNode;
             }
-            return rootNode;
+            else
+            {
+                return new CallTreeNode(sm, GetType(sm), $"RECURSED :{sm.gameObject.name}");
+            }
+
         }
 
-        CallTreeNode GetStateNode(State st)
+        CallTreeNode GetStateNode(State st, Stack<object> stack)
         {
-            var rootNode = new CallTreeNode(st, CallTreeNodeType.State, st.gameObject.name);
-            var type = st.GetType();
-            foreach (var field in type.GetFields())
+            if (!stack.Contains(st))
             {
-                // Find Fields that are Callable[]
-                if (field.FieldType.IsAssignableFrom(typeof(Callable[])))
+                stack.Push(st);
+                var rootNode = new CallTreeNode(st, CallTreeNodeType.State, st.gameObject.name);
+                var type = st.GetType();
+                foreach (var field in type.GetFields())
                 {
-                    var node = new CallTreeNode(st, CallTreeNodeType.Callable, field.Name);
-                    rootNode.Children.Add(node);
-                    // Add Callables from this Callable[] array
-                    var value = (Callable[])field.GetValue(st);
-                    foreach (var call in value)
+                    // Find Fields that are Callable[]
+                    if (field.FieldType.IsAssignableFrom(typeof(Callable[])))
                     {
-                        node.Children.Add(GetNode(call));
+                        var node = new CallTreeNode(st, CallTreeNodeType.Callable, field.Name);
+                        rootNode.Children.Add(node);
+                        // Add Callables from this Callable[] array
+                        var value = (Callable[])field.GetValue(st);
+                        foreach (var call in value)
+                        {
+                            node.Children.Add(GetNode(call, stack));
+                        }
                     }
                 }
+                return rootNode;
             }
-            return rootNode;
+            else
+            {
+                return new CallTreeNode(st, GetType(st), $"RECURSED :{st.gameObject.name}");
+            }
         }
 
         CallTreeNodeType GetType(MonoBehaviour bhv)
@@ -230,18 +269,18 @@ namespace GameplayIngredients.Editor
                 Children = new List<CallTreeNode>();
             }
 
-            public bool ContainsReference(GameObject go)
+            public bool Filter(GameObject go, string filter)
             {
-                if (go == null)
+                if (go == null && string.IsNullOrEmpty(filter))
                     return true;
                 else
                 {
-                    if (this.Target.gameObject == go)
+                    if (this.Target.gameObject == go && string.IsNullOrEmpty(filter)? true: this.Name.Contains(filter))
                         return true;
 
                     bool value = false;
                     foreach (var node in Children)
-                        value = value || node.ContainsReference(go);
+                        value = value || node.Filter(go, filter);
                     return value;
                 }
             }
@@ -269,7 +308,11 @@ namespace GameplayIngredients.Editor
                 m_Bindings = new Dictionary<int, CallTreeNode>();
             }
 
+            public string stringFilter { get { return m_StringFilter; } set { m_StringFilter = value; this.Reload(); } }
+
             GameObject m_filter = null;
+            string m_StringFilter = "";
+
             public bool AutoFilter { get; private set; }
             public void ToggleAutoFilter()
             {
@@ -318,7 +361,7 @@ namespace GameplayIngredients.Editor
                     treeRoot.AddChild(currentRoot);
                     foreach (var node in kvp.Value)
                     {
-                        if (node.ContainsReference(m_filter))
+                        if (node.Filter(m_filter, m_StringFilter))
                         {
                             currentRoot.AddChild(GetNode(node, ref id, 1));
                         }
