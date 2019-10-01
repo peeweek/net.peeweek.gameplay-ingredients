@@ -1,5 +1,27 @@
 # Changelog
 
+## 2019.1.3
+
+#### Added
+
+* **Call Tree Explorer :** Using Window/Gameplay Ingredients/Call Tree Explorer , opens a window that lists the tree of Events, Logic and Actions, State Machines and Event Calling Actions
+* Added option in GameplayIngredientsSettings to disable visibility of Callable[] bound to Update Loops.
+* Added OnUpdate Event : Perform calls every update
+* Added OnColider Event :  Perform calls upon collisions
+* Added OnJoinBreak Event : Perform calls upon Rigid body joint break
+* Added FlipFlop Logic : Two-state latch logic
+* Added RigidBody Action : Perform actions on a rigidbody
+* Added SetAnimatorParameterAction : Perform parameter setting on Animators
+* Added Sacrifice Oldest option to Factory
+
+#### Changed
+
+- Moved Menu Items in Window menu into a Gameplay Ingredients Subfolder
+
+#### Fixed
+
+* 
+
 ## 2019.1.2
 
 #### Changed
