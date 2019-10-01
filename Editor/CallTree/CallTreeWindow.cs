@@ -13,12 +13,12 @@ using GameplayIngredients.Actions;
 using GameplayIngredients.StateMachines;
 using UnityEngine.SceneManagement;
 
-namespace GameplayIngredients
+namespace GameplayIngredients.Editor
 {
     public class CallTreeWindow : EditorWindow
     {
         CallTreeView m_TreeView;
-        [MenuItem("Window/Callable Tree Explorer")]
+        [MenuItem("Window/Gameplay Ingredients/Callable Tree Explorer", priority = MenuItems.kWindowMenuPriority)]
         static void OpenWindow()
         {
             GetWindow<CallTreeWindow>();
@@ -84,6 +84,7 @@ namespace GameplayIngredients
             AddToCategory<EventBase>("Events");
             AddToCategory<StateMachine>("State Machines");
             AddToCategory<Factory>("Factories");
+            AddToCategory<SendMessageAction>("Messages");
 
             m_TreeView.Reload();
         }
@@ -101,6 +102,10 @@ namespace GameplayIngredients
                 if(typeof(T) == typeof(StateMachine))
                 {
                     listRoot.Add(GetStateMachineNode(item as StateMachine));
+                }
+                else if(typeof(T) == typeof(SendMessageAction))
+                {
+                    listRoot.Add(GetMessageNode(item as SendMessageAction));
                 }
                 else
                 {
@@ -135,6 +140,19 @@ namespace GameplayIngredients
             }
             return rootNode;
         }
+
+        CallTreeNode GetMessageNode(SendMessageAction sm)
+        {
+            var rootNode = new CallTreeNode(sm, CallTreeNodeType.Message, sm.MessageToSend);
+            var all = Resources.FindObjectsOfTypeAll<OnMessageEvent>().Where(o=> o.MessageName == sm.MessageToSend).ToList();
+
+            foreach(var evt in all)
+            {
+                rootNode.Children.Add(GetNode(evt));
+            }
+            return rootNode;
+        }
+
 
         CallTreeNode GetStateMachineNode(StateMachine sm)
         {
