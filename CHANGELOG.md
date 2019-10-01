@@ -20,7 +20,7 @@
 
 #### Fixed
 
-* 
+* Fixed LinkGameView not working in play mode when excluding VirtualCameraManager.
 
 ## 2019.1.2
 
