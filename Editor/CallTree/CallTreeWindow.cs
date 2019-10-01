@@ -143,7 +143,7 @@ namespace GameplayIngredients.Editor
 
         CallTreeNode GetMessageNode(SendMessageAction sm)
         {
-            var rootNode = new CallTreeNode(sm, CallTreeNodeType.Message, sm.MessageToSend);
+            var rootNode = new CallTreeNode(sm, CallTreeNodeType.Message, $"{sm.MessageToSend} : ({sm.gameObject.name}.{sm.Name})");
             var all = Resources.FindObjectsOfTypeAll<OnMessageEvent>().Where(o=> o.MessageName == sm.MessageToSend).ToList();
 
             foreach(var evt in all)
