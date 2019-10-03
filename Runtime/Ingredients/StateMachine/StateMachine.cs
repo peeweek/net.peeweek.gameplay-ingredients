@@ -13,6 +13,8 @@ namespace GameplayIngredients.StateMachines
         [ReorderableList, NonNullCheck]
         public State[] States;
 
+        public State CurrentState { get { return m_CurrentState; } }
+
         State m_CurrentState;
 
         void Start()
