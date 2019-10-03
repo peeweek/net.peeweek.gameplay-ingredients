@@ -10,6 +10,8 @@
 * Added OnColider Event :  Perform calls upon collisions
 * Added OnJoinBreak Event : Perform calls upon Rigid body joint break
 * Added FlipFlop Logic : Two-state latch logic
+* Added State Logic : Perform logic based on State Machine current state.
+* Added Audio Mix Snapshot Action : Set Mixer Snapshots
 * Added RigidBody Action : Perform actions on a rigidbody
 * Added SetAnimatorParameterAction : Perform parameter setting on Animators
 * Added Sacrifice Oldest option to Factory
