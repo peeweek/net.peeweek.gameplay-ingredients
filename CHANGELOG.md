@@ -5,6 +5,7 @@
 #### Added
 
 * **Call Tree Explorer :** Using Window/Gameplay Ingredients/Call Tree Explorer , opens a window that lists the tree of Events, Logic and Actions, State Machines and Event Calling Actions
+* **Folders:** In the Game Object creation Menu, Select folder to add a folder in the hierarchy. Automatically adds Static Game Objects with colored icon (Displayed using Advanced Hierarchy View)
 * Added option in GameplayIngredientsSettings to disable visibility of Callable[] bound to Update Loops.
 * Added OnUpdate Event : Perform calls every update
 * Added OnColider Event :  Perform calls upon collisions
