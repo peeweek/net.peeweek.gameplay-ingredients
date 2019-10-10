@@ -5,25 +5,38 @@ namespace GameplayIngredients.Logic
 {
     public class FlipFlopLogic : LogicBase
     {
+        public enum State
+        {
+            Flip,
+            Flop
+        }
+
+        public State InitialState = State.Flip;
+
         [ReorderableList]
         public Callable[] OnFlip;
 
         [ReorderableList]
         public Callable[] OnFlop;
 
-        private bool condition = true;
+        private State state;
+
+        public void OnEnable()
+        {
+            state = InitialState;
+        }
 
         public override void Execute(GameObject instigator = null)
         {
-            if (condition)
+            if (state == State.Flop)
             {
                 Callable.Call(OnFlip, instigator);
-                condition = false;
+                state = State.Flip;
             }
             else
             {
                 Callable.Call(OnFlop, instigator);
-                condition = true;
+                state = State.Flop;
             }
         }
     }

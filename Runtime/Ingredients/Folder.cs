@@ -7,6 +7,7 @@ namespace GameplayIngredients
     {
         public Color Color = Color.yellow;
 
+#if UNITY_EDITOR
         private void Awake()
         {
             Reset();
@@ -22,6 +23,7 @@ namespace GameplayIngredients
                 Destroy(this);
             }
         }
+#endif
     }
 }
 

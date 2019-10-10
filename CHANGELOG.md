@@ -16,10 +16,12 @@
 * Added RigidBody Action : Perform actions on a rigidbody
 * Added SetAnimatorParameterAction : Perform parameter setting on Animators
 * Added Sacrifice Oldest option to Factory
+* Added Folder Cosmetic Behavior (for view in Advanced HIerarchy View)
 
 #### Changed
 
 - Moved Menu Items in Window menu into a Gameplay Ingredients Subfolder
+- State Machine : Setting default state in editor also sets the correct enabled flags for this state.
 
 #### Fixed
 
