@@ -17,6 +17,9 @@
 * Added SetAnimatorParameterAction : Perform parameter setting on Animators
 * Added Sacrifice Oldest option to Factory
 * Added Folder Cosmetic Behavior (for view in Advanced HIerarchy View)
+* Added Timer Component
+* Added TimerAction to control Timer
+* Added TimerDisplayRig
 
 #### Changed
 
