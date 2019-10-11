@@ -64,6 +64,25 @@ namespace GameplayIngredients
 
         List<GameObject> m_Instances;
 
+        private void OnEnable()
+        {
+            List<int> todelete = new List<int>();
+            for (int i = 0; i < m_Instances.Count; i++)
+            {
+                if (m_Instances[i] == null)
+                    todelete.Add(i);
+            }
+            foreach (var index in todelete)
+            {
+                m_Instances.RemoveAt(index);
+                if (RespawnTarget)
+                    AddRespawnCoroutine();
+
+            }
+
+        }
+
+
         private void OnDestroy()
         {
             if(ReapInstancesOnDestroy && m_Instances != null)
