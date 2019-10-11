@@ -64,6 +64,11 @@ namespace GameplayIngredients
 
         List<GameObject> m_Instances;
 
+        private void OnEnable()
+        {
+        	m_Instances.RemoveAll(item => item == null);
+        }
+
         private void OnDestroy()
         {
             if(ReapInstancesOnDestroy && m_Instances != null)
