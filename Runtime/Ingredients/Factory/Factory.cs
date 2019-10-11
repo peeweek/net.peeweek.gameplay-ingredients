@@ -66,22 +66,8 @@ namespace GameplayIngredients
 
         private void OnEnable()
         {
-            List<int> todelete = new List<int>();
-            for (int i = 0; i < m_Instances.Count; i++)
-            {
-                if (m_Instances[i] == null)
-                    todelete.Add(i);
-            }
-            foreach (var index in todelete)
-            {
-                m_Instances.RemoveAt(index);
-                if (RespawnTarget)
-                    AddRespawnCoroutine();
-
-            }
-
+        	m_Instances.RemoveAll(item => item == null);
         }
-
 
         private void OnDestroy()
         {
