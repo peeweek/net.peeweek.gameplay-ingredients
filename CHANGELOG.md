@@ -20,11 +20,16 @@
 * Added Timer Component
 * Added TimerAction to control Timer
 * Added TimerDisplayRig
+* Added Global Variables (Globals + Local Scope)
+* Added Global Variable Set Action
+* Added Global Variable Logic
+* Added Global Variables Reset Action
 
 #### Changed
 
 - Moved Menu Items in Window menu into a Gameplay Ingredients Subfolder
 - State Machine : Setting default state in editor also sets the correct enabled flags for this state.
+- GameManager Resets Global Variables Local Scope on Level Load
 
 #### Fixed
 

@@ -126,6 +126,7 @@ namespace GameplayIngredients
             if (m_CurrentLevelSwitch == null)
             {
                 var call = GetCurrentLevelSwitch(nextLevel, showUI, onComplete);
+                Globals.ResetLocals();
                 call.Execute();
                 currentLevel = nextLevel;
 
