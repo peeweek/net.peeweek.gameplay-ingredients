@@ -28,11 +28,6 @@ namespace GameplayIngredients.StateMachines
             SetState(DefaultState);
         }
 
-        private void OnValidate()
-        {
-            SetState(DefaultState);
-        }
-
         public void SetState(string stateName)
         {
             State newState = States.FirstOrDefault(o => o.StateName == stateName);
