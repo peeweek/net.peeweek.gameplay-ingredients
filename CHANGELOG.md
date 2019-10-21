@@ -28,7 +28,6 @@
 #### Changed
 
 - Moved Menu Items in Window menu into a Gameplay Ingredients Subfolder
-- State Machine : Setting default state in editor also sets the correct enabled flags for this state.
 - GameManager Resets Global Variables Local Scope on Level Load
 
 #### Fixed
