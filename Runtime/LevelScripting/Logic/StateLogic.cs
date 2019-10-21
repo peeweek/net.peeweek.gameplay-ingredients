@@ -18,8 +18,7 @@ namespace GameplayIngredients.Logic
         {
             if (StateMachine.CurrentState == TargetState && IfCurrentState != null && IfCurrentState.Length > 0)
                 Call(IfCurrentState, instigator);
-
-            if (StateMachine.CurrentState != TargetState && IfNotCurrentState != null && IfNotCurrentState.Length > 0)
+            else if (StateMachine.CurrentState != TargetState && IfNotCurrentState != null && IfNotCurrentState.Length > 0)
                 Call(IfNotCurrentState, instigator);
         }
     }
