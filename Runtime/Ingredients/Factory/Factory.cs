@@ -66,7 +66,8 @@ namespace GameplayIngredients
 
         private void OnEnable()
         {
-        	m_Instances.RemoveAll(item => item == null);
+            if(m_Instances != null)
+        	    m_Instances.RemoveAll(item => item == null);
         }
 
         private void OnDestroy()
