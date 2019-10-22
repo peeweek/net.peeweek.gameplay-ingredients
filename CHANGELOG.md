@@ -1,6 +1,8 @@
 # Changelog
 
-## 2019.1.3
+## 2019.3.0
+
+Requires Unity 2019.3.0 or later.
 
 #### Added
 
