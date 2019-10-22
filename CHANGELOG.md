@@ -24,6 +24,7 @@
 * Added Global Variable Set Action
 * Added Global Variable Logic
 * Added Global Variables Reset Action
+* Added Context Menu in ToggleGameObjectAction to update entries based on current enabled state in scene. 
 
 #### Changed
 
