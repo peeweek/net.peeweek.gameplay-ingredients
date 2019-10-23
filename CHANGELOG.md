@@ -2,7 +2,8 @@
 
 ## 2019.3.0
 
-Requires Unity 2019.3.0 or later.
+* Feature Release
+* Requires Unity 2019.3.0 or newer
 
 #### Added
 
@@ -17,8 +18,7 @@ Requires Unity 2019.3.0 or later.
 * Added Audio Mix Snapshot Action : Set Mixer Snapshots
 * Added RigidBody Action : Perform actions on a rigidbody
 * Added SetAnimatorParameterAction : Perform parameter setting on Animators
-* Added Sacrifice Oldest option to Factory
-* Added Folder Cosmetic Behavior (for view in Advanced HIerarchy View)
+* Added Sacrifice Oldest option to Factory : When needing a new spawn but no slots left, sacrifices the first spawn of the list
 * Added Timer Component
 * Added TimerAction to control Timer
 * Added TimerDisplayRig
@@ -30,8 +30,10 @@ Requires Unity 2019.3.0 or later.
 
 #### Changed
 
+- Improved **Find & Replace** window, with a selection-based criteria.
 - Moved Menu Items in Window menu into a Gameplay Ingredients Subfolder
 - GameManager Resets Global Variables Local Scope on Level Load
+- Updated NaughtyAttributes to a more recent version
 
 #### Fixed
 
