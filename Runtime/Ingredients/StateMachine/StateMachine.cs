@@ -16,6 +16,14 @@ namespace GameplayIngredients.StateMachines
         public State CurrentState { get { return m_CurrentState; } }
 
         State m_CurrentState;
+        
+        private void OnValidate()
+        {
+            foreach(var state in States)
+            {
+                state.gameObject.SetActive(state == States.FirstOrDefault(o => o.StateName == DefaultState));
+            }
+        }
 
         void Start()
         {
