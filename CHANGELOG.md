@@ -9,6 +9,16 @@
 
 * **Call Tree Explorer :** Using Window/Gameplay Ingredients/Call Tree Explorer , opens a window that lists the tree of Events, Logic and Actions, State Machines and Event Calling Actions
 * **Folders:** In the Game Object creation Menu, Select folder to add a folder in the hierarchy. Automatically adds Static Game Objects with colored icon (Displayed using Advanced Hierarchy View)
+* **Global Variables System**
+  - Added Global Variables (Globals + Local Scope)
+  - Added Global Variable Debug Window
+  - Added Global Variable Set Action
+  - Added Global Variable Logic
+  - Added Global Variables Reset Action
+* **Timers**
+  * Added Timer Component
+  * Added TimerAction to control Timer
+  * Added TimerDisplayRig
 * Added option in GameplayIngredientsSettings to disable visibility of Callable[] bound to Update Loops.
 * Added OnUpdate Event : Perform calls every update
 * Added OnColider Event :  Perform calls upon collisions
@@ -19,13 +29,6 @@
 * Added RigidBody Action : Perform actions on a rigidbody
 * Added SetAnimatorParameterAction : Perform parameter setting on Animators
 * Added Sacrifice Oldest option to Factory : When needing a new spawn but no slots left, sacrifices the first spawn of the list
-* Added Timer Component
-* Added TimerAction to control Timer
-* Added TimerDisplayRig
-* Added Global Variables (Globals + Local Scope)
-* Added Global Variable Set Action
-* Added Global Variable Logic
-* Added Global Variables Reset Action
 * Added Context Menu in ToggleGameObjectAction to update entries based on current enabled state in scene. 
 
 #### Changed

@@ -20,16 +20,37 @@ namespace GameplayIngredients
         [InfoBox("Use the following wildcards:\n - %h : hours\n - %m : minutes\n - %s : seconds\n - %x : milliseconds", InfoBoxType.Normal)]
         public string format = "%h:%m:%s:%x";
 
+        private void OnValidate()
+        {
+            UpdateText();
+        }
+
+        private void Reset()
+        {
+            UpdateText();
+        }
+
         private void Update()
         {
             if (timer == null || (text == null && textMesh == null))
                 return;
 
+            UpdateText();
+        }
+
+        void UpdateText()
+        {
             var value = format;
-            value = value.Replace("%h", timer.CurrentHours.ToString("D2"));
-            value = value.Replace("%m", timer.CurrentMinutes.ToString("D2"));
-            value = value.Replace("%s", timer.CurrentSeconds.ToString("D2"));
-            value = value.Replace("%x", timer.CurrentMilliseconds.ToString("D3"));
+
+            uint hours = timer != null ? timer.CurrentHours: 0;
+            uint minutes = timer != null ? timer.CurrentMinutes : 0;
+            uint seconds = timer != null ? timer.CurrentSeconds : 0;
+            uint milliseconds = timer != null ? timer.CurrentMilliseconds : 0;
+
+            value = value.Replace("%h", hours.ToString("D2"));
+            value = value.Replace("%m", minutes.ToString("D2"));
+            value = value.Replace("%s", seconds.ToString("D2"));
+            value = value.Replace("%x", milliseconds.ToString("D3"));
 
             if (text != null)
                 text.text = value;

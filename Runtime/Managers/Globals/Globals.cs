@@ -167,7 +167,7 @@ public static class Globals
                 return globalFloats[name];
         }
     }
-    public static bool GetObject(string name, Scope scope)
+    public static GameObject GetObject(string name, Scope scope)
     {
         switch (scope)
         {
@@ -196,10 +196,13 @@ public static class Globals
         {
             default:
             case Scope.Local:
-                SetValue(localBooleans, name, value); return;
+                SetValue(localBooleans, name, value); break;
             case Scope.Global:
-                SetValue(globalBooleans, name, value); return;
+                SetValue(globalBooleans, name, value); break;
         }
+        if (OnGlobalsUpdated != null)
+            OnGlobalsUpdated(Type.Boolean, name, value);
+        return;
     }
     public static void SetInt(string name, int value, Scope scope)
     {
@@ -207,10 +210,14 @@ public static class Globals
         {
             default:
             case Scope.Local:
-                SetValue(localInts, name, value); return;
+                SetValue(localInts, name, value); break;
             case Scope.Global:
-                SetValue(globalInts, name, value); return;
+                SetValue(globalInts, name, value); break;
         }
+        if (OnGlobalsUpdated != null)
+            OnGlobalsUpdated(Type.Integer, name, value);
+        return;
+
     }
     public static void SetString(string name, string value, Scope scope)
     {
@@ -218,10 +225,13 @@ public static class Globals
         {
             default:
             case Scope.Local:
-                SetValue(localStrings, name, value); return;
+                SetValue(localStrings, name, value); break;
             case Scope.Global:
-                SetValue(globalStrings, name, value); return;
+                SetValue(globalStrings, name, value); break;
         }
+        if (OnGlobalsUpdated != null)
+            OnGlobalsUpdated(Type.String, name, value);
+        return;
     }
     public static void SetFloat(string name, float value, Scope scope)
     {
@@ -229,10 +239,13 @@ public static class Globals
         {
             default:
             case Scope.Local:
-                SetValue(localFloats, name, value); return;
+                SetValue(localFloats, name, value); break;
             case Scope.Global:
-                SetValue(globalFloats, name, value); return;
+                SetValue(globalFloats, name, value); break;
         }
+        if (OnGlobalsUpdated != null)
+            OnGlobalsUpdated(Type.Float, name, value);
+        return;
     }
     public static void SetObject(string name, GameObject value, Scope scope)
     {
@@ -240,11 +253,26 @@ public static class Globals
         {
             default:
             case Scope.Local:
-                SetValue(localObjects, name, value); return;
+                SetValue(localObjects, name, value); break;
             case Scope.Global:
-                SetValue(globalObjects, name, value); return;
+                SetValue(globalObjects, name, value); break;
         }
+        if (OnGlobalsUpdated != null)
+            OnGlobalsUpdated(Type.GameObject, name, value);
+        return;
     }
     #endregion
 
+    #region Debug
+
+    public delegate void GlobalsUpdatedDelegate(Type t, string name, object value);
+    public static event GlobalsUpdatedDelegate OnGlobalsUpdated;
+
+    public static IEnumerable<string> GetBoolNames(Scope scope) { return scope == Scope.Global ? globalBooleans.Keys : localBooleans.Keys; }
+    public static IEnumerable<string> GetIntNames(Scope scope) { return scope == Scope.Global ? globalInts.Keys : localInts.Keys; }
+    public static IEnumerable<string> GetFloatNames(Scope scope) { return scope == Scope.Global ? globalFloats.Keys : localFloats.Keys; }
+    public static IEnumerable<string> GetStringNames(Scope scope) { return scope == Scope.Global ? globalStrings.Keys : localStrings.Keys; }
+    public static IEnumerable<string> GetObjectNames(Scope scope) { return scope == Scope.Global ? globalObjects.Keys : localObjects.Keys; }
+
+    #endregion
 }

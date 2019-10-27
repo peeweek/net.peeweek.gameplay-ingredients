@@ -17,7 +17,8 @@ namespace GameplayIngredients.StateMachines
 
         State m_CurrentState;
         
-        private void OnValidate()
+        [ContextMenu("Reset State Objects")]
+        private void UpdateFromState()
         {
             foreach(var state in States)
             {
