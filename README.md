@@ -4,7 +4,7 @@ Gameplay Ingredients for your Unity Games - A collection of scripts that ease si
 
 ## Requirements
 
-* Unity 2018.3 / 2019.1 / 2019.2
+* Unity 2018.3 / 2019.1 / 2019.2 / 2019.3
 * Package Manager UI
 
 ## How to install
@@ -32,4 +32,4 @@ Gameplay Ingredients comes with the following compatibility:
 * **Unity 2018.3 / 2018.4 :** choose the tag `2018.3.0`
 * **Unity 2019.1 / 2019.2 :** choose the tag `2019.1.2` 
 
-* **Unity 2019.3** : Not officially supported ATM
+* **Unity 2019.3** : choose the tag `2019.3.0` (not published atm) 
