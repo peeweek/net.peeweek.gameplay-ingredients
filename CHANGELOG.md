@@ -9,13 +9,13 @@
 
 * **Call Tree Explorer :** Using Window/Gameplay Ingredients/Call Tree Explorer , opens a window that lists the tree of Events, Logic and Actions, State Machines and Event Calling Actions
 * **Folders:** In the Game Object creation Menu, Select folder to add a folder in the hierarchy. Automatically adds Static Game Objects with colored icon (Displayed using Advanced Hierarchy View)
-* **Global Variables System**
+* **Global Variables System**:
   - Added Global Variables (Globals + Local Scope)
-  - Added Global Variable Debug Window
+  - Added Global Variable Debug Window (`Window/Gameplay Ingredients/Globals Debug`)
   - Added Global Variable Set Action
   - Added Global Variable Logic
   - Added Global Variables Reset Action
-* **Timers**
+* **Timers**:
   * Added Timer Component
   * Added TimerAction to control Timer
   * Added TimerDisplayRig
@@ -37,6 +37,7 @@
 - Moved Menu Items in Window menu into a Gameplay Ingredients Subfolder
 - GameManager Resets Global Variables Local Scope on Level Load
 - Updated NaughtyAttributes to a more recent version
+- Renamed the Add Game Object menu category from `'GameplayIngredients' to 'Gameplay Ingredients'` and adjusted its contents
 
 #### Fixed
 
