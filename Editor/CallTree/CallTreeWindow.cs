@@ -37,7 +37,7 @@ namespace GameplayIngredients.Editor
         {
             nodeRoots = new Dictionary<string, List<CallTreeNode>>();
             m_TreeView = new CallTreeView(nodeRoots);            
-            titleContent = new GUIContent("Callable Tree Explorer");
+            titleContent = new GUIContent("Callable Tree Explorer", CallTreeView.Styles.Callable);
             ReloadCallHierarchy();
             EditorSceneManager.sceneOpened += Reload;
             EditorSceneSetup.onSetupLoaded += ReloadSetup;
@@ -493,7 +493,7 @@ namespace GameplayIngredients.Editor
                     Selection.activeObject = m_Bindings[selectedIds[0]].Target;
             }
 
-            static class Styles
+            public static class Styles
             {
                 public static Texture2D Callable = Icon("Misc/ic-callable.png");
                 public static Texture2D Action = Icon("Actions/ic-action-generic.png");
