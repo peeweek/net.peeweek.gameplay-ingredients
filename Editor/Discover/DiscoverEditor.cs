@@ -36,23 +36,22 @@ namespace GameplayIngredients.Editor
         {
             using (new GUILayout.HorizontalScope())
             {
-                GUILayout.FlexibleSpace();
-                editing = GUILayout.Toggle(editing, "Edit", EditorStyles.miniButton, GUILayout.Width(48));
-            }
-
-            if (editing)
-            {
-                if(GUILayout.Button("Align Discover to View"))
+                if (GUILayout.Button("Align Discover to View"))
                 {
-                    var transform = (serializedObject.targetObject as GameObject).transform;
+                    var transform = (serializedObject.targetObject as Discover).gameObject.transform;
                     var svTransform = SceneView.lastActiveSceneView.camera.transform;
 
                     transform.position = svTransform.position;
                     transform.rotation = svTransform.rotation;
                     transform.localScale = Vector3.one;
                 }
-                DrawDefaultInspector();
+                
+                GUILayout.FlexibleSpace();
+                editing = GUILayout.Toggle(editing, "Edit", EditorStyles.miniButton, GUILayout.Width(48));
             }
+
+            if (editing)
+                DrawDefaultInspector();
             else
                 DrawDiscoverContentGUI(m_Discover);
         }
