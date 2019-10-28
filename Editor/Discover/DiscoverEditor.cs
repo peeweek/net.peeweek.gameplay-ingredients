@@ -41,7 +41,18 @@ namespace GameplayIngredients.Editor
             }
 
             if (editing)
+            {
+                if(GUILayout.Button("Align Discover to View"))
+                {
+                    var transform = (serializedObject.targetObject as GameObject).transform;
+                    var svTransform = SceneView.lastActiveSceneView.camera.transform;
+
+                    transform.position = svTransform.position;
+                    transform.rotation = svTransform.rotation;
+                    transform.localScale = Vector3.one;
+                }
                 DrawDefaultInspector();
+            }
             else
                 DrawDiscoverContentGUI(m_Discover);
         }
