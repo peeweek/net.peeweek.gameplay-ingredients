@@ -309,6 +309,8 @@ namespace GameplayIngredients.Editor
                 return CallTreeNodeType.StateMachine;
             else if (bhv is State)
                 return CallTreeNodeType.State;
+            else if (bhv is Factory)
+                return CallTreeNodeType.Factory;
             else if (bhv is OnMessageEvent || bhv is SendMessageAction)
                 return CallTreeNodeType.Message;
             else
@@ -354,7 +356,8 @@ namespace GameplayIngredients.Editor
             Action,
             Message,
             StateMachine,
-            State
+            State,
+            Factory
         }
 
         class CallTreeView : TreeView
@@ -475,6 +478,8 @@ namespace GameplayIngredients.Editor
                         return Styles.Message;
                     case CallTreeNodeType.State:
                         return Styles.State;
+                    case CallTreeNodeType.Factory:
+                        return Styles.Factory;
                     case CallTreeNodeType.StateMachine:
                         return Styles.StateMachine;
                 }
@@ -499,6 +504,7 @@ namespace GameplayIngredients.Editor
                 public static Texture2D Message = Icon("Events/ic-event-message .png");
                 public static Texture2D StateMachine = Icon("Misc/ic-StateMachine.png");
                 public static Texture2D State = Icon("Misc/ic-State.png");
+                public static Texture2D Factory = Icon("Misc/ic-Factory.png");
 
                 static Texture2D Icon(string path)
                 {
