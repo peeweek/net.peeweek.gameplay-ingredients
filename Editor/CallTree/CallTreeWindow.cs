@@ -70,7 +70,13 @@ namespace GameplayIngredients.Editor
                     ReloadCallHierarchy();
                 }
                 GUILayout.FlexibleSpace();
-                m_TreeView.stringFilter = EditorGUILayout.DelayedTextField(m_TreeView.stringFilter, EditorStyles.toolbarSearchField);
+                EditorGUI.BeginChangeCheck();
+                string filter = EditorGUILayout.DelayedTextField(m_TreeView.stringFilter, EditorStyles.toolbarSearchField);
+                if(EditorGUI.EndChangeCheck())
+                {
+                    m_TreeView.SetStringFilter(filter);
+                }
+
 
                 Rect buttonRect = GUILayoutUtility.GetRect(52, 16);
                 if (GUI.Button(buttonRect, "Filter", EditorStyles.toolbarDropDown))
@@ -78,12 +84,12 @@ namespace GameplayIngredients.Editor
                     GenericMenu menu = new GenericMenu();
                     menu.AddItem(new GUIContent("Filter Selected"), false, () => {
                         m_TreeView.SetAutoFilter(false);
-                        m_TreeView.SetFilter(Selection.activeGameObject);
+                        m_TreeView.SetObjectFilter(Selection.activeGameObject);
                     });
                     menu.AddItem(new GUIContent("Clear Filter"), false, () => {
                         m_TreeView.SetAutoFilter(false);
-                        m_TreeView.SetFilter(null);
-                        m_TreeView.stringFilter = string.Empty;
+                        m_TreeView.SetObjectFilter(null);
+                        m_TreeView.SetStringFilter(string.Empty);
                     });
                     menu.AddSeparator("");
                     menu.AddItem(new GUIContent("Automatic Filter"), m_TreeView.AutoFilter, () => {
@@ -369,7 +375,7 @@ namespace GameplayIngredients.Editor
                 m_Bindings = new Dictionary<int, CallTreeNode>();
             }
 
-            public string stringFilter { get { return m_StringFilter; } set { m_StringFilter = value; this.Reload(); } }
+            public string stringFilter { get { return m_StringFilter; } }
 
             [SerializeField]
             GameObject m_filter = null;
@@ -390,7 +396,7 @@ namespace GameplayIngredients.Editor
                     Selection.selectionChanged += UpdateAutoFilter;
                     if(this.HasSelection())
                     {
-                        SetFilter(m_Bindings[this.GetSelection()[0]].Target.gameObject);
+                        SetObjectFilter(m_Bindings[this.GetSelection()[0]].Target.gameObject);
                     }
                 }
                 else
@@ -400,12 +406,18 @@ namespace GameplayIngredients.Editor
             void UpdateAutoFilter()
             {
                 if (Selection.activeGameObject != null)
-                    SetFilter(Selection.activeGameObject);
+                    SetObjectFilter(Selection.activeGameObject);
             }
 
-            public void SetFilter(GameObject filter = null)
+            public void SetObjectFilter(GameObject filter = null)
             {
                 m_filter = filter;
+                Reload();
+            }
+
+            public void SetStringFilter(string stringFilter)
+            {
+                m_StringFilter = stringFilter;
                 Reload();
             }
 
