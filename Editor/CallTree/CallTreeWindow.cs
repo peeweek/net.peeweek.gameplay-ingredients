@@ -333,18 +333,16 @@ namespace GameplayIngredients.Editor
 
             public bool Filter(GameObject go, string filter)
             {
-                if (go == null && string.IsNullOrEmpty(filter))
-                    return true;
-                else
-                {
-                    if (this.Target.gameObject == go && (string.IsNullOrEmpty(filter)? true: this.Name.Contains(filter)))
-                        return true;
+                bool keep = (go == null || this.Target.gameObject == go) 
+                    && (string.IsNullOrEmpty(filter) ? true : this.Name.Contains(filter));
 
-                    bool value = false;
+                if(!keep)
+                {
                     foreach (var node in Children)
-                        value = value || node.Filter(go, filter);
-                    return value;
+                        keep = keep || node.Filter(go, filter);
                 }
+
+                return keep;
             }
         }
 
