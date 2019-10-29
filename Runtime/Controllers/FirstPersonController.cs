@@ -66,15 +66,13 @@ namespace GameplayIngredients.Controllers
 
         public void OnValidate()
         {
-            if (m_Controller == null)
-                m_Controller = GetComponent<CharacterController>();
-
             float realHeight = PlayerHeight + PlayerRadius;
             m_Controller.center = new Vector3(0, realHeight / 2, 0);
             m_Controller.height = realHeight;
             m_Controller.radius = PlayerRadius;
 
-            m_Camera.transform.localPosition = new Vector3(0, PlayerHeight, 0);
+            if(m_Camera != null)
+                m_Camera.transform.localPosition = new Vector3(0, PlayerHeight, 0);
         }
 
         public void UpdateRotation()
