@@ -1,5 +1,11 @@
 # Changelog
 
+## 2019.3.1
+
+#### Fixed
+
+* Fixed `OnValidate` for FirstPersonController leading to infinite import loop when displaying the inspector for a Prefab Asset.
+
 ## 2019.3.0
 
 * Feature Release
