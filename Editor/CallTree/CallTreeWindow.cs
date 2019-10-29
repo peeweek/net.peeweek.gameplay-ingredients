@@ -174,6 +174,7 @@ namespace GameplayIngredients.Editor
                             // Add Callables from this Callable[] array
                             foreach (var call in value)
                             {
+                                if (call != null)
                                 node.Children.Add(GetCallableNode(call, stack));
                             }
                         }

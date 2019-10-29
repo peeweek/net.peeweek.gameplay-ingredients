@@ -5,6 +5,7 @@
 #### Fixed
 
 * Fixed `OnValidate` for FirstPersonController leading to infinite import loop when displaying the inspector for a Prefab Asset.
+* Fix for null Callables in Callable Tree Window.
 
 ## 2019.3.0
 
