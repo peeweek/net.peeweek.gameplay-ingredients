@@ -36,7 +36,7 @@ namespace GameplayIngredients.Editor
         private void OnEnable()
         {
             nodeRoots = new Dictionary<string, List<CallTreeNode>>();
-            m_TreeView = new CallTreeView(nodeRoots);            
+            m_TreeView = new CallTreeView(nodeRoots);
             titleContent = new GUIContent("Callable Tree Explorer", CallTreeView.Styles.Callable);
             ReloadCallHierarchy();
             EditorSceneManager.sceneOpened += Reload;
@@ -72,7 +72,7 @@ namespace GameplayIngredients.Editor
                 GUILayout.FlexibleSpace();
                 EditorGUI.BeginChangeCheck();
                 string filter = EditorGUILayout.DelayedTextField(m_TreeView.stringFilter, EditorStyles.toolbarSearchField);
-                if(EditorGUI.EndChangeCheck())
+                if (EditorGUI.EndChangeCheck())
                 {
                     m_TreeView.SetStringFilter(filter);
                 }
@@ -105,6 +105,8 @@ namespace GameplayIngredients.Editor
 
         Dictionary<string, List<CallTreeNode>> nodeRoots;
 
+        List<MonoBehaviour> erroneous;
+
         void ReloadCallHierarchy()
         {
             if (nodeRoots == null)
@@ -112,12 +114,33 @@ namespace GameplayIngredients.Editor
             else
                 nodeRoots.Clear();
 
+            erroneous = new List<MonoBehaviour>();
+
             AddToCategory<EventBase>("Events");
             AddToCategory<StateMachine>("State Machines");
             AddToCategory<Factory>("Factories");
             AddToCategory<SendMessageAction>("Messages");
-
+            CollectErroneousCallables();
             m_TreeView.Reload();
+        }
+
+        void CollectErroneousCallables()
+        {
+            if (erroneous == null || erroneous.Count == 0)
+                return;
+            var root = new List<CallTreeNode>();
+            nodeRoots.Add("Erroneous Callables", root);
+
+            foreach(var callable in erroneous)
+            {
+                root.Add(new CallTreeNode(callable, CallTreeNodeType.Callable, callable.name));
+            }
+        }
+
+        void AddErroneous(MonoBehaviour bhv)
+        {
+            if (!erroneous.Contains(bhv))
+                erroneous.Add(bhv);
         }
 
         void AddToCategory<T>(string name) where T:MonoBehaviour
@@ -175,7 +198,9 @@ namespace GameplayIngredients.Editor
                             foreach (var call in value)
                             {
                                 if (call != null)
-                                node.Children.Add(GetCallableNode(call, stack));
+                                    node.Children.Add(GetCallableNode(call, stack));
+                                else
+                                    AddErroneous(node.Target);
                             }
                         }
                     }
@@ -209,7 +234,10 @@ namespace GameplayIngredients.Editor
                             // Add Callables from this Callable[] array
                             foreach (var call in value)
                             {
-                                node.Children.Add(GetCallableNode(call, stack));
+                                if (call != null)
+                                    node.Children.Add(GetCallableNode(call, stack));
+                                else
+                                    AddErroneous(node.Target);
                             }
                         }
                     }
@@ -259,7 +287,10 @@ namespace GameplayIngredients.Editor
                         var value = (State[])field.GetValue(sm);
                         foreach (var state in value)
                         {
-                            rootNode.Children.Add(GetStateNode(state, stack));
+                            if (state != null)
+                                rootNode.Children.Add(GetStateNode(state, stack));
+                            else
+                                AddErroneous(rootNode.Target);
                         }
                     }
                 }
@@ -290,7 +321,10 @@ namespace GameplayIngredients.Editor
                         var value = (Callable[])field.GetValue(st);
                         foreach (var call in value)
                         {
-                            node.Children.Add(GetNode(call, stack));
+                            if (call != null)
+                                node.Children.Add(GetNode(call, stack));
+                            else
+                                AddErroneous(rootNode.Target);
                         }
                     }
                 }
