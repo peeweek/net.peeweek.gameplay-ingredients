@@ -13,6 +13,8 @@
 * **Call Tree Explorer**: Added Category for Erroneous Calls
 * Added **ToggleBehaviourAction** working the same as ToggleGameObjectAction, but for behaviour components instead.
 * **SendMessageBehaviour** (Timeline Send Message Tracks/Clips) now displays an instigator game object field in the inspector to be attached to the sent message.
+* Added **VFXSetPropertyAction**
+* Added **VFXSendEventAction**
 
 #### Fixed
 
