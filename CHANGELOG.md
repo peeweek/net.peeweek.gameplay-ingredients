@@ -2,10 +2,17 @@
 
 ## 2019.3.1
 
+#### Changed
+
+* **Messager** is now able to pass instigator Game Object through message broadcast.
+* **OnMessageEvent** now passes the optional instigator instead of itself as instigator to the Calls. In order to pass itself use an intermediate **SetInstigatorLogic** that targets the OnMessageEvent owner to replicate the former behaviour.
+* **SendMessageAction** now passes its instigator game object to the **Messager**
+
 #### Added
 
 * **Call Tree Explorer**: Added Category for Erroneous Calls
 * Added **ToggleBehaviourAction** working the same as ToggleGameObjectAction, but for behaviour components instead.
+* **SendMessageBehaviour** (Timeline Send Message Tracks/Clips) now displays an instigator game object field in the inspector to be attached to the sent message.
 
 #### Fixed
 
