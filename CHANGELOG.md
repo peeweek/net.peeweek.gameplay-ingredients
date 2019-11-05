@@ -5,6 +5,7 @@
 #### Added
 
 * **Call Tree Explorer**: Added Category for Erroneous Calls
+* Added **ToggleBehaviourAction** working the same as ToggleGameObjectAction, but for behaviour components instead.
 
 #### Fixed
 
