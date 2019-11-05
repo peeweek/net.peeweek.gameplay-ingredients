@@ -69,10 +69,16 @@ namespace GameplayIngredients.Controllers
             float realHeight = PlayerHeight + PlayerRadius;
 
             var controller = GetComponent<CharacterController>();
+            var center = new Vector3(0, realHeight / 2, 0);
 
-            controller.center = new Vector3(0, realHeight / 2, 0);
-            controller.height = realHeight;
-            controller.radius = PlayerRadius;
+            if (controller.center != center)
+                controller.center = center;
+
+            if (controller.height != realHeight)
+                controller.height = realHeight;
+
+            if(controller.radius != PlayerRadius)
+                controller.radius = PlayerRadius;
 
             if(m_Camera != null)
                 m_Camera.transform.localPosition = new Vector3(0, PlayerHeight, 0);
