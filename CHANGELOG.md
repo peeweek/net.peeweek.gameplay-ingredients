@@ -1,5 +1,16 @@
 # Changelog
 
+## 2019.3.2
+
+#### Changed
+
+- **Delayed Logic** now has a mode that allows you to have a random delay within a range.
+- **Audio Play Clip Action** now allows you to randomize volume and pitch within a range of values every time you play the clip.
+
+#### Fixed
+
+- Fixed selection of Call tree window that became broken somehow in 2019.3.0f1
+
 ## 2019.3.1
 
 #### Changed
@@ -7,8 +18,6 @@
 * **Messager** is now able to pass instigator Game Object through message broadcast.
 * **OnMessageEvent** now passes the optional instigator instead of itself as instigator to the Calls. In order to pass itself use an intermediate **SetInstigatorLogic** that targets the OnMessageEvent owner to replicate the former behaviour.
 * **SendMessageAction** now passes its instigator game object to the **Messager**
-* **Delayed Logic** now has a mode that allows you to have a random delay within a range.
-* **Audio Play Clip Action** now allows you to randomize volume and pitch within a range of values every time you play the clip.
 
 #### Added
 
