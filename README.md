@@ -35,7 +35,7 @@ You can check that the package was imported by looking at the project window, un
 
 Gameplay Ingredients comes at latest version with the following compatibility:
 
-**Unity 2019.3** : clone and check out the `master` branch at the tag `2019.3.1` 
+**Unity 2019.3** : clone and check out the `master` branch at the tag `2019.3.2` 
 
 #### Older Versions
 
