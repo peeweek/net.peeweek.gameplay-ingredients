@@ -2,6 +2,10 @@
 
 ## 2019.3.2
 
+#### Added
+- Added Create State button to StateMachines
+- Added State Machine templates in the GameObject Creation Menu
+
 #### Changed
 
 - **Delayed Logic** now has a mode that allows you to have a random delay within a range.
