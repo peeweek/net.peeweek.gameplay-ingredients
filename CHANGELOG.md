@@ -10,6 +10,7 @@
 
 - **Delayed Logic** now has a mode that allows you to have a random delay within a range.
 - **Audio Play Clip Action** now allows you to randomize volume and pitch within a range of values every time you play the clip.
+- Messager now send messages through a copy of its source listeners array instead of the actual enumerator. This prevents from modifying the call array at the same frame if a OnMessageEvent becomes disabled during execution.
 
 #### Fixed
 
