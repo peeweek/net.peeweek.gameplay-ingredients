@@ -48,7 +48,7 @@ namespace GameplayIngredients
                 try
                 {
                     // Get a copy of registered messages to iterate on. This prevents issues while deregistering message recievers while iterating.
-                    var messages = m_RegisteredMessages[eventName];
+                    var messages = m_RegisteredMessages[eventName].ToArray();
                     foreach (var message in messages)
                     {
                         if(message != null)
