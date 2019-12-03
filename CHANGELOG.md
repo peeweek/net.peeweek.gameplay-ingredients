@@ -3,6 +3,9 @@
 ## 2019.3.2
 
 #### Added
+
+- Added Counters : Integer counters stored in the scene
+- Added CounterAction and CounterLogic
 - Added Create State button to StateMachines
 - Added State Machine templates in the GameObject Creation Menu
 

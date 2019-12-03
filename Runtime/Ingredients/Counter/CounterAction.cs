@@ -20,11 +20,11 @@ namespace GameplayIngredients.Actions
         public enum ValueSourceType
         {
             Property,
-            Global,
+            GlobalVariable,
             GameSave,
         }
 
-        [ReorderableList, NonNullCheck]
+        [ReorderableList]
         public Counter[] Counters;
 
         public CounterOperation Operation = CounterOperation.Set;
@@ -44,7 +44,7 @@ namespace GameplayIngredients.Actions
 
         bool isValueProperty() { return ValueSource == ValueSourceType.Property; }
         bool isValueGameSave() { return ValueSource == ValueSourceType.GameSave; }
-        bool isValueGlobal() { return ValueSource == ValueSourceType.Global; }
+        bool isValueGlobal() { return ValueSource == ValueSourceType.GlobalVariable; }
 
         public override void Execute(GameObject instigator = null)
         {
@@ -55,12 +55,12 @@ namespace GameplayIngredients.Actions
                 case ValueSourceType.Property:
                     value = Value;
                     break;
-                case ValueSourceType.Global:
+                case ValueSourceType.GlobalVariable:
                     if (Globals.HasInt(GlobalVariableName, GlobalScope))
-                        Globals.GetInt(GlobalVariableName, GlobalScope);
+                        value = Globals.GetInt(GlobalVariableName, GlobalScope);
                     else
                     {
-                        Debug.LogWarning($"CounterAction ({name}) : Could not find Global {GlobalVariableName}({GlobalScope})");
+                        Debug.LogWarning($"CounterAction ({name}) : Could not find Global integer {GlobalVariableName}({GlobalScope})");
                         value = 0;
                     }
                     break;
@@ -68,10 +68,10 @@ namespace GameplayIngredients.Actions
                     var gsm = Manager.Get<GameSaveManager>();
 
                     if (gsm.HasInt(GameSaveVariableName, GameSaveLocation))
-                        gsm.GetInt(GameSaveVariableName, GameSaveLocation);
+                        value = gsm.GetInt(GameSaveVariableName, GameSaveLocation);
                     else
                     {
-                        Debug.LogWarning($"CounterAction ({name}) : Could not find Global {GlobalVariableName}({GlobalScope})");
+                        Debug.LogWarning($"CounterAction ({name}) : Could not find Game Save integer {GameSaveVariableName}({GameSaveLocation})");
                         value = 0;
                     }
 
@@ -87,31 +87,36 @@ namespace GameplayIngredients.Actions
                 {
                     default:
                     case CounterOperation.Set:
-                        counter.SetValue(Value);
                         break;
                     case CounterOperation.Add:
-                        counter.SetValue(counter.CurrentValue + Value);
+                        value = counter.CurrentValue + value;
                         break;
                     case CounterOperation.Subtract:
-                        counter.SetValue(counter.CurrentValue - Value);
+                        value = counter.CurrentValue - value;
                         break;
                     case CounterOperation.Multiply:
-                        counter.SetValue(counter.CurrentValue * Value);
+                        value = counter.CurrentValue * value;
                         break;
                     case CounterOperation.Divide:
-                        if (Value != 0)
-                            counter.SetValue(counter.CurrentValue / Value);
+                        if (value != 0)
+                            value = counter.CurrentValue / value;
                         else
+                        {
                             Debug.LogWarning($"{this.name} : Division by zero");
+                            continue;
+                        }
                         break;
                     case CounterOperation.Modulo:
-                        if (Value != 0)
-                            counter.SetValue(counter.CurrentValue % Value);
+                        if (value != 0)
+                            value = counter.CurrentValue % value;
                         else
+                        {
                             Debug.LogWarning($"{this.name} : Modulo by zero");
-
+                            continue;
+                        }
                         break;
                 }
+                counter.SetValue(value, instigator);
             }
         }
     }
