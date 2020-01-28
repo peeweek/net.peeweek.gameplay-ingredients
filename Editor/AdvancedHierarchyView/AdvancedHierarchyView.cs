@@ -14,7 +14,7 @@ using UnityEngine.Playables;
 namespace GameplayIngredients.Editor
 {
     [InitializeOnLoad]
-    public static class HierarchyHints
+    public static class AdvancedHierarchyView
     {
         const string kMenuPath = "Edit/Advanced Hierarchy View %.";
         public const int kMenuPriority = 230;
@@ -52,7 +52,7 @@ namespace GameplayIngredients.Editor
             }
         }
 
-        static HierarchyHints()
+        static AdvancedHierarchyView()
         {
             EditorApplication.hierarchyWindowItemOnGUI -= HierarchyOnGUI;
             EditorApplication.hierarchyWindowItemOnGUI += HierarchyOnGUI;
