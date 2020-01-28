@@ -2,11 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-#if UNITY_2019_3_OR_NEWER
 using UnityEngine.VFX;
-#else
-using UnityEngine.Experimental.VFX;
-#endif
 using UnityEditor;
 using GameplayIngredients.StateMachines;
 using UnityEngine.Playables;
@@ -35,9 +31,7 @@ namespace GameplayIngredients.Editor
             return SceneView.sceneViews.Count > 0;
         }
 
-
         static readonly string kPreferenceName = "GameplayIngredients.HierarchyHints";
-
         public static bool Active
         {
             get
@@ -56,47 +50,56 @@ namespace GameplayIngredients.Editor
         {
             EditorApplication.hierarchyWindowItemOnGUI -= HierarchyOnGUI;
             EditorApplication.hierarchyWindowItemOnGUI += HierarchyOnGUI;
+            InitializeTypes();
         }
 
-        static Dictionary<Type, string> s_Definitions = new Dictionary<Type, string>()
+        static void InitializeTypes()
         {
-            { typeof(Folder), "Folder Icon"},
-            { typeof(MonoBehaviour), "cs Script Icon"},
-            { typeof(Camera), "Camera Icon"},
-            { typeof(MeshRenderer), "MeshRenderer Icon"},
-            { typeof(SkinnedMeshRenderer), "SkinnedMeshRenderer Icon"},
-            { typeof(BoxCollider), "BoxCollider Icon"},
-            { typeof(SphereCollider), "SphereCollider Icon"},
-            { typeof(CapsuleCollider), "CapsuleCollider Icon"},
-            { typeof(MeshCollider), "MeshCollider Icon"},
-            { typeof(AudioSource), "AudioSource Icon"},
-            { typeof(Animation), "Animation Icon"},
-            { typeof(Animator), "Animator Icon"},
-            { typeof(PlayableDirector), "PlayableDirector Icon"},
-            { typeof(Light), "Light Icon"},
-            { typeof(LightProbeGroup), "LightProbeGroup Icon"},
-            { typeof(LightProbeProxyVolume), "LightProbeProxyVolume Icon"},
-            { typeof(ReflectionProbe), "ReflectionProbe Icon"},
-            { typeof(VisualEffect), "VisualEffect Icon"},
-            { typeof(ParticleSystem), "ParticleSystem Icon"},
-            { typeof(Canvas), "Canvas Icon"},
-            { typeof(Image), "Image Icon"},
-            { typeof(Text), "Text Icon"},
-            { typeof(Button), "Button Icon"},
-            { typeof(StateMachine), "Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-StateMachine.png"},
-            { typeof(State), "Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-State.png"},
-        };
+            RegisterComponentType( typeof(Folder), "Folder Icon");
+            RegisterComponentType( typeof(MonoBehaviour), "cs Script Icon");
+            RegisterComponentType( typeof(Camera), "Camera Icon");
+            RegisterComponentType( typeof(MeshRenderer), "MeshRenderer Icon");
+            RegisterComponentType( typeof(SkinnedMeshRenderer), "SkinnedMeshRenderer Icon");
+            RegisterComponentType( typeof(BoxCollider), "BoxCollider Icon");
+            RegisterComponentType( typeof(SphereCollider), "SphereCollider Icon");
+            RegisterComponentType( typeof(CapsuleCollider), "CapsuleCollider Icon");
+            RegisterComponentType( typeof(MeshCollider), "MeshCollider Icon");
+            RegisterComponentType( typeof(AudioSource), "AudioSource Icon");
+            RegisterComponentType( typeof(Animation), "Animation Icon");
+            RegisterComponentType( typeof(Animator), "Animator Icon");
+            RegisterComponentType( typeof(PlayableDirector), "PlayableDirector Icon");
+            RegisterComponentType( typeof(Light), "Light Icon");
+            RegisterComponentType( typeof(LightProbeGroup), "LightProbeGroup Icon");
+            RegisterComponentType( typeof(LightProbeProxyVolume), "LightProbeProxyVolume Icon");
+            RegisterComponentType( typeof(ReflectionProbe), "ReflectionProbe Icon");
+            RegisterComponentType( typeof(VisualEffect), "VisualEffect Icon");
+            RegisterComponentType( typeof(ParticleSystem), "ParticleSystem Icon");
+            RegisterComponentType( typeof(Canvas), "Canvas Icon");
+            RegisterComponentType( typeof(Image), "Image Icon");
+            RegisterComponentType( typeof(Text), "Text Icon");
+            RegisterComponentType( typeof(Button), "Button Icon");
+            RegisterComponentType( typeof(StateMachine), "Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-StateMachine.png");
+            RegisterComponentType( typeof(State), "Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-State.png");
+        }
+
+        public static void RegisterComponentType(Type t, string iconName)
+        {
+            if (s_Definitions == null)
+                s_Definitions = new Dictionary<Type, string>();
+
+            if (!s_Definitions.ContainsKey(t))
+                s_Definitions.Add(t, iconName);
+        }
+
+        public static IEnumerable<Type> allTypes { get { return s_Definitions.Keys; } }
+        static Dictionary<Type, string> s_Definitions = new Dictionary<Type, string>();
 
         static void HierarchyOnGUI(int instanceID, Rect selectionRect)
         {
             if (!Active) return;
 
             var fullRect = selectionRect;
-#if UNITY_2019_3_OR_NEWER
             fullRect.xMin = 32;
-#else
-            fullRect.xMin = 16;
-#endif
             fullRect.xMax = EditorGUIUtility.currentViewWidth;
             GameObject o = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             if (o == null) return;
@@ -109,12 +112,13 @@ namespace GameplayIngredients.Editor
             {
                 fullRect.xMin += 28 + 14 * GetObjectDepth(o.transform);
                 fullRect.width = 16;
+
                 EditorGUI.DrawRect(fullRect, EditorGUIUtility.isProSkin? Styles.proBackground : Styles.personalBackground);
                 DrawIcon(fullRect, Contents.GetContent(typeof(Folder)), o.GetComponent<Folder>().Color);
             }
             else
             {
-                if (o.isStatic)
+                if (o.isStatic && AdvancedHierarchyPreferences.showStatic)
                 {
                     GUI.Label(fullRect, " S");
                     EditorGUI.DrawRect(fullRect, Colors.dimGray);
@@ -122,7 +126,8 @@ namespace GameplayIngredients.Editor
 
                 foreach (var type in s_Definitions.Keys)
                 {
-                    if (o.GetComponents(type).Length > 0) selectionRect = DrawIcon(selectionRect, Contents.GetContent(type), Color.white);
+                    if(AdvancedHierarchyPreferences.IsVisible(type) && o.GetComponents(type).Length > 0) 
+                        selectionRect = DrawIcon(selectionRect, Contents.GetContent(type), Color.white);
                 }
             }
             GUI.color = c;
