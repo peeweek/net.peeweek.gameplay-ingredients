@@ -6,6 +6,8 @@ using UnityEngine.VFX;
 using UnityEditor;
 using GameplayIngredients.StateMachines;
 using UnityEngine.Playables;
+using System.Linq;
+using System.Reflection;
 
 namespace GameplayIngredients.Editor
 {
@@ -55,7 +57,6 @@ namespace GameplayIngredients.Editor
 
         static void InitializeTypes()
         {
-            RegisterComponentType( typeof(Folder), "Folder Icon");
             RegisterComponentType( typeof(MonoBehaviour), "cs Script Icon");
             RegisterComponentType( typeof(Camera), "Camera Icon");
             RegisterComponentType( typeof(MeshRenderer), "MeshRenderer Icon");
@@ -78,8 +79,30 @@ namespace GameplayIngredients.Editor
             RegisterComponentType( typeof(Image), "Image Icon");
             RegisterComponentType( typeof(Text), "Text Icon");
             RegisterComponentType( typeof(Button), "Button Icon");
-            RegisterComponentType( typeof(StateMachine), "Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-StateMachine.png");
-            RegisterComponentType( typeof(State), "Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-State.png");
+            RegisterComponentType( typeof(Folder), "Folder Icon");
+
+            foreach(var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                try
+                {
+                    var types = assembly.GetTypes();
+                    foreach(var type in types)
+                    {
+                        if(type.IsSubclassOf(typeof(MonoBehaviour)) && !type.IsAbstract)
+                        {
+                            var attrib = type.GetCustomAttribute<AdvancedHierarchyIconAttribute>();
+                            if(attrib != null)
+                            {
+                                RegisterComponentType(type, attrib.icon);
+                            }
+                        }
+                    }
+                }
+                catch(Exception e)
+                {
+                    Debug.LogWarning("Could not load types from assembly:" + assembly.FullName);
+                }
+            }
         }
 
         public static void RegisterComponentType(Type t, string iconName)
