@@ -1,6 +1,6 @@
 ![](https://raw.githubusercontent.com/peeweek/net.peeweek.gameplay-ingredients/master/Documentation%7E/Images/site-banner.png)
 
-[![openupm](https://img.shields.io/npm/v/net.peeweek.gameplay-ingredients?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/net.peeweek.gameplay-ingredients/)
+[![openupm](https://img.shields.io/npm/v/net.peeweek.gameplay-ingredients?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/net.peeweek.gameplay-ingredients/) [![Documentation Status](https://readthedocs.org/projects/pip/badge/?version=stable)](http://pip.pypa.io/en/stable/?badge=stable)
 
 Gameplay Ingredients for your Unity Games - A collection of scripts that ease simple tasks while making games and prototypes.
 
