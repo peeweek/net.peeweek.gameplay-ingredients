@@ -14,19 +14,7 @@ Gameplay Ingredients for your Unity Games - A collection of scripts that ease si
 
 ## How to install
 
-### Install via OpenUPM
-
-The package is available on the [openupm registry](https://openupm.com). It's recommended to install it via [openupm-cli](https://github.com/openupm/openupm-cli).
-
-```
-openupm add net.peeweek.gameplay-ingredients
-```
-
-### Install via Git URL
-
-You can perform a git referenced package in your `manifset.json` file : this option shall download and manage automatically the repository, with the drawback of being read-only.
-
-### Install via Local Package
+### Install as Local Package
 
 You can use a manual, local package installation if you need to alter the code locally or update the code base regularly. 
 
@@ -34,6 +22,14 @@ You can use a manual, local package installation if you need to alter the code l
 - In your project, open the `Window/Package Manager` window and use the + button to select the `Add Package from Disk...` option.
 - Navigate to your repository folder and select the `package.json` file
 - The package shall be added as a **local package**
+
+### Install via OpenUPM
+
+The package is available on the [openupm registry](https://openupm.com). It's recommended to install it via [openupm-cli](https://github.com/openupm/openupm-cli).
+
+```
+openupm add net.peeweek.gameplay-ingredients
+```
 
 ### Git Reference Version
 
