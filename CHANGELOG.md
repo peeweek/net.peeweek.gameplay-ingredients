@@ -9,6 +9,7 @@
 
 #### Changed
 
+* Game Save manager now saves to the Application.persistentDataPath folder
 * Renamed HierarchyHints to AdvancedHierarchyView + Changed behaviour to apply visibility from preferences
 
 ## 2019.3.3
