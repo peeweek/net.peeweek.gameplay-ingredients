@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+using System.Linq;
 
 namespace GameplayIngredients.Editor
 {
@@ -64,7 +65,17 @@ namespace GameplayIngredients.Editor
             }
             EditorGUI.indentLevel--;
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Visible Components", EditorStyles.boldLabel);
+            using (new GUILayout.HorizontalScope())
+            {
+
+                GUILayout.Label("Visible Components", EditorStyles.boldLabel, GUILayout.Width(EditorGUIUtility.labelWidth));
+                if (GUILayout.Button("All"))
+                    ToggleAll(true);
+                if (GUILayout.Button("None"))
+                    ToggleAll(false);
+                if (GUILayout.Button("Invert"))
+                    ToggleInvert();
+            }
 
             EditorGUI.indentLevel ++;
             foreach (var type in AdvancedHierarchyView.allTypes)
@@ -73,13 +84,41 @@ namespace GameplayIngredients.Editor
                 var value = EditorGUILayout.Toggle(type.Name, s_CachedVisibility[type]);
                 if(EditorGUI.EndChangeCheck())
                 {
-                    s_CachedVisibility[type] = value;
-                    EditorPrefs.SetBool(componentPrefix + type.Name, value);
-                    EditorApplication.RepaintHierarchyWindow();
+                    SetValue(type, value, true);
                 }
             }
             EditorGUI.indentLevel -= 2;
         }
+
+        static void SetValue(Type type, bool value, bool repaint = false)
+        {
+            s_CachedVisibility[type] = value;
+            EditorPrefs.SetBool(componentPrefix + type.Name, value);
+            if(repaint)
+                EditorApplication.RepaintHierarchyWindow();
+
+        }
+
+        static void ToggleAll(bool value)
+        {
+            var allTypes = s_CachedVisibility.Keys.ToArray();
+            foreach(var type in allTypes)
+            {
+                SetValue(type, value);
+            }
+            EditorApplication.RepaintHierarchyWindow();
+        }
+
+        static void ToggleInvert()
+        {
+            var allTypes = s_CachedVisibility.Keys.ToArray();
+            foreach (var type in allTypes)
+            {
+                SetValue(type, !s_CachedVisibility[type]);
+            }
+            EditorApplication.RepaintHierarchyWindow();
+        }
+
     }
 
 }
