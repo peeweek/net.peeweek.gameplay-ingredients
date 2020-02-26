@@ -7,6 +7,7 @@
 * Preferences for Advanced Hierarchy View
 * Added API to AdvancedHierarchyView to add other Icons from component types
 * Help Menu links (github, documentation, openUPM)
+* Added support for SceneAsset and EditorSceneSetup in Discover
 
 #### Changed
 
