@@ -97,6 +97,12 @@ namespace GameplayIngredients.Editor
                     Active = true;
                 else
                     Active = false;
+
+                if (CinemachineActive)
+                    CinemachineActive = true;
+                else
+                    CinemachineActive = false;
+
             }
             else // Cleanup before switching state
             {
