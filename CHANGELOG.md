@@ -12,6 +12,7 @@
 
 * Game Save manager now saves to the Application.persistentDataPath folder
 * Renamed HierarchyHints to AdvancedHierarchyView + Changed behaviour to apply visibility from preferences
+* Managers: Adjusted RuntimeInitializeOnLoad for new Quick Enter Play Mode Settings
 
 ## 2019.3.3
 
