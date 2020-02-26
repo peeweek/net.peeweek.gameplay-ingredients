@@ -53,11 +53,19 @@ namespace GameplayIngredients.Editor
                         GUI.color = Color.green *2;
                     }
 
-                    isLinked = GUILayout.Toggle(isLinked, Contents.linkGameView, EditorStyles.toolbarButton, GUILayout.Width(64));
+                    isLinked = GUILayout.Toggle(isLinked, LinkGameView.CinemachineActive? Contents.linkGameViewCinemachine: Contents.linkGameView, EditorStyles.toolbarButton, GUILayout.Width(64));
 
                     if (GUI.changed)
                     {
-                        LinkGameView.Active = isLinked;
+                        if(Event.current.shift)
+                        {
+                            if (!LinkGameView.Active)
+                                LinkGameView.Active = true;
+
+                            LinkGameView.CinemachineActive = !LinkGameView.CinemachineActive;
+                        }
+                        else
+                            LinkGameView.Active = isLinked;
                     }
 
                     isLocked = GUILayout.Toggle(isLocked, Contents.lockLinkGameView, EditorStyles.toolbarButton);
@@ -104,12 +112,18 @@ namespace GameplayIngredients.Editor
             public static GUIContent playFromHere;
             public static GUIContent lockLinkGameView;
             public static GUIContent linkGameView;
+            public static GUIContent linkGameViewCinemachine;
 
             static Contents()
             {
                 lockLinkGameView = new GUIContent(EditorGUIUtility.IconContent("IN LockButton"));
                 linkGameView = new GUIContent(EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/GUI/Camera16x16.png") as Texture);
                 linkGameView.text = " Game";
+
+                linkGameViewCinemachine = new GUIContent(EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/GUI/Camera16x16.png") as Texture);
+                linkGameViewCinemachine.text = " Cine";
+
+
 
                 playFromHere = new GUIContent(EditorGUIUtility.IconContent("Animation.Play"));
                 playFromHere.text = "Here";
