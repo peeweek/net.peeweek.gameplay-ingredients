@@ -8,6 +8,7 @@
 * Added API to AdvancedHierarchyView to add other Icons from component types
 * Help Menu links (github, documentation, openUPM)
 * Added support for SceneAsset and EditorSceneSetup in Discover
+* Added an option to change the Game View Link camera behavior to Cinemachine Brain preview.
 
 #### Changed
 
