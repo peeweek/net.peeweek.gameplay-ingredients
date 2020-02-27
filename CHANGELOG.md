@@ -16,6 +16,10 @@
 * Renamed HierarchyHints to AdvancedHierarchyView + Changed behaviour to apply visibility from preferences
 * Managers: Adjusted RuntimeInitializeOnLoad for new Quick Enter Play Mode Settings
 
+#### Fixed
+
+* Fixed FocusUIAction that did not update the focus of a button in certain conditions.
+
 ## 2019.3.3
 
 #### Added
