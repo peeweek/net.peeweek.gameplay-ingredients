@@ -2,6 +2,11 @@
 
 ## 2019.3.4
 
+This version added the following package dependencies:
+
+* Cinemachine 2.5.0 
+* Timeline 1.3.0
+
 #### Added
 
 * Preferences for Advanced Hierarchy View
