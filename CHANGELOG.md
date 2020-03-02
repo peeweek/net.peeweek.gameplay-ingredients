@@ -15,6 +15,7 @@
 * Game Save manager now saves to the Application.persistentDataPath folder
 * Renamed HierarchyHints to AdvancedHierarchyView + Changed behaviour to apply visibility from preferences
 * Managers: Adjusted RuntimeInitializeOnLoad for new Quick Enter Play Mode Settings
+* Updated Starter Packages for Built-in RP, HDRP and URP (removed LWRP)
 
 #### Fixed
 
