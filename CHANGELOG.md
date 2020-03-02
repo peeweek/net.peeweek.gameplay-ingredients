@@ -20,6 +20,7 @@
 #### Fixed
 
 * Fixed FocusUIAction that did not update the focus of a button in certain conditions.
+* Fixed possible null in discover components
 
 ## 2019.3.3
 
