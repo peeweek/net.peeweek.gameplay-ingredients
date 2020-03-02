@@ -104,8 +104,8 @@ Please select a package depending on your project's render loop. If you do not k
                         AssetDatabase.ImportPackage("Packages/net.peeweek.gameplay-ingredients/StarterAssets/GameplayIngredients-Starter-BuiltInRenderer.unitypackage", false);
                     if (GUILayout.Button("HD Render Pipeline"))
                         AssetDatabase.ImportPackage("Packages/net.peeweek.gameplay-ingredients/StarterAssets/GameplayIngredients-Starter-HDRP.unitypackage", false);
-                    if (GUILayout.Button("Lightweight Render Pipeline"))
-                        AssetDatabase.ImportPackage("Packages/net.peeweek.gameplay-ingredients/StarterAssets/GameplayIngredients-Starter-LWRP.unitypackage", false);
+                    if (GUILayout.Button("Universal Render Pipeline"))
+                        AssetDatabase.ImportPackage("Packages/net.peeweek.gameplay-ingredients/StarterAssets/GameplayIngredients-Starter-URP.unitypackage", false);
                 }
             }
         }
