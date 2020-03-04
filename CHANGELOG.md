@@ -1,5 +1,11 @@
 # Changelog
 
+## 2019.3.5
+
+#### Added
+
+- Discover : Tag Filtering System
+
 ## 2019.3.4
 
 This version added the following package dependencies:
