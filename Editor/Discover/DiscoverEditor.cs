@@ -85,7 +85,7 @@ namespace GameplayIngredients.Editor
             }
         }
 
-        static void DrawImage(Texture texture)
+        public static void DrawImage(Texture texture)
         {
             float aspect = texture.width / texture.height;
             var rect = GUILayoutUtility.GetAspectRect(aspect, DiscoverWindow.Styles.image, GUILayout.MaxWidth(texture.width));
