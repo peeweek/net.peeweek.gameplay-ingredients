@@ -159,6 +159,11 @@ namespace GameplayIngredients.Editor
         /// <returns>true to discard, false to keep</returns>
         static bool FilterDiscoverObject(DiscoverAsset asset, Discover discoverObject)
         {
+            if (string.IsNullOrEmpty(asset.Tags))
+                asset.Tags = string.Empty;
+            if (string.IsNullOrEmpty(discoverObject.Tags))
+                discoverObject.Tags = string.Empty;
+
             string[] assetTags = asset.Tags.Split(' ');
             string[] objectTags = discoverObject.Tags.Split(' ');
 
