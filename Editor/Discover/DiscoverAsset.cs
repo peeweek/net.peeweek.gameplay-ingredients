@@ -30,6 +30,7 @@ namespace GameplayIngredients.Editor
         [Header("General Properties")]
         public string WindowTitle = "Discover";
         public Texture2D HeaderTexture;
+        public bool dockable = false;
 
         [Tooltip("Width of the Window, in pixels")]
         public int WindowWidth = 640;
@@ -43,8 +44,20 @@ namespace GameplayIngredients.Editor
         [Tooltip("The name of the preference for auto showing at startup, will be ")]
         public string PreferenceName = "Discover";
 
+        [Header("Filter Content")]
+        public FilterMode filterMode = FilterMode.ShowAll;
+        public string Tags = "";
+
+        public enum FilterMode
+        { 
+            ShowAll,
+            IncludeTags,
+            ExcludeTags
+        }
+
         [Header("Content")]
         public string Title = "Welcome!";
+        public Texture2D Image;
         [Multiline]
         public string Description = "This is a sample body for your discover window.";
         [Header("Scenes")]
@@ -58,6 +71,7 @@ namespace GameplayIngredients.Editor
     public struct DiscoverSceneInfo
     {
         public string Title;
+        public Texture2D Image;
         [Multiline]
         public string Description;
         public EditorSceneSetup[] SceneSetups;
