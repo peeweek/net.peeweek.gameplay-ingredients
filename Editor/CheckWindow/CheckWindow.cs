@@ -70,6 +70,7 @@ namespace GameplayIngredients.Editor
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
                     GUILayout.Label("Check Type", Styles.header, GUILayout.Width(128));
+                    GUILayout.Label("Object", Styles.header, GUILayout.Width(128));
                     GUILayout.Label("Message", Styles.header, GUILayout.ExpandWidth(true));
                     GUILayout.Label("Resolution", Styles.header, GUILayout.Width(128));
                     GUILayout.Space(12);
@@ -88,6 +89,10 @@ namespace GameplayIngredients.Editor
                         using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                         {
                             GUILayout.Label(result.check.name, Styles.line, GUILayout.Width(128));
+                            if(GUILayout.Button(result.mainObject.name, Styles.line, GUILayout.Width(128)))
+                            {
+                                Selection.activeObject = result.mainObject;
+                            }
                             GUILayout.Label(result.message, Styles.line, GUILayout.ExpandWidth(true));
                             ShowMenu(result);
 

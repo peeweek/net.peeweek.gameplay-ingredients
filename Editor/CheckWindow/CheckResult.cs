@@ -9,13 +9,14 @@ namespace GameplayIngredients.Editor
     {
         public enum Result
         {
-            Pass,
+            Notice,
             Warning,
             Failed
         }
 
         public T check { get; private set; }
         Result result;
+        public Object mainObject { get { if (objects != null && objects.Length > 0) return objects[0]; else return null; } }
         Object[] objects;
         public GUIContent message;
 
@@ -35,8 +36,8 @@ namespace GameplayIngredients.Editor
             switch (r)
             {
                 default:
-                case Result.Pass:
-                    return EditorGUIUtility.IconContent("vcs_check").image;
+                case Result.Notice:
+                    return EditorGUIUtility.IconContent("console.infoicon.sml").image;
                 case Result.Warning:
                     return EditorGUIUtility.IconContent("console.warnicon.sml").image;
                 case Result.Failed:
