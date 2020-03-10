@@ -5,7 +5,7 @@ using UnityEditor;
 
 namespace GameplayIngredients.Editor
 {
-    public class CheckResult<T> where T:Check
+    public class CheckResult
     {
         public enum Result
         {
@@ -14,8 +14,8 @@ namespace GameplayIngredients.Editor
             Failed
         }
 
-        public T check { get; private set; }
-        Result result;
+        public Check check { get; private set; }
+        public Result result { get; private set; }
         public Object mainObject { get { if (objects != null && objects.Length > 0) return objects[0]; else return null; } }
         Object[] objects;
         public GUIContent message;
@@ -23,7 +23,7 @@ namespace GameplayIngredients.Editor
 
         public int resolutionActionIndex;
         public string action { get { return check.ResolutionActions[resolutionActionIndex]; } }
-        public CheckResult(T check, Result result, string message, params Object[] objects)
+        public CheckResult(Check check, Result result, string message, params Object[] objects)
         {
             this.check = check;
             this.result = result;

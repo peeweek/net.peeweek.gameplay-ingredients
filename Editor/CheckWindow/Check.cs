@@ -11,7 +11,7 @@ namespace GameplayIngredients.Editor
         public abstract string name { get; }
 
         public abstract bool defaultEnabled { get; }
-        public abstract IEnumerable<CheckResult<Check>> GetResults();
+        public abstract IEnumerable<CheckResult> GetResults();
         public abstract void Resolve(int action);
         public abstract string[] ResolutionActions { get; }
         public abstract int defaultResolutionActionIndex { get; }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 namespace GameplayIngredients.Editor
 {
@@ -40,6 +41,61 @@ namespace GameplayIngredients.Editor
         Vector2 Scroll = new Vector2();
         Dictionary<Check, bool> s_CheckStates;
 
+        enum SortMode
+        {
+            None,
+            CheckType,
+            ObjectName,
+            Message,
+            Resolution
+        }
+
+        SortMode sortMode = SortMode.None;
+        bool invertSort = false;
+
+        private void SortButton(string label, SortMode sortMode, params GUILayoutOption[] options)
+        {
+            if (GUILayout.Button(label, this.sortMode == sortMode ? Styles.sortHeader : Styles.header, options))
+            {
+
+                if (this.sortMode == sortMode)
+                    invertSort = !invertSort;
+                else
+                {
+                    this.sortMode = sortMode;
+                    invertSort = false;
+                }
+
+                if(m_Results != null)
+                {
+                    switch (sortMode)
+                    {
+                        default:
+                        case SortMode.None:
+                            break;
+                        case SortMode.CheckType:
+                            m_Results = m_Results.OrderBy((a) => a.check.name).ToList();
+                            break;
+                        case SortMode.ObjectName:
+                            m_Results = m_Results.OrderBy((a) => a.mainObject == null? "" : a.mainObject.name).ToList();
+                            break;
+                        case SortMode.Message:
+                            m_Results = m_Results.OrderBy((a) => a.message.text).OrderBy((a) => a.result).ToList();
+                            break;
+                        case SortMode.Resolution:
+                            m_Results = m_Results.OrderBy((a) => a.check.ResolutionActions[a.resolutionActionIndex]).ToList();
+                            break;
+                    }
+                    if(invertSort)
+                    {
+                        m_Results.Reverse();
+                    }
+
+                    Repaint();
+                }
+            }
+        }
+
         private void OnGUI()
         {
             using(new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Height(22)))
@@ -69,10 +125,10 @@ namespace GameplayIngredients.Editor
                 GUI.backgroundColor = Color.white * 1.3f;
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
-                    GUILayout.Label("Check Type", Styles.header, GUILayout.Width(128));
-                    GUILayout.Label("Object", Styles.header, GUILayout.Width(128));
-                    GUILayout.Label("Message", Styles.header, GUILayout.ExpandWidth(true));
-                    GUILayout.Label("Resolution", Styles.header, GUILayout.Width(128));
+                    SortButton("Check Type", SortMode.CheckType, GUILayout.Width(128));
+                    SortButton("Object", SortMode.ObjectName, GUILayout.Width(128));
+                    SortButton("Message", SortMode.Message, GUILayout.ExpandWidth(true));
+                    SortButton("Resolution", SortMode.Resolution, GUILayout.Width(128));
                     GUILayout.Space(12);
                 }
 
@@ -89,7 +145,7 @@ namespace GameplayIngredients.Editor
                         using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                         {
                             GUILayout.Label(result.check.name, Styles.line, GUILayout.Width(128));
-                            if(GUILayout.Button(result.mainObject.name, Styles.line, GUILayout.Width(128)))
+                            if(GUILayout.Button(result.mainObject != null? result.mainObject.name : "Null", Styles.line, GUILayout.Width(128)))
                             {
                                 Selection.activeObject = result.mainObject;
                             }
@@ -112,7 +168,7 @@ namespace GameplayIngredients.Editor
             }
         }
 
-        void ShowMenu(CheckResult<Check> result)
+        void ShowMenu(CheckResult result)
         {
             if (s_IntValues == null)
                 s_IntValues = new Dictionary<Check, int[]>();
@@ -134,7 +190,7 @@ namespace GameplayIngredients.Editor
 
         static Dictionary<Check, int[]> s_IntValues;
 
-        List<CheckResult<Check>> m_Results;
+        List<CheckResult> m_Results;
 
         void Resolve()
         {
@@ -143,7 +199,7 @@ namespace GameplayIngredients.Editor
 
         void PerformChecks()
         {
-            List<CheckResult<Check>> results = new List<CheckResult<Check>>();
+            List<CheckResult> results = new List<CheckResult>();
             bool canceled = false;
             try
             {
@@ -171,12 +227,14 @@ namespace GameplayIngredients.Editor
             if(!canceled)
                 m_Results = results;
 
+            sortMode = SortMode.None;
             Repaint();
         }
 
         static class Styles
         {
             public static GUIStyle header;
+            public static GUIStyle sortHeader;
             public static GUIStyle line;
 
             static Styles()
@@ -184,6 +242,10 @@ namespace GameplayIngredients.Editor
                 header = new GUIStyle(EditorStyles.toolbarButton);
                 header.alignment = TextAnchor.MiddleLeft;
                 header.fontStyle = FontStyle.Bold;
+
+                sortHeader = new GUIStyle(EditorStyles.toolbarDropDown);
+                sortHeader.alignment = TextAnchor.MiddleLeft;
+                sortHeader.fontStyle = FontStyle.Bold;
 
                 line = new GUIStyle(EditorStyles.toolbarButton);
                 line.alignment = TextAnchor.MiddleLeft;

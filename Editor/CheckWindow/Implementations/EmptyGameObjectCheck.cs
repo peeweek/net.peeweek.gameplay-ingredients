@@ -14,7 +14,7 @@ namespace GameplayIngredients.Editor
 
         public override int defaultResolutionActionIndex => 0;
 
-        public override IEnumerable<CheckResult<Check>> GetResults()
+        public override IEnumerable<CheckResult> GetResults()
         {
             GameObject[] all = GameObject.FindObjectsOfType<GameObject>();
             foreach (var go in all)
@@ -23,7 +23,16 @@ namespace GameplayIngredients.Editor
                 if (allComps.Length == 1)
                 {
                     if (!go.isStatic)
-                        yield return new CheckResult<Check>(this, CheckResult<Check>.Result.Warning, $"Empty Game Object {go.name} is not static", go);
+                    {
+                        yield return new CheckResult(this, CheckResult.Result.Warning, $"Empty Game Object {go.name} is not static", go);
+                    }
+                    else
+                    {
+                        if(go.transform.childCount == 0)
+                        {
+                            yield return new CheckResult(this, CheckResult.Result.Notice, "Empty Static Game Object has no children and could be deleted if unused.", go);
+                        }
+                    }
                 }
 
             }
