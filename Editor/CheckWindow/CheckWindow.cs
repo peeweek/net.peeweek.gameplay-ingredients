@@ -53,6 +53,47 @@ namespace GameplayIngredients.Editor
         SortMode sortMode = SortMode.None;
         bool invertSort = false;
 
+        bool showNotice
+        {
+            get
+            {
+                return EditorPrefs.GetBool(kPreference + "showNotice", true);
+            }
+            set
+            {
+                if (value != showNotice)
+                    EditorPrefs.SetBool(kPreference + "showNotice", value);
+            }
+        }
+        bool showWarning
+        {
+            get
+            {
+                return EditorPrefs.GetBool(kPreference + "showWarning", true);
+            }
+            set
+            {
+                if (value != showWarning)
+                    EditorPrefs.SetBool(kPreference + "showWarning", value);
+            }
+        }
+
+        bool showError
+        {
+            get
+            {
+                return EditorPrefs.GetBool(kPreference + "showError", true);
+            }
+            set
+            {
+                if (value != showError)
+                    EditorPrefs.SetBool(kPreference + "showError", value);
+            }
+        }
+
+        string kPreference = "GameplayIngredients.CheckResolve.";
+
+
         private void SortButton(string label, SortMode sortMode, params GUILayoutOption[] options)
         {
             if (GUILayout.Button(label, this.sortMode == sortMode ? Styles.sortHeader : Styles.header, options))
@@ -115,6 +156,11 @@ namespace GameplayIngredients.Editor
 
                 GUILayout.FlexibleSpace();
 
+
+                showNotice = GUILayout.Toggle(showNotice, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Notice).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Notice)), EditorStyles.toolbarButton);
+                showWarning = GUILayout.Toggle(showWarning, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Warning).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Warning)), EditorStyles.toolbarButton);
+                showError = GUILayout.Toggle(showError, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Failed).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Failed)), EditorStyles.toolbarButton);
+
                 if (GUILayout.Button("Resolve", EditorStyles.toolbarButton))
                     Resolve();
 
@@ -139,6 +185,15 @@ namespace GameplayIngredients.Editor
                     bool odd = true;
                     foreach (var result in m_Results)
                     {
+                        if (result.result == CheckResult.Result.Notice && !showNotice)
+                            continue;
+
+                        if (result.result == CheckResult.Result.Warning && !showWarning)
+                            continue;
+
+                        if (result.result == CheckResult.Result.Failed && !showError)
+                            continue;
+
                         GUI.backgroundColor = Color.white * (odd ? 0.9f : 0.8f);
                         odd = !odd;
 
@@ -190,7 +245,7 @@ namespace GameplayIngredients.Editor
 
         static Dictionary<Check, int[]> s_IntValues;
 
-        List<CheckResult> m_Results;
+        List<CheckResult> m_Results = new List<CheckResult>();
 
         void Resolve()
         {

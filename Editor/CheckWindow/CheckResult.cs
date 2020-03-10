@@ -31,17 +31,32 @@ namespace GameplayIngredients.Editor
             this.objects = objects;
         }
 
-        static Texture GetIcon(Result r)
+        public static Texture GetIcon(Result r)
         {
             switch (r)
             {
                 default:
                 case Result.Notice:
-                    return EditorGUIUtility.IconContent("console.infoicon.sml").image;
+                    return Contents.notice;
                 case Result.Warning:
-                    return EditorGUIUtility.IconContent("console.warnicon.sml").image;
+                    return Contents.warning;
                 case Result.Failed:
-                    return EditorGUIUtility.IconContent("console.erroricon.sml").image;
+                    return Contents.failed;
+
+            }
+        }
+
+        static class Contents
+        {
+            public static Texture notice;
+            public static Texture warning;
+            public static Texture failed;
+
+            static Contents()
+            {
+                notice = EditorGUIUtility.IconContent("console.infoicon.sml").image;
+                warning = EditorGUIUtility.IconContent("console.warnicon.sml").image;
+                failed = EditorGUIUtility.IconContent("console.erroricon.sml").image;
 
             }
         }
