@@ -53,6 +53,8 @@ namespace GameplayIngredients.Editor
         SortMode sortMode = SortMode.None;
         bool invertSort = false;
 
+        string filterString = "";
+
         bool showNotice
         {
             get
@@ -154,15 +156,18 @@ namespace GameplayIngredients.Editor
                     menu.DropDown(r);
                 }
 
+                if (GUILayout.Button("Resolve", EditorStyles.toolbarButton))
+                    Resolve();
+
                 GUILayout.FlexibleSpace();
 
+                filterString = EditorGUILayout.DelayedTextField(filterString, EditorStyles.toolbarSearchField, GUILayout.Width(180));
 
                 showNotice = GUILayout.Toggle(showNotice, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Notice).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Notice)), EditorStyles.toolbarButton);
                 showWarning = GUILayout.Toggle(showWarning, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Warning).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Warning)), EditorStyles.toolbarButton);
                 showError = GUILayout.Toggle(showError, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Failed).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Failed)), EditorStyles.toolbarButton);
 
-                if (GUILayout.Button("Resolve", EditorStyles.toolbarButton))
-                    Resolve();
+
 
             }
             using(new GUILayout.VerticalScope())
@@ -192,6 +197,9 @@ namespace GameplayIngredients.Editor
                             continue;
 
                         if (result.result == CheckResult.Result.Failed && !showError)
+                            continue;
+
+                        if (!string.IsNullOrEmpty(filterString) && !result.message.text.Contains(filterString))
                             continue;
 
                         GUI.backgroundColor = Color.white * (odd ? 0.9f : 0.8f);
