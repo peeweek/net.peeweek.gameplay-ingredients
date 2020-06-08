@@ -2,6 +2,10 @@
 
 ## 2019.3.6
 
+#### Added
+
+- Added API Access to the Link Game View Camera object
+
 #### Fixed
 
 * Fixed Possible Nulls in Discover Asset reference
@@ -13,7 +17,6 @@
 - Discover : Tag Filtering System
 - Discover : Images in Discover Window
 - Find and Replace : Result list enables selecting / focusing on objects
-- Added API Access to the Link Game View Camera object
 
 ## 2019.3.4
 
