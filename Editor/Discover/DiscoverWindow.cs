@@ -94,6 +94,7 @@ namespace GameplayIngredients.Editor
             }
         }
 
+        [SerializeField]
         public DiscoverAsset discoverAsset { get; private set; }
         Texture2D header;
         bool forceGlobal;
@@ -104,11 +105,11 @@ namespace GameplayIngredients.Editor
             titleContent = new GUIContent(discoverAsset.WindowTitle);
             minSize = new Vector2(discoverAsset.WindowWidth, discoverAsset.WindowHeight);
             maxSize = new Vector2(discoverAsset.WindowWidth, discoverAsset.WindowHeight);
+            UpdateDiscoverObjects();
         }
 
         private void OnEnable()
         {
-            UpdateDiscoverObjects();
             EditorSceneManager.newSceneCreated += UpdateDiscoverObjectsOnCreate;
             EditorSceneManager.sceneOpened += UpdateDiscoverObjectsOnLoad;
             EditorSceneSetup.onSetupLoaded += UpdateDiscoverObjectsOnLoadSetup;

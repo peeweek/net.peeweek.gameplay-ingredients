@@ -1,5 +1,11 @@
 # Changelog
 
+## 2019.3.6
+
+#### Fixed
+
+* Fixed Possible Nulls in Discover Asset reference
+
 ## 2019.3.5
 
 #### Added
