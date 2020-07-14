@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using System.Reflection;
+using System;
 
 namespace GameplayIngredients.Editor
 {
@@ -257,7 +259,10 @@ namespace GameplayIngredients.Editor
 
         void Resolve()
         {
-
+            foreach(var result in m_Results)
+            {
+                result.check.Resolve(result);
+            }
         }
 
         void PerformChecks()
@@ -266,6 +271,8 @@ namespace GameplayIngredients.Editor
             bool canceled = false;
             try
             {
+                var so = new SceneObjects();
+
                 int count = s_CheckStates.Count;
                 int i = 0;
                 foreach (var kvp in s_CheckStates)
@@ -278,7 +285,7 @@ namespace GameplayIngredients.Editor
                     }
 
                     if (kvp.Value)
-                        results.AddRange(kvp.Key.GetResults());
+                        results.AddRange(kvp.Key.GetResults(so));
                     i++;
                 }
             }
@@ -314,7 +321,96 @@ namespace GameplayIngredients.Editor
                 line.alignment = TextAnchor.MiddleLeft;
             }
         }
+    }
 
+
+
+    public class SceneObjects
+    {
+        public GameObject[] sceneObjects;
+        public List<GameObject> referencedGameObjects;
+        public List<Component> referencedComponents;
+        public List<UnityEngine.Object> referencedObjects;
+
+        public SceneObjects()
+        {
+            sceneObjects = GameObject.FindObjectsOfType<GameObject>();
+            referencedGameObjects = new List<GameObject>();
+            referencedComponents = new List<Component>();
+            referencedObjects = new List<UnityEngine.Object>();
+
+            if (sceneObjects == null || sceneObjects.Length == 0)
+                return;
+
+            try
+            {
+                int count = sceneObjects.Length;
+                int i = 0;
+
+                foreach (var sceneObject in sceneObjects)
+                {
+                    float progress = ++i / (float)count;
+                    if (EditorUtility.DisplayCancelableProgressBar("Building Reference Table...", $"{sceneObject.name}", progress))
+                    {
+                        referencedComponents.Clear();
+                        referencedGameObjects.Clear();
+                        referencedObjects.Clear();
+                        break;
+                    }
+
+                    var components = sceneObject.GetComponents<Component>();
+                    foreach (var component in components)
+                    {
+                        if (!(component is Transform))
+                        {
+                            Type t = component.GetType();
+                            FieldInfo[] fields = t.GetFields(BindingFlags.Public
+                                             | BindingFlags.Instance
+                                             | BindingFlags.NonPublic);
+
+                            foreach (var f in fields)
+                            {
+
+                                if (f.FieldType == typeof(GameObject))
+                                {
+                                    var go = f.GetValue(component) as GameObject;
+                                    if (go != component.gameObject)
+                                    {
+                                        referencedGameObjects.Add(go);
+                                    }
+                                }
+                                else if (f.FieldType == typeof(Transform))
+                                {
+                                    var tr = f.GetValue(component) as Transform;
+                                    if (tr.gameObject != component.gameObject)
+                                    {
+                                        referencedGameObjects.Add(tr.gameObject);
+                                    }
+                                }
+                                else if (f.FieldType.IsSubclassOf(typeof(Component)))
+                                {
+                                    var comp = f.GetValue(component) as Component;
+                                    if (comp != null && comp.gameObject != component.gameObject)
+                                    {
+                                        referencedComponents.Add(comp);
+                                    }
+                                }
+                                else if (f.FieldType.IsSubclassOf(typeof(UnityEngine.Object)))
+                                {
+                                    var obj = f.GetValue(component) as UnityEngine.Object;
+                                    referencedObjects.Add(obj);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
+
+        }
     }
 
 }

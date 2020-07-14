@@ -101,12 +101,18 @@ namespace GameplayIngredients.Editor
                         SceneViewPOV.ShowPopup(btnrect, sceneView);
                     }
 
-                    GUILayout.FlexibleSpace();
+                    // Check Window
+                    GUILayout.Space(16);
+                    if (GUILayout.Button("Check", EditorStyles.toolbarButton))
+                    {
+                        EditorWindow.GetWindow<CheckWindow>();
+                    }
 
                     // Custom Code here
                     if (OnSceneViewToolbarGUI != null)
                         OnSceneViewToolbarGUI.Invoke(sceneView);
 
+                    GUILayout.FlexibleSpace();
                     // Saving Space not to overlap view controls
                     GUILayout.Space(96);
 
@@ -159,8 +165,6 @@ namespace GameplayIngredients.Editor
 
                 linkGameViewCinemachine = new GUIContent(EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/GUI/Camera16x16.png") as Texture);
                 linkGameViewCinemachine.text = " Cine";
-
-
 
                 playFromHere = new GUIContent(EditorGUIUtility.IconContent("Animation.Play"));
                 playFromHere.text = "Here";
