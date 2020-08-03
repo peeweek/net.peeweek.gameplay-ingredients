@@ -5,10 +5,12 @@
 #### Added
 
 - Added API Access to the Link Game View Camera object
+- Added Valid/Invalid paths for Platform Logic
 
 #### Fixed
 
 * Fixed Possible Nulls in Discover Asset reference
+* Fixed Possible Out-of range director time in DirectorControlRig
 
 ## 2019.3.5
 
