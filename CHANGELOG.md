@@ -6,6 +6,8 @@
 
 - Added API Access to the Link Game View Camera object
 - Added Valid/Invalid paths for Platform Logic
+- Added Local Space control for ReachPositionRig
+- Added "Update SetStateAction" Button in State Machine components to populate the game object with Set State Actions
 
 #### Fixed
 

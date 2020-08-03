@@ -2,6 +2,7 @@ using NaughtyAttributes;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using GameplayIngredients.Actions;
 
 namespace GameplayIngredients.StateMachines
 {
@@ -39,6 +40,33 @@ namespace GameplayIngredients.StateMachines
             foreach(var state in States)
             {
                 state.gameObject.SetActive(state == States.FirstOrDefault(o => o.StateName == DefaultState));
+            }
+        }
+
+        [Button("Create/Update SetStateAction Components")]
+        private void UpdateSetStateActionComponents()
+        {
+            var components = this.GetComponents<SetStateAction>();
+            foreach (var state in States)
+            {
+                if (!components.Any(o => o.state == state.StateName))
+                {
+                    var action = gameObject.AddComponent<SetStateAction>();
+                    action.state = state.StateName;
+                    action.StateMachine = this;
+                }
+            }
+
+            var todelete = GetComponents<SetStateAction>().Where(a => !States.Any(s => s.StateName == a.state)).ToArray();
+            for (int i = 0; i < todelete.Length; i++)
+            {
+                DestroyImmediate(todelete[i]);
+            }
+
+            components = this.GetComponents<SetStateAction>();
+            foreach(var action in components)
+            {
+                action.Name = $"Set State {action.state}";
             }
         }
 
