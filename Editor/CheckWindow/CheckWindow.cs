@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System;
 using UnityEngine.SceneManagement;
+using GameplayIngredients.Rigs;
+using UnityEngine.Events;
 
 namespace GameplayIngredients.Editor
 {
@@ -319,7 +321,8 @@ namespace GameplayIngredients.Editor
         {
             foreach(var result in m_Results)
             {
-                result.check.Resolve(result);
+                if(!IsIgnored(result))
+                    result.check.Resolve(result);
             }
         }
 
@@ -382,8 +385,6 @@ namespace GameplayIngredients.Editor
         }
     }
 
-
-
     public class SceneObjects
     {
         public GameObject[] sceneObjects;
@@ -429,7 +430,6 @@ namespace GameplayIngredients.Editor
 
                             foreach (var f in fields)
                             {
-
                                 if (f.FieldType == typeof(GameObject))
                                 {
                                     var go = f.GetValue(component) as GameObject;
@@ -454,11 +454,26 @@ namespace GameplayIngredients.Editor
                                         referencedComponents.Add(comp);
                                     }
                                 }
+                                else if (f.FieldType == typeof(UnityEvent))
+                                {
+                                    var ue = f.GetValue(component) as UnityEvent;
+                                    int evtCount = ue.GetPersistentEventCount();
+                                    for(int k = 0; k< evtCount; k++)
+                                    {
+                                        
+                                        var target = ue.GetPersistentTarget(k);
+                                        if (target is GameObject)
+                                            referencedGameObjects.Add(target as GameObject);
+                                        else if(target.GetType().IsSubclassOf(typeof(Component)))
+                                            referencedGameObjects.Add((target as Component).gameObject);
+                                    }
+                                }
                                 else if (f.FieldType.IsSubclassOf(typeof(UnityEngine.Object)))
                                 {
                                     var obj = f.GetValue(component) as UnityEngine.Object;
                                     referencedObjects.Add(obj);
                                 }
+
                             }
                         }
                     }
