@@ -8,6 +8,7 @@ using System;
 using UnityEngine.SceneManagement;
 using GameplayIngredients.Rigs;
 using UnityEngine.Events;
+using UnityEditor.SceneManagement;
 
 namespace GameplayIngredients.Editor
 {
@@ -41,9 +42,18 @@ namespace GameplayIngredients.Editor
             EditorPrefs.SetBool(kPreferencePrefix + check.name, value);
         }
 
-        const string kPreferencePrefix = "GameplayIngrediensts.Check.";
+        const string kPreferencePrefix = "GameplayIngredients.Check.";
+        const string kShowIgnoredPreference = "GameplayIngredients.ShowIgnored";
 
-        bool showIgnored;
+        bool showIgnored
+        {
+            get { 
+                return EditorPrefs.GetBool(kShowIgnoredPreference, true); 
+            }
+            set { 
+                EditorPrefs.SetBool(kShowIgnoredPreference, value); 
+            }
+        }
         Vector2 Scroll = new Vector2();
         Dictionary<Check, bool> s_CheckStates;
 
@@ -201,7 +211,8 @@ namespace GameplayIngredients.Editor
                     bool odd = true;
                     foreach (var result in m_Results)
                     {
-                        if (!showIgnored && IsIgnored(result))
+
+                        if (!showIgnored && IsIgnored(result) || result.mainObject == null)
                             continue;
 
                         if (result.result == CheckResult.Result.Notice && !showNotice)
@@ -221,6 +232,8 @@ namespace GameplayIngredients.Editor
 
                         using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                         {
+                            EditorGUI.BeginDisabledGroup(showIgnored && IsIgnored(result));
+                            
                             GUILayout.Label(result.check.name, Styles.line, GUILayout.Width(128));
                             if(GUILayout.Button(result.mainObject != null? result.mainObject.name : "Null", Styles.line, GUILayout.Width(128)))
                             {
@@ -228,6 +241,8 @@ namespace GameplayIngredients.Editor
                             }
                             GUILayout.Label(result.message, Styles.line, GUILayout.ExpandWidth(true));
                             ShowMenu(result);
+
+                            EditorGUI.EndDisabledGroup();
 
                             if(showIgnored)
                             {
@@ -290,6 +305,11 @@ namespace GameplayIngredients.Editor
         void SetIgnored(CheckResult result, bool ignored)
         {
             result.SetIgnored(ignored);
+            if(result.mainObject is GameObject)
+            {
+                var go = result.mainObject as GameObject;
+                EditorSceneManager.MarkSceneDirty(go.scene);
+            }
             BuildIgnoredList();
         }
 
@@ -433,7 +453,7 @@ namespace GameplayIngredients.Editor
                                 if (f.FieldType == typeof(GameObject))
                                 {
                                     var go = f.GetValue(component) as GameObject;
-                                    if (go != component.gameObject)
+                                    if (go != null && go != component.gameObject)
                                     {
                                         referencedGameObjects.Add(go);
                                     }
@@ -441,7 +461,7 @@ namespace GameplayIngredients.Editor
                                 else if (f.FieldType == typeof(Transform))
                                 {
                                     var tr = f.GetValue(component) as Transform;
-                                    if (tr.gameObject != component.gameObject)
+                                    if (tr != null && tr.gameObject != component.gameObject)
                                     {
                                         referencedGameObjects.Add(tr.gameObject);
                                     }
@@ -460,7 +480,6 @@ namespace GameplayIngredients.Editor
                                     int evtCount = ue.GetPersistentEventCount();
                                     for(int k = 0; k< evtCount; k++)
                                     {
-                                        
                                         var target = ue.GetPersistentTarget(k);
                                         if (target is GameObject)
                                             referencedGameObjects.Add(target as GameObject);
