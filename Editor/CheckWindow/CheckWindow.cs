@@ -5,6 +5,7 @@ using UnityEditor;
 using System.Linq;
 using System.Reflection;
 using System;
+using UnityEngine.SceneManagement;
 
 namespace GameplayIngredients.Editor
 {
@@ -40,6 +41,7 @@ namespace GameplayIngredients.Editor
 
         const string kPreferencePrefix = "GameplayIngrediensts.Check.";
 
+        bool showIgnored;
         Vector2 Scroll = new Vector2();
         Dictionary<Check, bool> s_CheckStates;
 
@@ -49,7 +51,8 @@ namespace GameplayIngredients.Editor
             CheckType,
             ObjectName,
             Message,
-            Resolution
+            Resolution,
+            Ignored
         }
 
         SortMode sortMode = SortMode.None;
@@ -97,7 +100,6 @@ namespace GameplayIngredients.Editor
 
         string kPreference = "GameplayIngredients.CheckResolve.";
 
-
         private void SortButton(string label, SortMode sortMode, params GUILayoutOption[] options)
         {
             if (GUILayout.Button(label, this.sortMode == sortMode ? Styles.sortHeader : Styles.header, options))
@@ -130,6 +132,9 @@ namespace GameplayIngredients.Editor
                         case SortMode.Resolution:
                             m_Results = m_Results.OrderBy((a) => a.check.ResolutionActions[a.resolutionActionIndex]).ToList();
                             break;
+                        case SortMode.Ignored:
+                            m_Results = m_Results.OrderBy((a) => IsIgnored(a)).ToList();
+                            break;
                     }
                     if(invertSort)
                     {
@@ -161,6 +166,9 @@ namespace GameplayIngredients.Editor
                 if (GUILayout.Button("Resolve", EditorStyles.toolbarButton))
                     Resolve();
 
+                GUILayout.Space(16);
+                showIgnored = GUILayout.Toggle(showIgnored, "Show Ignored", EditorStyles.toolbarButton);
+
                 GUILayout.FlexibleSpace();
 
                 filterString = EditorGUILayout.DelayedTextField(filterString, EditorStyles.toolbarSearchField, GUILayout.Width(180));
@@ -169,12 +177,9 @@ namespace GameplayIngredients.Editor
                 showWarning = GUILayout.Toggle(showWarning, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Warning).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Warning)), EditorStyles.toolbarButton);
                 showError = GUILayout.Toggle(showError, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Failed).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Failed)), EditorStyles.toolbarButton);
 
-
-
             }
             using(new GUILayout.VerticalScope())
             {
-               
                 GUI.backgroundColor = Color.white * 1.3f;
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
@@ -182,6 +187,8 @@ namespace GameplayIngredients.Editor
                     SortButton("Object", SortMode.ObjectName, GUILayout.Width(128));
                     SortButton("Message", SortMode.Message, GUILayout.ExpandWidth(true));
                     SortButton("Resolution", SortMode.Resolution, GUILayout.Width(128));
+                    if(showIgnored)
+                        SortButton("Ignored", SortMode.Ignored, GUILayout.Width(64));
                     GUILayout.Space(12);
                 }
 
@@ -192,6 +199,9 @@ namespace GameplayIngredients.Editor
                     bool odd = true;
                     foreach (var result in m_Results)
                     {
+                        if (!showIgnored && IsIgnored(result))
+                            continue;
+
                         if (result.result == CheckResult.Result.Notice && !showNotice)
                             continue;
 
@@ -217,9 +227,20 @@ namespace GameplayIngredients.Editor
                             GUILayout.Label(result.message, Styles.line, GUILayout.ExpandWidth(true));
                             ShowMenu(result);
 
+                            if(showIgnored)
+                            {
+                                GUILayout.Space(18);
+                                EditorGUI.BeginChangeCheck();
+                                var ignored = GUILayout.Toggle(IsIgnored(result),"", EditorStyles.toggle ,GUILayout.Width(24));
+                                if (EditorGUI.EndChangeCheck())
+                                {
+                                    SetIgnored(result, ignored);
+                                }
+                                GUILayout.Space(18);
+                            }
+
                         }
                     }
-
                 }
                 else
                 {
@@ -229,8 +250,45 @@ namespace GameplayIngredients.Editor
 
                 GUILayout.FlexibleSpace();
                 GUILayout.EndScrollView();
-
             }
+        }
+
+        Dictionary<Scene,IgnoredCheckResults> m_IgnoredLists;
+        
+        void BuildIgnoredList()
+        {
+            if (m_IgnoredLists == null)
+                m_IgnoredLists = new Dictionary<Scene, IgnoredCheckResults>();
+            else
+                m_IgnoredLists.Clear();
+
+            var all = FindObjectsOfType<IgnoredCheckResults>().ToList();
+            foreach(var one in all)
+            {
+                if (!m_IgnoredLists.ContainsKey(one.gameObject.scene))
+                    m_IgnoredLists.Add(one.gameObject.scene, one);
+                else
+                    Debug.LogWarning($"Found at least two IgnoredCheckResults objects in scene {one.gameObject.scene.name}");
+            }
+        }
+
+        bool IsIgnored(CheckResult result)
+        {
+            if (result.mainObject == null || !(result.mainObject is GameObject))
+                return false;
+
+            GameObject go = result.mainObject as GameObject;
+            if (!m_IgnoredLists.ContainsKey(go.scene))
+                return false;
+
+            var igl = m_IgnoredLists[go.scene];
+            return igl.ignoredCheckResults.Any(o => (o.check == result.check.GetType().ToString()) && (o.gameObject == go));
+        }
+
+        void SetIgnored(CheckResult result, bool ignored)
+        {
+            result.SetIgnored(ignored);
+            BuildIgnoredList();
         }
 
         void ShowMenu(CheckResult result)
@@ -298,6 +356,7 @@ namespace GameplayIngredients.Editor
                 m_Results = results;
 
             sortMode = SortMode.None;
+            BuildIgnoredList();
             Repaint();
         }
 

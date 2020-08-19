@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.SceneManagement;
+using System.Linq;
 
 namespace GameplayIngredients.Editor
 {
@@ -58,6 +60,56 @@ namespace GameplayIngredients.Editor
                 warning = EditorGUIUtility.IconContent("console.warnicon.sml").image;
                 failed = EditorGUIUtility.IconContent("console.erroricon.sml").image;
 
+            }
+        }
+        public void SetIgnored(bool ignored = true)
+        {
+            if (!(mainObject is GameObject))
+                return;
+
+            GameObject go = mainObject as GameObject;
+            Scene scene = go.scene;
+            var ignoredResults = Object.FindObjectsOfType<IgnoredCheckResults>();
+            IgnoredCheckResults targetResults = null;
+
+            foreach(var result in ignoredResults)
+            {
+                if(result.gameObject.scene == scene)
+                {
+                    targetResults = result;
+                    break;
+                }
+            }
+            
+            if(targetResults == null)
+            {
+                var newGo = new GameObject("__IGNORED_CHECK_RESULTS__");
+                newGo.hideFlags = HideFlags.HideInHierarchy;
+                SceneManager.MoveGameObjectToScene(newGo,scene);
+                targetResults = newGo.AddComponent<IgnoredCheckResults>();
+            }
+
+            if (targetResults.ignoredCheckResults == null)
+                targetResults.ignoredCheckResults = new List<IgnoredCheckResults.IgnoredCheckResult>();
+
+            if(ignored)
+            {
+                if(!targetResults.ignoredCheckResults.Any(o => o.gameObject == go && o.check == check.GetType().ToString()))
+                {
+                    IgnoredCheckResults.IgnoredCheckResult r = new IgnoredCheckResults.IgnoredCheckResult()
+                    {
+                        check = check.GetType().ToString(),
+                        gameObject = go
+                    };
+                    targetResults.ignoredCheckResults.Add(r);
+                }
+            }
+            else
+            {
+                if (targetResults.ignoredCheckResults.Any(o => o.gameObject == go && o.check == check.GetType().ToString()))
+                {
+                    targetResults.ignoredCheckResults.Remove(targetResults.ignoredCheckResults.FirstOrDefault(o => o.gameObject == go && o.check == check.GetType().ToString()));
+                }
             }
         }
     }
