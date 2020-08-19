@@ -344,6 +344,7 @@ namespace GameplayIngredients.Editor
                 if(!IsIgnored(result))
                     result.check.Resolve(result);
             }
+            PerformChecks();
         }
 
         void PerformChecks()

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using Object = UnityEngine.Object;
-using UnityEngine.Events;
-using System.Reflection;
 
 namespace GameplayIngredients.Editor
 {
@@ -14,7 +11,7 @@ namespace GameplayIngredients.Editor
 
         public override bool defaultEnabled => true;
 
-        public override string[] ResolutionActions => new string[] { "Do Nothing", "Set Static", "Delete Object" };
+        public override string[] ResolutionActions => new string[] { "Set Static", "Delete Object" };
 
         public override int defaultResolutionActionIndex => 0;
 
@@ -41,7 +38,7 @@ namespace GameplayIngredients.Editor
                             if(!so.referencedGameObjects.Contains(go))
                             {
                                 var result = new CheckResult(this, CheckResult.Result.Warning, $"Empty Game Object {go.name} is not static", go);
-                                result.resolutionActionIndex = 1;
+                                result.resolutionActionIndex = 0;
                                 yield return result;
                             }
                         }
@@ -52,7 +49,7 @@ namespace GameplayIngredients.Editor
                                 if (!so.referencedGameObjects.Contains(go) && !so.referencedComponents.Contains(go.transform))
                                 {
                                     var result =  new CheckResult(this, CheckResult.Result.Notice, "Empty Static Game Object has no children and could be deleted if unused.", go);
-                                    result.resolutionActionIndex = 2;
+                                    result.resolutionActionIndex = 1;
                                     yield return result;
                                 }
                             }
@@ -67,18 +64,15 @@ namespace GameplayIngredients.Editor
             }
         }
 
-
         public override void Resolve(CheckResult result)
         {
             switch (result.resolutionActionIndex)
             {
                 case 0:
                 default:
-                    break;
-                case 1:
                     (result.mainObject as GameObject).isStatic = true;
                     break;
-                case 2:
+                case 1:
                     Object.DestroyImmediate(result.mainObject as GameObject);
                     break;
             }
