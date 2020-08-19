@@ -103,7 +103,7 @@ namespace GameplayIngredients.Editor
 
                     // Check Window
                     GUILayout.Space(16);
-                    if (GUILayout.Button("Check", EditorStyles.toolbarButton))
+                    if (GUILayout.Button(Contents.checkWindow, EditorStyles.toolbarButton))
                     {
                         EditorWindow.GetWindow<CheckWindow>();
                     }
@@ -156,6 +156,7 @@ namespace GameplayIngredients.Editor
             public static GUIContent lockLinkGameView;
             public static GUIContent linkGameView;
             public static GUIContent linkGameViewCinemachine;
+            public static GUIContent checkWindow;
 
             static Contents()
             {
@@ -168,6 +169,9 @@ namespace GameplayIngredients.Editor
 
                 playFromHere = new GUIContent(EditorGUIUtility.IconContent("Animation.Play"));
                 playFromHere.text = "Here";
+
+                checkWindow = new GUIContent(EditorGUIUtility.IconContent("Valid"));
+                checkWindow.text = "Check";
             }
         }
 

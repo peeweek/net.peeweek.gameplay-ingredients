@@ -20,10 +20,12 @@ namespace GameplayIngredients.Editor
             GetWindow<CheckWindow>(false);
         }
 
+
         private void OnEnable()
         {
-            this.titleContent = new GUIContent("Check/Resolve");
-            this.minSize = new Vector2(640, 180);
+            titleContent = new GUIContent(EditorGUIUtility.IconContent("Valid"));
+            titleContent.text = "Check/Resolve";
+            minSize = new Vector2(640, 180);
             InitializeCheckStates();
         }
 
@@ -178,13 +180,11 @@ namespace GameplayIngredients.Editor
                 if (GUILayout.Button("Resolve", EditorStyles.toolbarButton))
                     Resolve();
 
-                GUILayout.Space(16);
-                showIgnored = GUILayout.Toggle(showIgnored, "Show Ignored", EditorStyles.toolbarButton);
-
                 GUILayout.FlexibleSpace();
 
                 filterString = EditorGUILayout.DelayedTextField(filterString, EditorStyles.toolbarSearchField, GUILayout.Width(180));
 
+                showIgnored = GUILayout.Toggle(showIgnored, "Ignored", EditorStyles.toolbarButton);
                 showNotice = GUILayout.Toggle(showNotice, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Notice).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Notice)), EditorStyles.toolbarButton);
                 showWarning = GUILayout.Toggle(showWarning, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Warning).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Warning)), EditorStyles.toolbarButton);
                 showError = GUILayout.Toggle(showError, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Failed).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Failed)), EditorStyles.toolbarButton);
@@ -402,6 +402,7 @@ namespace GameplayIngredients.Editor
 
                 line = new GUIStyle(EditorStyles.toolbarButton);
                 line.alignment = TextAnchor.MiddleLeft;
+
             }
         }
     }
