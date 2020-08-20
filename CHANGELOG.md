@@ -8,12 +8,14 @@
 - Added Valid/Invalid paths for Platform Logic
 - Added Local Space control for ReachPositionRig
 - Added "Update SetStateAction" Button in State Machine components to populate the game object with Set State Actions
-- Added **Check/Resolve** Window and API : The check window enables performing scriptable checks and resolution actions in your scene for maintenance purposes.
+- Added **Check/Resolve** Window and API : The check window enables performing scriptable checks and resolution actions in your scene for maintenance purposes
+- Added **ReachPositionRigSetTargetAction**
 
 #### Fixed
 
 * Fixed Possible Nulls in Discover Asset reference
 * Fixed Possible Out-of range director time in DirectorControlRig
+* Fixed Bad drawing of NonNullCheck property drawer
 
 ## 2019.3.5
 
