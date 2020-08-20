@@ -5,8 +5,11 @@ using UnityEngine;
 
 namespace GameplayIngredients.Rigs
 {
-    public class FollowPathRig : MonoBehaviour
+    public class FollowPathRig : Rig
     {
+        public override int defaultPriority => 0;
+        public override UpdateMode defaultUpdateMode => UpdateMode.LateUpdate;
+
         public enum PlayMode
         {
             Playing,
@@ -69,7 +72,7 @@ namespace GameplayIngredients.Rigs
             m_Progress = 0.0f;
         }
 
-        private void LateUpdate()
+        public override void UpdateRig(float deltaTime)
         {
             if(m_PlayMode != PlayMode.Stopped)
             {
@@ -125,7 +128,7 @@ namespace GameplayIngredients.Rigs
 
                 Vector3 dir = ( outPos - inPos ).normalized;
                 Vector3 pos = Vector3.Lerp( sign > 0? inPos : outPos, sign > 0? outPos : inPos, m_Progress % 1.0f);
-                Vector3 move = dir * Speed * Time.deltaTime;
+                Vector3 move = dir * Speed * deltaTime;
                 float moveT = move.magnitude / (outPos - inPos).magnitude * sign;
 
                 m_Progress = Mathf.Clamp(m_Progress + moveT, (sign > 0)? idx : nextidx, (sign > 0) ? nextidx : idx);

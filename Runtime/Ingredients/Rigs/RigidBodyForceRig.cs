@@ -6,8 +6,11 @@ using UnityEngine;
 namespace GameplayIngredients.Rigs
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class RigidBodyForceRig : MonoBehaviour
+    public class RigidBodyForceRig : Rig
     {
+        public override int defaultPriority => 0;
+        public override UpdateMode defaultUpdateMode => UpdateMode.Update;
+
         private Rigidbody m_RigidBody;
 
         public enum EffectorType
@@ -68,8 +71,9 @@ namespace GameplayIngredients.Rigs
             return !isExplosion();
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             m_RigidBody = GetComponent<Rigidbody>();
             m_Time = 0.0f;
         }
@@ -85,12 +89,12 @@ namespace GameplayIngredients.Rigs
             return noise;
         }
 
-        public void Update()
+        public override void UpdateRig(float deltaTime)
         {
             if (m_RigidBody == null)
                 return;
 
-            m_Time += Time.deltaTime;
+            m_Time += deltaTime;
 
             Vector3 force = vector;
             float attenuation = ForceOverTime.Evaluate(m_Time);

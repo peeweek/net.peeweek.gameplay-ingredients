@@ -2,15 +2,18 @@ using UnityEngine;
 
 namespace GameplayIngredients.Rigs
 { 
-    public class RotationRig : MonoBehaviour
+    public class RotationRig : Rig
     {
+        public override int defaultPriority => 0;
+        public override UpdateMode defaultUpdateMode => UpdateMode.Update;
+
         public Space Space = Space.World;
         public Vector3 RotationAxis = Vector3.up;
         public float RotationSpeed = 30.0f;
 
-        void Update()
+        public override void UpdateRig(float deltaTime)
         {
-            transform.Rotate(RotationAxis.normalized, RotationSpeed * Time.deltaTime, Space);
+            transform.Rotate(RotationAxis.normalized, RotationSpeed * deltaTime, Space);
         }
     }
 }
