@@ -9,7 +9,10 @@ namespace GameplayIngredients
     [ManagerDefaultPrefab("GameSaveManager")]
     public class GameSaveManager : Manager
     {
-        [SerializeField, Tooltip("The path where system and user saves will be stored. Relative to the Application.persistantDataPath folder.")]
+        [InfoBox(@"Use PlayerPrefs will store save data in common target platform registry instead of individual files. For some platforms where writing on disk is forbidden, this is required.", InfoBoxType.Normal)]
+        public bool UsePlayerPrefs = false;
+
+        [DisableIf("UsePlayerPrefs"), SerializeField, Tooltip("The path where system and user saves will be stored. Relative to the Application.persistantDataPath folder.")]
         private string savePath = "/";
         [SerializeField, Tooltip("The file name of the System Save.")]
         private string systemSaveName = "System.sav";
@@ -24,6 +27,8 @@ namespace GameplayIngredients
 
         [ReorderableList]
         public Callable[] OnSave;
+
+        const string kPreferencePrefix = "GameplayIngredients.GameSaveManager.";
 
         void Awake()
         {
@@ -148,14 +153,29 @@ namespace GameplayIngredients
 
         Dictionary<string, object> LoadFile(string fileName)
         {
-            if(!File.Exists(Application.persistentDataPath + savePath + fileName))
+            if (UsePlayerPrefs)
             {
-                SaveFile(fileName, new Dictionary<string, object>());
+                if(PlayerPrefs.GetString(kPreferencePrefix + fileName, string.Empty) == string.Empty)
+                    SaveFile(fileName, new Dictionary<string, object>());
+            }
+            else 
+            {
+                if (!File.Exists(Application.persistentDataPath + savePath + fileName))
+                    SaveFile(fileName, new Dictionary<string, object>());
             }
 
             var dict = new Dictionary<string, System.Object>();
 
-            string contents= File.ReadAllText(Application.persistentDataPath + savePath + fileName);
+            string contents = string.Empty;
+
+            if(UsePlayerPrefs)
+            {
+                contents = PlayerPrefs.GetString(kPreferencePrefix + fileName, string.Empty);
+            }
+            else
+            {
+                contents = File.ReadAllText(Application.persistentDataPath + savePath + fileName);
+            }
 
             SerializableOutput data = JsonUtility.FromJson<SerializableOutput>(contents);
 
@@ -207,7 +227,14 @@ namespace GameplayIngredients
                 i++;
             }
 
-            File.WriteAllText(Application.persistentDataPath + savePath + filename, JsonUtility.ToJson(data));
+            if (UsePlayerPrefs)
+            {
+                PlayerPrefs.SetString(kPreferencePrefix + filename, JsonUtility.ToJson(data));
+            }
+            else
+            {
+                File.WriteAllText(Application.persistentDataPath + savePath + filename, JsonUtility.ToJson(data));
+            }    
         }
 
         [System.Serializable]

@@ -10,6 +10,7 @@
 - Added "Update SetStateAction" Button in State Machine components to populate the game object with Set State Actions
 - Added **Check/Resolve** Window and API : The check window enables performing scriptable checks and resolution actions in your scene for maintenance purposes
 - Added **ReachPositionRigSetTargetAction**
+- Added the ability to store Game Saves as PlayerPrefs strings 
 
 #### Fixed
 
