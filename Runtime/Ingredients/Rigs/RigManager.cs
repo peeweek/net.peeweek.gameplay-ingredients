@@ -22,8 +22,14 @@ namespace GameplayIngredients.Rigs
 
         public void RegistedRig(Rig rig)
         {
+            Rig.UpdateMode updateMode;
+            if (rig.canChangeUpdateMode)
+                updateMode = rig.updateMode;
+            else
+                updateMode = rig.defaultUpdateMode;
+
             Dictionary<int, List<Rig>> dict;
-            switch (rig.updateMode)
+            switch (updateMode)
             {
                 default:
                 case Rig.UpdateMode.Update:
