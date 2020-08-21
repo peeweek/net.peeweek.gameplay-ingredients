@@ -1,5 +1,11 @@
 # Changelog
 
+## 2019.3.7
+
+#### Added
+
+#### Fixed
+
 ## 2019.3.6
 
 #### Added
