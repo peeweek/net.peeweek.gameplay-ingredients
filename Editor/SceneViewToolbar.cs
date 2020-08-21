@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+using GameplayIngredients.Comments.Editor;
 
 namespace GameplayIngredients.Editor
 {
@@ -108,6 +109,12 @@ namespace GameplayIngredients.Editor
                         EditorWindow.GetWindow<CheckWindow>();
                     }
 
+                    // Check Window
+                    GUILayout.Space(16);
+                    if (GUILayout.Button(Contents.commentsWindow, EditorStyles.toolbarButton))
+                    {
+                        CommentsWindow.Open();
+                    }
                     // Custom Code here
                     if (OnSceneViewToolbarGUI != null)
                         OnSceneViewToolbarGUI.Invoke(sceneView);
@@ -115,7 +122,6 @@ namespace GameplayIngredients.Editor
                     GUILayout.FlexibleSpace();
                     // Saving Space not to overlap view controls
                     GUILayout.Space(96);
-
                 }
             }
 
@@ -157,6 +163,7 @@ namespace GameplayIngredients.Editor
             public static GUIContent linkGameView;
             public static GUIContent linkGameViewCinemachine;
             public static GUIContent checkWindow;
+            public static GUIContent commentsWindow;
 
             static Contents()
             {
@@ -172,6 +179,10 @@ namespace GameplayIngredients.Editor
 
                 checkWindow = new GUIContent(EditorGUIUtility.IconContent("Valid"));
                 checkWindow.text = "Check";
+
+                commentsWindow = new GUIContent(EditorGUIUtility.IconContent("console.infoicon.inactive.sml"));
+                commentsWindow.text = "Comments";
+
             }
         }
 
