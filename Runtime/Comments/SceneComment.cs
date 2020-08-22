@@ -5,9 +5,13 @@ namespace GameplayIngredients.Comments
 {
     public class SceneComment : MonoBehaviour
     {
+
 #if UNITY_EDITOR
+        public bool UsePOV;
+
+        public Comment comment => m_Comment;
         [SerializeField]
-        Comment comment;
+        Comment m_Comment;
 #endif
     }
 }

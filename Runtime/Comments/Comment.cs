@@ -18,6 +18,7 @@ namespace GameplayIngredients.Comments
         public string[] attn;
         public string title;
         public string URL;
+        [Multiline]
         public string body;
         public object[] targets;
         public CommentMessage[] replies;
