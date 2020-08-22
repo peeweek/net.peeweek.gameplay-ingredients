@@ -5,6 +5,9 @@ namespace GameplayIngredients.Comments
 {
     public class SceneComment : MonoBehaviour
     {
-        public Comment comment;
+#if UNITY_EDITOR
+        [SerializeField]
+        Comment comment;
+#endif
     }
 }
