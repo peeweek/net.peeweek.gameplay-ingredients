@@ -6,16 +6,21 @@ namespace GameplayIngredients.Comments
     [Serializable]
     public struct Comment
     {
-        public string user;
-        public string attn;
+        public CommentMessage message;
+        public CommentType type;
+        public CommentState state;
+    }
+
+    [Serializable]
+    public struct CommentMessage
+    {
+        public string from;
+        public string[] attn;
         public string title;
         public string URL;
         public string body;
-        public object target;
-        public Vector3 position;
-        public Quaternion rotation;
-        public CommentType type;
-        public Comment[] replies;
+        public object[] targets;
+        public CommentMessage[] replies;
     }
 
     [Serializable]

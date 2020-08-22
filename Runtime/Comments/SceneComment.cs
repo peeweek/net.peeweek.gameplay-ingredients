@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace GameplayIngredients.Comments
 {
-    public class SceneComments : MonoBehaviour
+    public class SceneComment : MonoBehaviour
     {
-        public List<Comment> comments;
+        public Comment comment;
     }
 }

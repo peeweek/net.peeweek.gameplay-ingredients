@@ -8,6 +8,7 @@ using GameplayIngredients.StateMachines;
 using UnityEngine.Playables;
 using System.Linq;
 using System.Reflection;
+using GameplayIngredients.Comments;
 
 namespace GameplayIngredients.Editor
 {
@@ -80,8 +81,9 @@ namespace GameplayIngredients.Editor
             RegisterComponentType( typeof(Text), "Text Icon");
             RegisterComponentType( typeof(Button), "Button Icon");
             RegisterComponentType( typeof(Folder), "Folder Icon");
+            RegisterComponentType( typeof(SceneComment), "Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-comment.png");
 
-            foreach(var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 try
                 {
@@ -130,14 +132,18 @@ namespace GameplayIngredients.Editor
             var c = GUI.color;
 
             bool isFolder = o.GetComponent<Folder>() != null;
+            bool isComment = o.GetComponent<SceneComment>() != null;
 
-            if(isFolder)
+            if(isFolder || isComment)
             {
                 fullRect.xMin += 28 + 14 * GetObjectDepth(o.transform);
                 fullRect.width = 16;
 
                 EditorGUI.DrawRect(fullRect, EditorGUIUtility.isProSkin? Styles.proBackground : Styles.personalBackground);
-                DrawIcon(fullRect, Contents.GetContent(typeof(Folder)), o.GetComponent<Folder>().Color);
+                if (isFolder)
+                    DrawIcon(fullRect, Contents.GetContent(typeof(Folder)), o.GetComponent<Folder>().Color);
+                else
+                    DrawIcon(fullRect, Contents.GetContent(typeof(SceneComment)), Color.white);
             }
             else
             {
