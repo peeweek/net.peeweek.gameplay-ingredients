@@ -5,12 +5,13 @@ using UnityEngine;
 namespace GameplayIngredients.Comments.Editor
 {
     [CustomEditor(typeof(SceneComment))]
-    public class SceneCommentsEditor : UnityEditor.Editor
+    public class SceneCommentEditor : UnityEditor.Editor
     {
         bool edit;
         SceneComment sceneComment;
 
         SerializedProperty m_Comment;
+        SerializedProperty m_UsePOV;
         SerializedProperty m_Message;
         SerializedProperty m_Type;
         SerializedProperty m_State;
@@ -26,6 +27,7 @@ namespace GameplayIngredients.Comments.Editor
             edit = false;
 
             m_Comment = serializedObject.FindProperty("m_Comment");
+            m_UsePOV = serializedObject.FindProperty("UsePOV");
             m_Message = m_Comment.FindPropertyRelative("message");
             m_Type = m_Comment.FindPropertyRelative("type");
             m_State = m_Comment.FindPropertyRelative("state");
@@ -48,6 +50,7 @@ namespace GameplayIngredients.Comments.Editor
                 EditorGUILayout.PropertyField(m_Body);
                 EditorGUILayout.PropertyField(m_Type);
                 EditorGUILayout.PropertyField(m_State);
+                EditorGUILayout.PropertyField(m_UsePOV);
 
                 serializedObject.ApplyModifiedProperties();
             }
