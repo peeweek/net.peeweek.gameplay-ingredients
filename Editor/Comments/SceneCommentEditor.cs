@@ -35,6 +35,18 @@ namespace GameplayIngredients.Comments.Editor
             m_Body = m_Message.FindPropertyRelative("body");
         }
 
+        public void ColoredLabel(string text, Color color)
+        {
+            GUIContent label = new GUIContent(text);
+            Rect r = GUILayoutUtility.GetRect(label, Styles.coloredLabel);
+            EditorGUI.DrawRect(r, color);
+            var r2 = new RectOffset(1, 1, 1, 1).Remove(r);
+            EditorGUI.DrawRect(r2, color * new Color(.5f,.5f,.5f,1f));
+            GUI.contentColor = color * 2;
+            GUI.Label(r, label, Styles.coloredLabel);
+            GUI.contentColor = Color.white;
+        }
+
         public override void OnInspectorGUI()
         {
             using(new GUILayout.HorizontalScope())
@@ -59,13 +71,13 @@ namespace GameplayIngredients.Comments.Editor
                 using(new GUILayout.HorizontalScope())
                 {
                     GUILayout.Label(m_Title.stringValue, Styles.title);
-                    GUILayout.FlexibleSpace(); 
-                    GUILayout.Label(((CommentType)m_Type.intValue).ToString());
-                    GUILayout.Label(((CommentState)m_State.intValue).ToString());
+                    GUILayout.FlexibleSpace();
+                    ColoredLabel(((CommentType)m_Type.intValue).ToString(), Color.green);
+                    ColoredLabel(((CommentState)m_State.intValue).ToString(), Color.cyan);
                 }
 
                 GUILayout.Space(8);
-                GUILayout.Label(m_Body.stringValue, EditorStyles.textArea);
+                GUILayout.Label(m_Body.stringValue, Styles.multiline);
 
             }
 
@@ -78,11 +90,21 @@ namespace GameplayIngredients.Comments.Editor
         static class Styles
         {
             public static GUIStyle title;
-
+            public static GUIStyle multiline;
+            public static GUIStyle coloredLabel;
             static Styles()
             {
                 title = new GUIStyle(EditorStyles.boldLabel);
                 title.fontSize = 16;
+
+                multiline = new GUIStyle(EditorStyles.label);
+                multiline.wordWrap = true;
+                multiline.fontSize = 14;
+
+                coloredLabel = new GUIStyle(EditorStyles.label);
+                coloredLabel.fontSize = 12;
+                coloredLabel.padding = new RectOffset(12, 12, 2, 2);
+
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace GameplayIngredients.Comments
@@ -9,6 +10,7 @@ namespace GameplayIngredients.Comments
         public CommentMessage message;
         public CommentType type;
         public CommentState state;
+        public CommentPriority priority;
     }
 
     [Serializable]
@@ -41,6 +43,14 @@ namespace GameplayIngredients.Comments
         Resolved,
         WontFix,
         Closed,
+    }
+
+    [Serializable]
+    public enum CommentPriority
+    {
+        High,
+        Medium,
+        Low,
     }
 
 }
