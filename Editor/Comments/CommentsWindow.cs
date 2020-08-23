@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace GameplayIngredients.Comments.Editor
 {
-
     public class CommentsWindow : EditorWindow
     {
         [MenuItem("Window/Gameplay Ingredients/Comments")]
@@ -95,7 +94,7 @@ namespace GameplayIngredients.Comments.Editor
             using(new GUILayout.HorizontalScope(EditorStyles.toolbar))
             {
                 userFilter = (UserFilter)EditorGUILayout.EnumPopup(userFilter, EditorStyles.toolbarDropDown, GUILayout.Width(140));
-                if (GUILayout.Button("Refresh", EditorStyles.toolbarButton))
+                if (GUILayout.Button(EditorGUIUtility.IconContent("Refresh"), EditorStyles.toolbarButton, GUILayout.Width(24)))
                     Refresh();
 
                 filter = EditorGUILayout.DelayedTextField(filter, EditorStyles.toolbarSearchField, GUILayout.ExpandWidth(true));

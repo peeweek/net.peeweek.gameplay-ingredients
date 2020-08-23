@@ -14,6 +14,7 @@ namespace GameplayIngredients.Comments.Editor
         SerializedProperty m_UsePOV;
         SerializedProperty m_Message;
         SerializedProperty m_Type;
+        SerializedProperty m_Priority;
         SerializedProperty m_State;
         SerializedProperty m_Title;
         SerializedProperty m_Body;
@@ -30,6 +31,7 @@ namespace GameplayIngredients.Comments.Editor
             m_UsePOV = serializedObject.FindProperty("UsePOV");
             m_Message = m_Comment.FindPropertyRelative("message");
             m_Type = m_Comment.FindPropertyRelative("type");
+            m_Priority = m_Comment.FindPropertyRelative("priority");
             m_State = m_Comment.FindPropertyRelative("state");
             m_Title = m_Message.FindPropertyRelative("title");
             m_Body = m_Message.FindPropertyRelative("body");
@@ -62,6 +64,7 @@ namespace GameplayIngredients.Comments.Editor
                 EditorGUILayout.PropertyField(m_Body);
                 EditorGUILayout.PropertyField(m_Type);
                 EditorGUILayout.PropertyField(m_State);
+                EditorGUILayout.PropertyField(m_Priority);
                 EditorGUILayout.PropertyField(m_UsePOV);
 
                 serializedObject.ApplyModifiedProperties();

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace GameplayIngredients.Comments
@@ -7,11 +8,18 @@ namespace GameplayIngredients.Comments
     {
 
 #if UNITY_EDITOR
-        public bool UsePOV;
 
+        const string kUserPreference = "GameplayIngredients.Comments.User";
+
+        public bool UsePOV;
         public Comment comment => m_Comment;
         [SerializeField]
         Comment m_Comment;
+        private void Reset()
+        {
+            m_Comment.message.from = EditorPrefs.GetString(kUserPreference, "user");
+        }
+
 #endif
     }
 }
