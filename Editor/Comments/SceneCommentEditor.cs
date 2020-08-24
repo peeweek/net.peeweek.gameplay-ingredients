@@ -37,24 +37,84 @@ namespace GameplayIngredients.Comments.Editor
             m_Body = m_Message.FindPropertyRelative("body");
         }
 
-        public void ColoredLabel(string text, Color color)
+        Color GetTypeColor(CommentType type)
         {
-            GUIContent label = new GUIContent(text);
-            Rect r = GUILayoutUtility.GetRect(label, Styles.coloredLabel);
-            EditorGUI.DrawRect(r, color);
-            var r2 = new RectOffset(1, 1, 1, 1).Remove(r);
-            EditorGUI.DrawRect(r2, color * new Color(.5f,.5f,.5f,1f));
-            GUI.contentColor = color * 2;
-            GUI.Label(r, label, Styles.coloredLabel);
-            GUI.contentColor = Color.white;
+            float sat = 0.5f;
+            float v = 1f;
+            switch (type)
+            {
+
+                default:
+                case CommentType.Info:
+                    return Color.HSVToRGB(0.1f, sat, v);
+                case CommentType.Bug:
+                    return Color.HSVToRGB(0.15f, sat, v);
+                case CommentType.Request:
+                    return Color.HSVToRGB(0.2f, sat, v);
+                case CommentType.ToDo:
+                    return Color.HSVToRGB(0.25f, sat, v);
+            }
+        }
+
+        Color GetStateColor(CommentState state)
+        {
+            float sat = 0.2f;
+            float v = 1f;
+            switch (state)
+            {
+                default:
+                case CommentState.Open:
+                    return Color.HSVToRGB(0.9f, sat, v);
+                case CommentState.Blocked:
+                    return Color.HSVToRGB(0.85f, sat, v);
+                case CommentState.Resolved:
+                    return Color.HSVToRGB(0.8f, sat, v);
+                case CommentState.WontFix:
+                    return Color.HSVToRGB(0.75f, sat, v);
+                case CommentState.Closed:
+                    return Color.HSVToRGB(0.7f, sat, v);
+            }
+        }
+
+        Color GetPriorityColor(CommentPriority priority)
+        {
+            float sat = 1f;
+            float v = 1f;
+            switch (priority)
+            {
+                default:
+                case CommentPriority.High:
+                    return Color.HSVToRGB(0.02f, sat, v);
+                case CommentPriority.Medium:
+                    return Color.HSVToRGB(0.15f, sat, v);
+                case CommentPriority.Low:
+                    return Color.HSVToRGB(0.3f, sat, v);
+            }
+        }
+
+        void TypeLabel(CommentType value)
+        {
+            GUIUtils.ColoredLabel(value.ToString(), GetTypeColor(value));
+        }
+
+        void StateLabel(CommentState value)
+        {
+            GUIUtils.ColoredLabel(value.ToString(), GetStateColor(value));
+        }
+        void PriorityLabel(CommentPriority value)
+        {
+            GUIUtils.ColoredLabel(value.ToString(), GetPriorityColor(value));
         }
 
         public override void OnInspectorGUI()
         {
             using(new GUILayout.HorizontalScope())
             {
+                TypeLabel((CommentType)m_Type.intValue);
+                StateLabel((CommentState)m_State.intValue);
+                PriorityLabel((CommentPriority)m_Priority.intValue);
                 GUILayout.FlexibleSpace();
-                edit = GUILayout.Toggle(edit, edit ? "Close" : "Edit", EditorStyles.miniButton, GUILayout.Width(64) );
+                edit = CommentEditor.DrawEditButton(edit);
             }
 
             if(edit)
@@ -75,9 +135,7 @@ namespace GameplayIngredients.Comments.Editor
                 {
                     GUILayout.Label(m_Title.stringValue, Styles.title);
                     GUILayout.FlexibleSpace();
-                    ColoredLabel(((CommentType)m_Type.intValue).ToString(), Color.green);
-                    ColoredLabel(((CommentState)m_State.intValue).ToString(), Color.cyan);
-                }
+               }
 
                 GUILayout.Space(8);
                 GUILayout.Label(m_Body.stringValue, Styles.multiline);
