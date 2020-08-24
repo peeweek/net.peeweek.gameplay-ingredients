@@ -69,25 +69,6 @@ namespace GameplayIngredients.Comments.Editor
         string filter;
         Vector2 scrollPosition;
 
-        static GUIContent GetPriorityContent(string text, CommentPriority priority)
-        {
-            return new GUIContent(text, GetPriorityTexture(priority));
-        }
-
-        static Texture GetPriorityTexture(CommentPriority priority)
-        {
-            switch (priority)
-            {
-                case CommentPriority.High:
-                    return CheckResult.GetIcon(CheckResult.Result.Failed);
-                case CommentPriority.Medium:
-                    return CheckResult.GetIcon(CheckResult.Result.Warning);
-                default:
-                case CommentPriority.Low:
-                    return CheckResult.GetIcon(CheckResult.Result.Notice);
-            }
-        }
-
         private void OnGUI()
         {
             // Toolbar
@@ -104,9 +85,9 @@ namespace GameplayIngredients.Comments.Editor
                 showRequests = GUILayout.Toggle(showRequests, $"Requests ({requestCount})", EditorStyles.toolbarButton, GUILayout.Width(80));
                 showTodo = GUILayout.Toggle(showTodo, $"To Do ({todoCount})", EditorStyles.toolbarButton, GUILayout.Width(60));
                 GUILayout.Space(16);
-                showHigh = GUILayout.Toggle(showHigh, GetPriorityContent(highCount.ToString(), CommentPriority.High), EditorStyles.toolbarButton, GUILayout.Width(32));
-                showMedium = GUILayout.Toggle(showMedium, GetPriorityContent(mediumCount.ToString(), CommentPriority.Medium), EditorStyles.toolbarButton, GUILayout.Width(32));
-                showLow = GUILayout.Toggle(showLow, GetPriorityContent(lowCount.ToString(), CommentPriority.Low), EditorStyles.toolbarButton, GUILayout.Width(32));
+                showHigh = GUILayout.Toggle(showHigh, CommentEditor.GetPriorityContent(highCount.ToString(), CommentPriority.High), EditorStyles.toolbarButton, GUILayout.Width(32));
+                showMedium = GUILayout.Toggle(showMedium, CommentEditor.GetPriorityContent(mediumCount.ToString(), CommentPriority.Medium), EditorStyles.toolbarButton, GUILayout.Width(32));
+                showLow = GUILayout.Toggle(showLow, CommentEditor.GetPriorityContent(lowCount.ToString(), CommentPriority.Low), EditorStyles.toolbarButton, GUILayout.Width(32));
             }
 
             GUI.backgroundColor = Color.white * 1.25f;
@@ -142,7 +123,7 @@ namespace GameplayIngredients.Comments.Editor
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
                     
-                    if(GUILayout.Button(GetPriorityContent(sceneComment.comment.message.title, sceneComment.comment.priority), Styles.line, GUILayout.Width(180)))
+                    if(GUILayout.Button(CommentEditor.GetPriorityContent(sceneComment.comment.message.title, sceneComment.comment.priority), Styles.line, GUILayout.Width(180)))
                     {
                         Selection.activeGameObject = sceneComment.gameObject;
                     }
