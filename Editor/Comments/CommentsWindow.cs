@@ -43,9 +43,19 @@ namespace GameplayIngredients.Comments.Editor
             set { EditorPrefs.SetInt(kUserFilterPreference, (int)value); }
         }
 
+        [InitializeOnLoadMethod]
+        static void SetDefaultUser()
+        {
+            var user = EditorPrefs.GetString(kUserPreference, "");
+            if(user == "")
+            {
+                user = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+            }
+        }
+
         static string user
         {
-            get { return EditorPrefs.GetString(kUserPreference, "user"); }
+            get { return EditorPrefs.GetString(kUserPreference, ""); }
             set { EditorPrefs.SetString(kUserPreference, value); }
         }
 
@@ -123,7 +133,7 @@ namespace GameplayIngredients.Comments.Editor
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
                     
-                    if(GUILayout.Button(CommentEditor.GetPriorityContent(sceneComment.comment.message.title, sceneComment.comment.priority), Styles.line, GUILayout.Width(180)))
+                    if(GUILayout.Button(CommentEditor.GetPriorityContent(sceneComment.comment.title, sceneComment.comment.priority), Styles.line, GUILayout.Width(180)))
                     {
                         Selection.activeGameObject = sceneComment.gameObject;
                     }

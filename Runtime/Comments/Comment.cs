@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NaughtyAttributes;
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace GameplayIngredients.Comments
     [Serializable]
     public struct Comment
     {
+        public string title;
         public CommentMessage message;
         public CommentType type;
         public CommentState state;
@@ -17,12 +19,12 @@ namespace GameplayIngredients.Comments
     public struct CommentMessage
     {
         public string from;
-        public string[] attn;
-        public string title;
+
         public string URL;
         [Multiline]
         public string body;
-        public object[] targets;
+        [ReorderableList]
+        public UnityEngine.Object[] targets;
         public CommentMessage[] replies;
     }
 

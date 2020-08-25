@@ -1,39 +1,139 @@
 ﻿using GameplayIngredients.Editor;
-using System.Security.Policy;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
 
 namespace GameplayIngredients.Comments.Editor
 {
     public class CommentEditor
     {
         SerializedObject serializedObject;
-        SerializedProperty comment;
+        SerializedProperty rootMessage;
+        SerializedProperty title;
+        SerializedProperty type;
+        SerializedProperty state;
+        SerializedProperty priority;
+        SerializedProperty editMessage;
 
-        public CommentEditor(SerializedObject serializedObject, SerializedProperty comment, bool editRoot)
+        bool edit => editMessage == rootMessage;
+
+        public CommentEditor(SerializedObject serializedObject, SerializedProperty comment)
         {
-            if(editRoot)
-            {
-
-            }
-
+            this.serializedObject = serializedObject;
+            title = comment.FindPropertyRelative("title");
+            type = comment.FindPropertyRelative("type");
+            state = comment.FindPropertyRelative("state");
+            priority = comment.FindPropertyRelative("priority");
+            rootMessage = comment.FindPropertyRelative("message");
         }
 
-        public static bool DrawEditButton(bool edit)
+        public bool DrawEditButton(bool edit)
         {
             return GUILayout.Toggle(edit, edit ? "Close" : "Edit", EditorStyles.miniButton, GUILayout.Width(64));
         }
 
-        public static void DrawComment(SerializedProperty comment)
+        public void DrawComment()
         {
+            using (new GUILayout.HorizontalScope())
+            {
+                TypeLabel((CommentType)type.intValue);
+                StateLabel((CommentState)state.intValue);
+                PriorityLabel((CommentPriority)priority.intValue);
 
+                GUILayout.FlexibleSpace();
+                EditorGUI.BeginChangeCheck();
+                bool editRoot = DrawEditButton(edit);
+                if(EditorGUI.EndChangeCheck())
+                {
+                    if (editRoot)
+                        editMessage = rootMessage;
+                    else
+                        editMessage = null;
+                }
+            }
+
+            GUILayout.Space(6);
+
+            if(edit)
+            {
+                serializedObject.Update();
+                EditorGUILayout.PropertyField(title);
+                EditorGUILayout.PropertyField(type);
+                EditorGUILayout.PropertyField(state);
+                EditorGUILayout.PropertyField(priority);
+                serializedObject.ApplyModifiedProperties();
+            }
+
+            GUILayout.Space(6);
+
+            DrawMessage(rootMessage);
         }
 
-        public static void DrawEditComment(SerializedProperty comment)
+        void DrawMessage(SerializedProperty message)
         {
+            SerializedProperty body = message.FindPropertyRelative("body");
+            SerializedProperty URL = message.FindPropertyRelative("URL");
+            SerializedProperty from = message.FindPropertyRelative("from");
+            SerializedProperty attn = message.FindPropertyRelative("attn");
+            SerializedProperty objects = message.FindPropertyRelative("targets");
+            SerializedProperty replies = message.FindPropertyRelative("replies");
 
+            if (editMessage == message)
+            {
+                serializedObject.Update();
+                EditorGUI.BeginChangeCheck();
+
+
+                EditorGUILayout.PropertyField(body);
+                EditorGUILayout.PropertyField(URL);
+                EditorGUILayout.PropertyField(from);
+                EditorGUILayout.PropertyField(attn);
+                EditorGUILayout.PropertyField(objects);
+
+
+                if(EditorGUI.EndChangeCheck())
+                    serializedObject.ApplyModifiedProperties();
+            }
+            else
+            {
+                using (new GUILayout.HorizontalScope())
+                {
+                    GUILayout.Label(CommentEditor.GetPriorityContent(" " + title.stringValue, (CommentPriority)(priority.intValue)), Styles.title);
+                    GUILayout.FlexibleSpace();
+                }
+
+                GUILayout.Space(8);
+
+                GUILayout.Label(body.stringValue, Styles.multiline);
+
+                GUILayout.Space(8);
+                using (new GUILayout.HorizontalScope())
+                {
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("Reply", GUILayout.Width(64)))
+                    {
+                        replies.InsertArrayElementAtIndex(0);
+                        editMessage = replies.GetArrayElementAtIndex(0);
+                    }
+                }
+
+
+            }
+
+            int replyCount = replies.arraySize; 
+
+            if(replyCount > 0)
+            {
+                EditorGUI.indentLevel++;
+                GUILayout.Label("Replies", EditorStyles.foldoutHeader);
+                for (int i = 0; i < replyCount; i++)
+                {
+                    DrawMessage(replies.GetArrayElementAtIndex(0));
+                }
+                EditorGUI.indentLevel--;
+            }
         }
-
 
         public static Color GetTypeColor(CommentType type)
         {
@@ -121,6 +221,28 @@ namespace GameplayIngredients.Comments.Editor
                 default:
                 case CommentPriority.Low:
                     return CheckResult.GetIcon(CheckResult.Result.Notice);
+            }
+        }
+
+
+        static class Styles
+        {
+            public static GUIStyle title;
+            public static GUIStyle multiline;
+            public static GUIStyle coloredLabel;
+            static Styles()
+            {
+                title = new GUIStyle(EditorStyles.boldLabel);
+                title.fontSize = 16;
+
+                multiline = new GUIStyle(EditorStyles.label);
+                multiline.wordWrap = true;
+                multiline.fontSize = 14;
+
+                coloredLabel = new GUIStyle(EditorStyles.label);
+                coloredLabel.fontSize = 12;
+                coloredLabel.padding = new RectOffset(12, 12, 2, 2);
+
             }
         }
     }
