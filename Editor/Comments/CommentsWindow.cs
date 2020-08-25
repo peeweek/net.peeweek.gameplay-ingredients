@@ -53,7 +53,7 @@ namespace GameplayIngredients.Comments.Editor
             }
         }
 
-        static string user
+        public static string user
         {
             get { return EditorPrefs.GetString(kUserPreference, ""); }
             set { EditorPrefs.SetString(kUserPreference, value); }

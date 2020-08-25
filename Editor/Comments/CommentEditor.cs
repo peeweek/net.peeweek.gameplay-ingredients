@@ -15,9 +15,9 @@ namespace GameplayIngredients.Comments.Editor
         SerializedProperty type;
         SerializedProperty state;
         SerializedProperty priority;
-        SerializedProperty editMessage;
+        string editMessagePath;
 
-        bool edit => editMessage == rootMessage;
+        bool edit => editMessagePath == rootMessage.propertyPath;
 
         public CommentEditor(SerializedObject serializedObject, SerializedProperty comment)
         {
@@ -48,9 +48,9 @@ namespace GameplayIngredients.Comments.Editor
                 if(EditorGUI.EndChangeCheck())
                 {
                     if (editRoot)
-                        editMessage = rootMessage;
+                        editMessagePath = rootMessage.propertyPath;
                     else
-                        editMessage = null;
+                        editMessagePath = string.Empty;
                 }
             }
 
@@ -78,11 +78,12 @@ namespace GameplayIngredients.Comments.Editor
 
             GUILayout.Space(6);
 
-            DrawMessage(rootMessage);
+            DrawMessage(rootMessage, null, -1, 0);
         }
 
-        void DrawMessage(SerializedProperty message)
+        void DrawMessage(SerializedProperty message, SerializedProperty parent, int indexInParent,  int depth, bool canReply = false)
         {
+            GUI.backgroundColor = new Color(1, 1, 1, Mathf.Clamp(depth * 0.05f, 0.05f, 0.5f));
             using(new EditorGUILayout.VerticalScope(Styles.message))
             {
                 SerializedProperty body = message.FindPropertyRelative("body");
@@ -91,7 +92,7 @@ namespace GameplayIngredients.Comments.Editor
                 SerializedProperty objects = message.FindPropertyRelative("targets");
                 SerializedProperty replies = message.FindPropertyRelative("replies");
 
-                if (editMessage == message)
+                if (editMessagePath == message.propertyPath)
                 {
                     message.serializedObject.Update();
                     EditorGUILayout.PropertyField(body);
@@ -99,21 +100,41 @@ namespace GameplayIngredients.Comments.Editor
                     EditorGUILayout.PropertyField(from);
                     EditorGUILayout.PropertyField(objects);
                     message.serializedObject.ApplyModifiedProperties();
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (editMessagePath == message.propertyPath && GUILayout.Button("Apply", Styles.miniButton))
+                        {
+                            editMessagePath = string.Empty;
+                        }
+                    }
                 }
                 else
                 {
-
-                    EditorGUILayout.LabelField($"<b>@{from.stringValue} :</b>" + body.stringValue, Styles.multiline);
+                    EditorGUILayout.LabelField($"<color={(from.stringValue == CommentsWindow.user? "lime":"white")}><b>@{from.stringValue}</b></color> : " + body.stringValue, Styles.multiline);
                     GUILayout.Space(8);
                     using (new GUILayout.HorizontalScope())
                     {
                         GUILayout.FlexibleSpace();
-                        if (GUILayout.Button("Reply", GUILayout.Width(64)))
+                        if (canReply && GUILayout.Button("Reply", Styles.miniButton))
                         {
                             replies.serializedObject.Update();
-                            replies.InsertArrayElementAtIndex(0);
+                            int index = replies.arraySize - 1;
+                            replies.InsertArrayElementAtIndex(index);
+                            var reply = replies.GetArrayElementAtIndex(index);
+                            editMessagePath = reply.propertyPath;
+                            reply.FindPropertyRelative("from").stringValue = CommentsWindow.user;
                             replies.serializedObject.ApplyModifiedProperties();
-                            editMessage = replies.GetArrayElementAtIndex(0);
+                        }
+
+                        if(from.stringValue == CommentsWindow.user && GUILayout.Button("Edit", Styles.miniButton))
+                        {
+                            editMessagePath = message.propertyPath;
+                        }
+
+                        if (from.stringValue == CommentsWindow.user && GUILayout.Button("Delete", Styles.miniButton))
+                        {
+                            parent.DeleteArrayElementAtIndex(indexInParent);
                         }
                     }
                 }
@@ -124,11 +145,12 @@ namespace GameplayIngredients.Comments.Editor
                 {
                     for (int i = 0; i < replyCount; i++)
                     {
-                        DrawMessage(replies.GetArrayElementAtIndex(i));
+                        DrawMessage(replies.GetArrayElementAtIndex(i), replies, i, depth+1, i == replyCount -1);
                     }
                 }
 
             }
+            GUI.contentColor = Color.white;
         }
 
         void Separator()
@@ -233,6 +255,7 @@ namespace GameplayIngredients.Comments.Editor
             public static GUIStyle multiline;
             public static GUIStyle coloredLabel;
             public static GUIStyle message;
+            public static GUIStyle miniButton;
             static Styles()
             {
                 title = new GUIStyle(EditorStyles.boldLabel);
@@ -248,8 +271,20 @@ namespace GameplayIngredients.Comments.Editor
                 coloredLabel.padding = new RectOffset(12, 12, 2, 2);
 
                 message = new GUIStyle(EditorStyles.helpBox);
-                message.margin = new RectOffset(32, 2, 2, 2);
+                message.onActive.background = Texture2D.whiteTexture;
+                message.active.background = Texture2D.whiteTexture;
+                message.onFocused.background = Texture2D.whiteTexture;
+                message.focused.background = Texture2D.whiteTexture;
+                message.onHover.background = Texture2D.whiteTexture;
+                message.hover.background = Texture2D.whiteTexture;
+                message.onNormal.background = Texture2D.whiteTexture;
+                message.normal.background = Texture2D.whiteTexture;
+                message.margin = new RectOffset(16, 2, 2, 2);
                 message.border = new RectOffset(4, 4, 4, 4);
+
+
+                miniButton = new GUIStyle(EditorStyles.miniButton);
+                miniButton.fontSize = 9;
 
             }
         }
