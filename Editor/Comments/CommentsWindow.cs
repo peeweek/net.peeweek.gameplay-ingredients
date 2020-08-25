@@ -166,7 +166,6 @@ namespace GameplayIngredients.Comments.Editor
             public static GUIStyle header;
             public static GUIStyle sortHeader;
             public static GUIStyle line;
-            public static GUIStyle lineWw;
             static Styles()
             {
                 header = new GUIStyle(EditorStyles.toolbarButton);
@@ -178,10 +177,10 @@ namespace GameplayIngredients.Comments.Editor
                 sortHeader.fontStyle = FontStyle.Bold;
 
                 line = new GUIStyle(EditorStyles.toolbarButton);
-                line.alignment = TextAnchor.MiddleLeft;
-
-                lineWw = new GUIStyle(line);
-                lineWw.wordWrap = true;
+                line.padding = new RectOffset();
+                line.contentOffset = new Vector2(6, 2);
+                line.alignment = TextAnchor.UpperLeft;
+                line.wordWrap = false;
             }
         }
 

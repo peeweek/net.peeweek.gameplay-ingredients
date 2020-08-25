@@ -1,5 +1,6 @@
 ﻿using GameplayIngredients.Editor;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using UnityEditor;
 using UnityEngine;
 
@@ -64,6 +65,16 @@ namespace GameplayIngredients.Comments.Editor
                 EditorGUILayout.PropertyField(priority);
                 serializedObject.ApplyModifiedProperties();
             }
+            else
+            {
+                GUILayout.Space(8);
+
+                using (new GUILayout.HorizontalScope())
+                {
+                    GUILayout.Label(CommentEditor.GetPriorityContent(" " + title.stringValue, (CommentPriority)(priority.intValue)), Styles.title);
+                    GUILayout.FlexibleSpace();
+                }
+            }
 
             GUILayout.Space(6);
 
@@ -72,67 +83,58 @@ namespace GameplayIngredients.Comments.Editor
 
         void DrawMessage(SerializedProperty message)
         {
-            SerializedProperty body = message.FindPropertyRelative("body");
-            SerializedProperty URL = message.FindPropertyRelative("URL");
-            SerializedProperty from = message.FindPropertyRelative("from");
-            SerializedProperty attn = message.FindPropertyRelative("attn");
-            SerializedProperty objects = message.FindPropertyRelative("targets");
-            SerializedProperty replies = message.FindPropertyRelative("replies");
-
-            if (editMessage == message)
+            using(new EditorGUILayout.VerticalScope(Styles.message))
             {
-                serializedObject.Update();
-                EditorGUI.BeginChangeCheck();
+                SerializedProperty body = message.FindPropertyRelative("body");
+                SerializedProperty URL = message.FindPropertyRelative("URL");
+                SerializedProperty from = message.FindPropertyRelative("from");
+                SerializedProperty objects = message.FindPropertyRelative("targets");
+                SerializedProperty replies = message.FindPropertyRelative("replies");
 
-
-                EditorGUILayout.PropertyField(body);
-                EditorGUILayout.PropertyField(URL);
-                EditorGUILayout.PropertyField(from);
-                EditorGUILayout.PropertyField(attn);
-                EditorGUILayout.PropertyField(objects);
-
-
-                if(EditorGUI.EndChangeCheck())
-                    serializedObject.ApplyModifiedProperties();
-            }
-            else
-            {
-                using (new GUILayout.HorizontalScope())
+                if (editMessage == message)
                 {
-                    GUILayout.Label(CommentEditor.GetPriorityContent(" " + title.stringValue, (CommentPriority)(priority.intValue)), Styles.title);
-                    GUILayout.FlexibleSpace();
+                    message.serializedObject.Update();
+                    EditorGUILayout.PropertyField(body);
+                    EditorGUILayout.PropertyField(URL);
+                    EditorGUILayout.PropertyField(from);
+                    EditorGUILayout.PropertyField(objects);
+                    message.serializedObject.ApplyModifiedProperties();
                 }
-
-                GUILayout.Space(8);
-
-                GUILayout.Label(body.stringValue, Styles.multiline);
-
-                GUILayout.Space(8);
-                using (new GUILayout.HorizontalScope())
+                else
                 {
-                    GUILayout.FlexibleSpace();
-                    if (GUILayout.Button("Reply", GUILayout.Width(64)))
+
+                    EditorGUILayout.LabelField($"<b>@{from.stringValue} :</b>" + body.stringValue, Styles.multiline);
+                    GUILayout.Space(8);
+                    using (new GUILayout.HorizontalScope())
                     {
-                        replies.InsertArrayElementAtIndex(0);
-                        editMessage = replies.GetArrayElementAtIndex(0);
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.Button("Reply", GUILayout.Width(64)))
+                        {
+                            replies.serializedObject.Update();
+                            replies.InsertArrayElementAtIndex(0);
+                            replies.serializedObject.ApplyModifiedProperties();
+                            editMessage = replies.GetArrayElementAtIndex(0);
+                        }
                     }
                 }
 
+                int replyCount = replies.arraySize;
 
-            }
-
-            int replyCount = replies.arraySize; 
-
-            if(replyCount > 0)
-            {
-                EditorGUI.indentLevel++;
-                GUILayout.Label("Replies", EditorStyles.foldoutHeader);
-                for (int i = 0; i < replyCount; i++)
+                if (replyCount > 0)
                 {
-                    DrawMessage(replies.GetArrayElementAtIndex(0));
+                    for (int i = 0; i < replyCount; i++)
+                    {
+                        DrawMessage(replies.GetArrayElementAtIndex(i));
+                    }
                 }
-                EditorGUI.indentLevel--;
+
             }
+        }
+
+        void Separator()
+        {
+            Rect r = GUILayoutUtility.GetRect(0, 1, GUILayout.ExpandWidth(true));
+            EditorGUI.DrawRect(r, Color.gray);
         }
 
         public static Color GetTypeColor(CommentType type)
@@ -230,6 +232,7 @@ namespace GameplayIngredients.Comments.Editor
             public static GUIStyle title;
             public static GUIStyle multiline;
             public static GUIStyle coloredLabel;
+            public static GUIStyle message;
             static Styles()
             {
                 title = new GUIStyle(EditorStyles.boldLabel);
@@ -237,11 +240,16 @@ namespace GameplayIngredients.Comments.Editor
 
                 multiline = new GUIStyle(EditorStyles.label);
                 multiline.wordWrap = true;
-                multiline.fontSize = 14;
+                multiline.richText = true;
+                multiline.fontSize = 13;
 
                 coloredLabel = new GUIStyle(EditorStyles.label);
                 coloredLabel.fontSize = 12;
                 coloredLabel.padding = new RectOffset(12, 12, 2, 2);
+
+                message = new GUIStyle(EditorStyles.helpBox);
+                message.margin = new RectOffset(32, 2, 2, 2);
+                message.border = new RectOffset(4, 4, 4, 4);
 
             }
         }
