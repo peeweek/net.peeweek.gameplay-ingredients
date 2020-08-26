@@ -1,6 +1,7 @@
 ﻿using GameplayIngredients.Editor;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Net.Http.Headers;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace GameplayIngredients.Comments.Editor
         SerializedProperty priority;
         string editMessagePath;
 
-        bool edit => editMessagePath == rootMessage.propertyPath;
+        bool editRoot => editMessagePath == rootMessage.propertyPath;
 
         public CommentEditor(SerializedObject serializedObject, SerializedProperty comment)
         {
@@ -44,7 +45,7 @@ namespace GameplayIngredients.Comments.Editor
 
                 GUILayout.FlexibleSpace();
                 EditorGUI.BeginChangeCheck();
-                bool editRoot = DrawEditButton(edit);
+                bool editRoot = DrawEditButton(this.editRoot);
                 if(EditorGUI.EndChangeCheck())
                 {
                     if (editRoot)
@@ -56,7 +57,7 @@ namespace GameplayIngredients.Comments.Editor
 
             GUILayout.Space(6);
 
-            if(edit)
+            if(editRoot)
             {
                 serializedObject.Update();
                 EditorGUILayout.PropertyField(title);
@@ -77,12 +78,12 @@ namespace GameplayIngredients.Comments.Editor
             }
 
             GUILayout.Space(6);
-
             DrawMessage(rootMessage, null, -1, 0);
         }
 
-        void DrawMessage(SerializedProperty message, SerializedProperty parent, int indexInParent,  int depth, bool canReply = false)
+        void DrawMessage(SerializedProperty message, SerializedProperty parent, int indexInParent,  int depth)
         {
+            bool delete = false;
             GUI.backgroundColor = new Color(1, 1, 1, Mathf.Clamp(depth * 0.05f, 0.05f, 0.5f));
             using(new EditorGUILayout.VerticalScope(Styles.message))
             {
@@ -99,7 +100,6 @@ namespace GameplayIngredients.Comments.Editor
                     EditorGUILayout.PropertyField(URL);
                     EditorGUILayout.PropertyField(from);
                     EditorGUILayout.PropertyField(objects);
-                    message.serializedObject.ApplyModifiedProperties();
                     using (new GUILayout.HorizontalScope())
                     {
                         GUILayout.FlexibleSpace();
@@ -107,45 +107,64 @@ namespace GameplayIngredients.Comments.Editor
                         {
                             editMessagePath = string.Empty;
                         }
+                        if (from.stringValue == CommentsWindow.user && GUILayout.Button("Delete", Styles.miniButton))
+                        {
+                            parent.serializedObject.Update();
+                            parent.DeleteArrayElementAtIndex(indexInParent);
+                            parent.serializedObject.ApplyModifiedProperties();
+                            delete = true;
+                        }
                     }
+                    GUILayout.Space(2);
+                    message.serializedObject.ApplyModifiedProperties();
                 }
                 else
                 {
-                    EditorGUILayout.LabelField($"<color={(from.stringValue == CommentsWindow.user? "lime":"white")}><b>@{from.stringValue}</b></color> : " + body.stringValue, Styles.multiline);
-                    GUILayout.Space(8);
                     using (new GUILayout.HorizontalScope())
                     {
+                        GUILayout.Label($"<color={(from.stringValue == CommentsWindow.user ? "lime" : "white")}><b>{from.stringValue}</b></color>", Styles.from);
                         GUILayout.FlexibleSpace();
-                        if (canReply && GUILayout.Button("Reply", Styles.miniButton))
-                        {
-                            replies.serializedObject.Update();
-                            int index = replies.arraySize - 1;
-                            replies.InsertArrayElementAtIndex(index);
-                            var reply = replies.GetArrayElementAtIndex(index);
-                            editMessagePath = reply.propertyPath;
-                            reply.FindPropertyRelative("from").stringValue = CommentsWindow.user;
-                            replies.serializedObject.ApplyModifiedProperties();
-                        }
 
-                        if(from.stringValue == CommentsWindow.user && GUILayout.Button("Edit", Styles.miniButton))
+                        if (depth>0 && from.stringValue == CommentsWindow.user 
+                            && GUILayout.Button(Styles.edit, Styles.miniButton, GUILayout.Width(32)))
                         {
                             editMessagePath = message.propertyPath;
                         }
-
-                        if (from.stringValue == CommentsWindow.user && GUILayout.Button("Delete", Styles.miniButton))
+                        if (GUILayout.Button(Styles.reply, Styles.miniButton, GUILayout.Width(32)))
                         {
-                            parent.DeleteArrayElementAtIndex(indexInParent);
+                            replies.serializedObject.Update();
+                            int index = replies.arraySize;
+                            replies.InsertArrayElementAtIndex(index);
+                            var reply = replies.GetArrayElementAtIndex(index);
+                            editMessagePath = reply.propertyPath;
+                            reply.FindPropertyRelative("body").stringValue = string.Empty;
+                            reply.FindPropertyRelative("URL").stringValue = string.Empty;
+                            reply.FindPropertyRelative("from").stringValue = CommentsWindow.user;
+                            reply.FindPropertyRelative("replies").ClearArray();
+                            replies.serializedObject.ApplyModifiedProperties();
                         }
                     }
+                    EditorGUILayout.LabelField(body.stringValue, Styles.multiline);
+                    if(!string.IsNullOrEmpty(URL.stringValue))
+                    {
+                        Color b = GUI.backgroundColor;
+                        GUI.backgroundColor = new Color(0, 0, 0, 0.2f);
+                        if(GUILayout.Button($"URL : <color=#44AAFFFF>{URL.stringValue}</color>", Styles.link))
+                        {
+                            Application.OpenURL(URL.stringValue);
+                        }
+                        GUI.backgroundColor = b;
+
+                    }
+                    GUILayout.Space(8);
+                    
                 }
 
-                int replyCount = replies.arraySize;
-
-                if (replyCount > 0)
+                if (!delete && !editRoot && replies.arraySize > 0)
                 {
-                    for (int i = 0; i < replyCount; i++)
+                    for (int i = 0; i < replies.arraySize; i++)
                     {
-                        DrawMessage(replies.GetArrayElementAtIndex(i), replies, i, depth+1, i == replyCount -1);
+                        DrawMessage(replies.GetArrayElementAtIndex(i), replies, i, depth+1);
                     }
                 }
 
@@ -252,14 +271,30 @@ namespace GameplayIngredients.Comments.Editor
         static class Styles
         {
             public static GUIStyle title;
+            public static GUIStyle from;
+            public static GUIStyle link;
             public static GUIStyle multiline;
             public static GUIStyle coloredLabel;
             public static GUIStyle message;
             public static GUIStyle miniButton;
+
+            public static GUIContent reply;
+            public static GUIContent edit;
             static Styles()
             {
                 title = new GUIStyle(EditorStyles.boldLabel);
                 title.fontSize = 16;
+
+                from = new GUIStyle(EditorStyles.label);
+                from.fontSize = 12;
+                from.richText = true;
+
+                link = new GUIStyle(EditorStyles.label);
+                link.fontSize = 12;
+                link.richText = true;
+                link.margin = new RectOffset(0, 0, 4, 4);
+                link.padding = new RectOffset(2, 2, 2, 2);
+                SetWhiteBG(link);
 
                 multiline = new GUIStyle(EditorStyles.label);
                 multiline.wordWrap = true;
@@ -271,21 +306,34 @@ namespace GameplayIngredients.Comments.Editor
                 coloredLabel.padding = new RectOffset(12, 12, 2, 2);
 
                 message = new GUIStyle(EditorStyles.helpBox);
-                message.onActive.background = Texture2D.whiteTexture;
-                message.active.background = Texture2D.whiteTexture;
-                message.onFocused.background = Texture2D.whiteTexture;
-                message.focused.background = Texture2D.whiteTexture;
-                message.onHover.background = Texture2D.whiteTexture;
-                message.hover.background = Texture2D.whiteTexture;
-                message.onNormal.background = Texture2D.whiteTexture;
-                message.normal.background = Texture2D.whiteTexture;
                 message.margin = new RectOffset(16, 2, 2, 2);
                 message.border = new RectOffset(4, 4, 4, 4);
-
+                SetWhiteBG(message);
 
                 miniButton = new GUIStyle(EditorStyles.miniButton);
-                miniButton.fontSize = 9;
+                miniButton.fontSize = 10;
+                miniButton.fixedHeight = 16;
 
+                SetWhiteBG(miniButton);
+
+                edit = new GUIContent(EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/GUI/edit.png") as Texture);
+                reply = new GUIContent(EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/GUI/reply.png") as Texture);
+            }
+
+            static void SetWhiteBG(GUIStyle style)
+            {
+                SetBGTexture(style, Texture2D.whiteTexture);
+            }
+            static void SetBGTexture(GUIStyle style, Texture2D texture)
+            {
+                style.onActive.background = texture;
+                style.active.background = texture;
+                style.onFocused.background = texture;
+                style.focused.background = texture;
+                style.onHover.background = texture;
+                style.hover.background = texture;
+                style.onNormal.background = texture;
+                style.normal.background = texture;
             }
         }
     }

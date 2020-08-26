@@ -20,6 +20,12 @@ namespace GameplayIngredients.Comments
             m_Comment.message.from = EditorPrefs.GetString(kUserPreference, "user");
         }
 
+        public void SetDefault()
+        {
+            m_Comment.title = "New Comment";
+            m_Comment.message.body = "This is a new Comment";
+        }
+
 #endif
     }
 }

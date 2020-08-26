@@ -19,7 +19,6 @@ namespace GameplayIngredients.Comments
     public struct CommentMessage
     {
         public string from;
-
         public string URL;
         [Multiline]
         public string body;

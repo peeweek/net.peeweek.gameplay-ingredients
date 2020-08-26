@@ -35,14 +35,30 @@ namespace GameplayIngredients.Comments.Editor
 
         public override void OnInspectorGUI()
         {
+            sceneComment.transform.hideFlags = HideFlags.HideInInspector;
             UpdateComment();
-
-            if (GUILayout.Button("Open Comments", GUILayout.Height(24)))
-                CommentsWindow.Open();
-
             GUILayout.Space(4);
             m_CommentEditor.DrawComment();
             GUILayout.Space(16);
+        }
+
+        [MenuItem("GameObject/Comment", false, 10)]
+        static void CreateComment()
+        {
+            var go = new GameObject("Comment", typeof(SceneComment));
+            if (Selection.activeGameObject != null && Selection.activeGameObject.scene != null)
+            {
+                go.transform.parent = Selection.activeGameObject.transform;
+                if(SceneView.lastActiveSceneView != null)
+                {
+                    var cam = SceneView.lastActiveSceneView.camera;
+                    go.transform.position = cam.transform.position;
+                    go.transform.rotation = cam.transform.rotation;
+                }
+                
+            }
+            Selection.activeGameObject = go;
+            go.GetComponent<SceneComment>().SetDefault();
         }
     }
 }
