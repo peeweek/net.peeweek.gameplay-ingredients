@@ -38,7 +38,7 @@ namespace GameplayIngredients.Comments.Editor
             sceneComment.transform.hideFlags = HideFlags.HideInInspector;
             UpdateComment();
             GUILayout.Space(4);
-            m_CommentEditor.DrawComment();
+            m_CommentEditor.DrawComment(sceneComment.comment);
             GUILayout.Space(16);
         }
 

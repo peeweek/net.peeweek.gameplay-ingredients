@@ -12,6 +12,7 @@ namespace GameplayIngredients.Comments.Editor
     {
         SerializedObject serializedObject;
         SerializedProperty rootMessage;
+        SerializedProperty replies;
         SerializedProperty title;
         SerializedProperty type;
         SerializedProperty state;
@@ -28,6 +29,7 @@ namespace GameplayIngredients.Comments.Editor
             state = comment.FindPropertyRelative("state");
             priority = comment.FindPropertyRelative("priority");
             rootMessage = comment.FindPropertyRelative("message");
+            replies = comment.FindPropertyRelative("replies");
         }
 
         public bool DrawEditButton(bool edit)
@@ -35,13 +37,13 @@ namespace GameplayIngredients.Comments.Editor
             return GUILayout.Toggle(edit, edit ? "Close" : "Edit", EditorStyles.miniButton, GUILayout.Width(64));
         }
 
-        public void DrawComment()
+        public void DrawComment(Comment comment)
         {
             using (new GUILayout.HorizontalScope())
             {
-                TypeLabel((CommentType)type.intValue);
-                StateLabel((CommentState)state.intValue);
-                PriorityLabel((CommentPriority)priority.intValue);
+                TypeLabel(comment.computedType);
+                StateLabel(comment.computedState);
+                PriorityLabel(comment.computedPriority);
 
                 GUILayout.FlexibleSpace();
                 EditorGUI.BeginChangeCheck();
@@ -78,28 +80,58 @@ namespace GameplayIngredients.Comments.Editor
             }
 
             GUILayout.Space(6);
-            DrawMessage(rootMessage, null, -1, 0);
+            DrawMessage(rootMessage, -1);
+            int replyCount = replies.arraySize;
+            using(new GUILayout.HorizontalScope())
+            {
+                GUILayout.Space(16);
+                using(new GUILayout.VerticalScope())
+                {
+                    for (int i = 0; i < replyCount; i++)
+                    {
+                        DrawMessage(replies.GetArrayElementAtIndex(i), i);
+                    }
+                }
+            }
         }
 
-        void DrawMessage(SerializedProperty message, SerializedProperty parent, int indexInParent,  int depth)
+        void DrawMessage(SerializedProperty message, int replyIndex)
         {
-            bool delete = false;
-            GUI.backgroundColor = new Color(1, 1, 1, Mathf.Clamp(depth * 0.05f, 0.05f, 0.5f));
+            GUI.backgroundColor = new Color(1, 1, 1, (replyIndex < 0 ? 0.1f : 0.2f));
             using(new EditorGUILayout.VerticalScope(Styles.message))
             {
+
                 SerializedProperty body = message.FindPropertyRelative("body");
                 SerializedProperty URL = message.FindPropertyRelative("URL");
                 SerializedProperty from = message.FindPropertyRelative("from");
-                SerializedProperty objects = message.FindPropertyRelative("targets");
-                SerializedProperty replies = message.FindPropertyRelative("replies");
+                SerializedProperty targets = message.FindPropertyRelative("targets");
+                SerializedProperty changeType = message.FindPropertyRelative("changeType");
+                SerializedProperty changeState = message.FindPropertyRelative("changeState");
+                SerializedProperty changePriority = message.FindPropertyRelative("changePriority");
+                SerializedProperty type = message.FindPropertyRelative("type");
+                SerializedProperty state = message.FindPropertyRelative("state");
+                SerializedProperty priority = message.FindPropertyRelative("priority");
 
                 if (editMessagePath == message.propertyPath)
                 {
                     message.serializedObject.Update();
+                    EditorGUILayout.LabelField("Edit Message", EditorStyles.boldLabel);
                     EditorGUILayout.PropertyField(body);
                     EditorGUILayout.PropertyField(URL);
                     EditorGUILayout.PropertyField(from);
-                    EditorGUILayout.PropertyField(objects);
+                    EditorGUILayout.PropertyField(targets);
+
+                    EditorGUILayout.PropertyField(changeType);
+                    EditorGUILayout.PropertyField(changeState);
+                    EditorGUILayout.PropertyField(changePriority);
+
+                    if(changeType.boolValue)
+                        EditorGUILayout.PropertyField(type);
+                    if (changeState.boolValue)
+                        EditorGUILayout.PropertyField(state);
+                    if (changePriority.boolValue)
+                        EditorGUILayout.PropertyField(priority);
+
                     using (new GUILayout.HorizontalScope())
                     {
                         GUILayout.FlexibleSpace();
@@ -107,12 +139,11 @@ namespace GameplayIngredients.Comments.Editor
                         {
                             editMessagePath = string.Empty;
                         }
-                        if (from.stringValue == CommentsWindow.user && GUILayout.Button("Delete", Styles.miniButton))
+                        if (replyIndex == replies.arraySize - 1 && from.stringValue == CommentsWindow.user && GUILayout.Button("Delete", Styles.miniButton))
                         {
-                            parent.serializedObject.Update();
-                            parent.DeleteArrayElementAtIndex(indexInParent);
-                            parent.serializedObject.ApplyModifiedProperties();
-                            delete = true;
+                            replies.serializedObject.Update();
+                            replies.DeleteArrayElementAtIndex(replyIndex);
+                            replies.serializedObject.ApplyModifiedProperties();
                         }
                     }
                     GUILayout.Space(2);
@@ -125,7 +156,7 @@ namespace GameplayIngredients.Comments.Editor
                         GUILayout.Label($"<color={(from.stringValue == CommentsWindow.user ? "lime" : "white")}><b>{from.stringValue}</b></color>", Styles.from);
                         GUILayout.FlexibleSpace();
 
-                        if (depth>0 && from.stringValue == CommentsWindow.user 
+                        if (replyIndex > -1 && from.stringValue == CommentsWindow.user 
                             && GUILayout.Button(Styles.edit, Styles.miniButton, GUILayout.Width(32)))
                         {
                             editMessagePath = message.propertyPath;
@@ -140,34 +171,71 @@ namespace GameplayIngredients.Comments.Editor
                             reply.FindPropertyRelative("body").stringValue = string.Empty;
                             reply.FindPropertyRelative("URL").stringValue = string.Empty;
                             reply.FindPropertyRelative("from").stringValue = CommentsWindow.user;
-                            reply.FindPropertyRelative("replies").ClearArray();
+                            reply.FindPropertyRelative("targets").ClearArray();
                             replies.serializedObject.ApplyModifiedProperties();
                         }
                     }
                     EditorGUILayout.LabelField(body.stringValue, Styles.multiline);
-                    if(!string.IsNullOrEmpty(URL.stringValue))
+
+                    if (!string.IsNullOrEmpty(URL.stringValue))
                     {
+                        GUILayout.Space(12);
+
+                        GUILayout.Label("URL:", EditorStyles.boldLabel, GUILayout.Width(32));
                         Color b = GUI.backgroundColor;
                         GUI.backgroundColor = new Color(0, 0, 0, 0.2f);
-                        if(GUILayout.Button($"URL : <color=#44AAFFFF>{URL.stringValue}</color>", Styles.link))
+                        if (GUILayout.Button($"<color=#44AAFFFF>{URL.stringValue}</color>", Styles.link))
                         {
                             Application.OpenURL(URL.stringValue);
                         }
                         GUI.backgroundColor = b;
 
                     }
-                    GUILayout.Space(8);
+
+                    if (changeType.boolValue)
+                    {
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("Changed type to: ");
+                            TypeLabel((CommentType)type.intValue);
+                            GUILayout.FlexibleSpace();
+                        }
+                    }
+
+                    if (changeState.boolValue)
+                    {
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("Changed state to: ");
+                            StateLabel((CommentState)state.intValue);
+                            GUILayout.FlexibleSpace();
+                        }
+                    }
+
+                    if (changePriority.boolValue)
+                    {
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("Changed priority to: ");
+                            PriorityLabel((CommentPriority)priority.intValue);
+                            GUILayout.FlexibleSpace();
+                        }
+                    }
+
+
+                    if (targets.arraySize > 0)
+                    {
+                        GUILayout.Space(12);
+                        EditorGUILayout.LabelField("Attached Objects:", EditorStyles.boldLabel);
+                        EditorGUI.BeginDisabledGroup(true);
+                        for(int i = 0; i<targets.arraySize; i++)
+                        {
+                            EditorGUILayout.ObjectField(targets.GetArrayElementAtIndex(i));
+                        }
+                        EditorGUI.EndDisabledGroup();
+                    }
                     
                 }
-
-                if (!delete && !editRoot && replies.arraySize > 0)
-                {
-                    for (int i = 0; i < replies.arraySize; i++)
-                    {
-                        DrawMessage(replies.GetArrayElementAtIndex(i), replies, i, depth+1);
-                    }
-                }
-
             }
             GUI.contentColor = Color.white;
         }
