@@ -1,5 +1,6 @@
 ﻿using NaughtyAttributes;
 using System;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,15 +12,22 @@ namespace GameplayIngredients.Comments
         public string title;
         public CommentMessage message; 
         public CommentMessage[] replies;
-        public CommentType type;
-        public CommentState state;
-        public CommentPriority priority;
+
+        public string[] users
+        {
+            get
+            {
+                var users = replies.Select(r => r.from).ToList();
+                users.Add(message.from);
+                return users.ToArray();
+            }
+        }
 
         public CommentType computedType
         {
             get
             {
-                CommentType currentType = type;
+                CommentType currentType = message.type;
                 if(replies != null)
                 {
                     foreach (var reply in replies)
@@ -36,7 +44,7 @@ namespace GameplayIngredients.Comments
         {
             get
             {
-                CommentState currentState = state;
+                CommentState currentState = message.state;
                 if (replies != null)
                 {
                     foreach (var reply in replies)
@@ -53,7 +61,7 @@ namespace GameplayIngredients.Comments
         {
             get
             {
-                CommentPriority currentPriority = priority;
+                CommentPriority currentPriority = message.priority;
                 if (replies != null)
                 {
                     foreach (var reply in replies)
@@ -81,6 +89,7 @@ namespace GameplayIngredients.Comments
         public bool changeType;
         public bool changeState;
         public bool changePriority;
+
         public CommentType type;
         public CommentState state;
         public CommentPriority priority;

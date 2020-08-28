@@ -68,13 +68,13 @@ namespace GameplayIngredients.Comments.Editor
         bool showMedium = true;
         bool showLow = true;
 
-        int infoCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.type == CommentType.Info);
-        int bugCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.type == CommentType.Bug);
-        int requestCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.type == CommentType.Request);
-        int todoCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.type == CommentType.ToDo);
-        int highCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.priority == CommentPriority.High);
-        int mediumCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.priority == CommentPriority.Medium);
-        int lowCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.priority == CommentPriority.Low);
+        int infoCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedType == CommentType.Info);
+        int bugCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedType == CommentType.Bug);
+        int requestCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedType == CommentType.Request);
+        int todoCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedType == CommentType.ToDo);
+        int highCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedPriority == CommentPriority.High);
+        int mediumCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedPriority == CommentPriority.Medium);
+        int lowCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedPriority == CommentPriority.Low);
 
         string filter;
         Vector2 scrollPosition;
@@ -119,29 +119,30 @@ namespace GameplayIngredients.Comments.Editor
             // Lines
             foreach(var sceneComment in sceneComments)
             {
-                if (sceneComment.comment.type == CommentType.Bug && !showBugs) continue;
-                if (sceneComment.comment.type == CommentType.Info && !showInfo) continue;
-                if (sceneComment.comment.type == CommentType.Request && !showRequests) continue;
-                if (sceneComment.comment.type == CommentType.ToDo && !showTodo) continue;
-                if (sceneComment.comment.priority == CommentPriority.High && !showHigh) continue;
-                if (sceneComment.comment.priority == CommentPriority.Medium && !showMedium) continue;
-                if (sceneComment.comment.priority == CommentPriority.Low && !showLow) continue;
+                if (sceneComment.comment.computedType == CommentType.Bug && !showBugs) continue;
+                if (sceneComment.comment.computedType == CommentType.Info && !showInfo) continue;
+                if (sceneComment.comment.computedType == CommentType.Request && !showRequests) continue;
+                if (sceneComment.comment.computedType == CommentType.ToDo && !showTodo) continue;
+                if (sceneComment.comment.computedPriority == CommentPriority.High && !showHigh) continue;
+                if (sceneComment.comment.computedPriority == CommentPriority.Medium && !showMedium) continue;
+                if (sceneComment.comment.computedPriority == CommentPriority.Low && !showLow) continue;
 
-
+                if (userFilter == UserFilter.MyComments && !sceneComment.comment.users.Contains(user))
+                    continue;
 
                 GUI.backgroundColor = (i%2 == 0)? Color.white : Color.white * 0.9f;
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
                     
-                    if(GUILayout.Button(CommentEditor.GetPriorityContent(sceneComment.comment.title, sceneComment.comment.priority), Styles.line, GUILayout.Width(180)))
+                    if(GUILayout.Button(CommentEditor.GetPriorityContent(sceneComment.comment.title, sceneComment.comment.computedPriority), Styles.line, GUILayout.Width(180)))
                     {
                         Selection.activeGameObject = sceneComment.gameObject;
                     }
                     GUILayout.Label(sceneComment.comment.message.body, Styles.line, GUILayout.Width(position.width - 461));
                     GUILayout.Label(sceneComment.gameObject.scene.name, Styles.line, GUILayout.Width(100));
                     GUILayout.Label(sceneComment.comment.message.from, Styles.line, GUILayout.Width(80));
-                    GUILayout.Label(sceneComment.comment.type.ToString(), Styles.line, GUILayout.Width(50));
-                    GUILayout.Label(sceneComment.comment.state.ToString(), Styles.line, GUILayout.Width(50));
+                    GUILayout.Label(sceneComment.comment.computedType.ToString(), Styles.line, GUILayout.Width(50));
+                    GUILayout.Label(sceneComment.comment.computedState.ToString(), Styles.line, GUILayout.Width(50));
                 }
 
                 i++;

@@ -63,9 +63,6 @@ namespace GameplayIngredients.Comments.Editor
             {
                 serializedObject.Update();
                 EditorGUILayout.PropertyField(title);
-                EditorGUILayout.PropertyField(type);
-                EditorGUILayout.PropertyField(state);
-                EditorGUILayout.PropertyField(priority);
                 serializedObject.ApplyModifiedProperties();
             }
             else
@@ -74,7 +71,7 @@ namespace GameplayIngredients.Comments.Editor
 
                 using (new GUILayout.HorizontalScope())
                 {
-                    GUILayout.Label(CommentEditor.GetPriorityContent(" " + title.stringValue, (CommentPriority)(priority.intValue)), Styles.title);
+                    GUILayout.Label(CommentEditor.GetPriorityContent(" " + title.stringValue, comment.computedPriority), Styles.title);
                     GUILayout.FlexibleSpace();
                 }
             }
@@ -121,15 +118,18 @@ namespace GameplayIngredients.Comments.Editor
                     EditorGUILayout.PropertyField(from);
                     EditorGUILayout.PropertyField(targets);
 
-                    EditorGUILayout.PropertyField(changeType);
-                    EditorGUILayout.PropertyField(changeState);
-                    EditorGUILayout.PropertyField(changePriority);
+                    if(replyIndex >= 0)
+                    {
+                        EditorGUILayout.PropertyField(changeType);
+                        EditorGUILayout.PropertyField(changeState);
+                        EditorGUILayout.PropertyField(changePriority);
+                    }
 
-                    if(changeType.boolValue)
+                    if(changeType.boolValue || replyIndex == -1)
                         EditorGUILayout.PropertyField(type);
-                    if (changeState.boolValue)
+                    if (changeState.boolValue || replyIndex == -1)
                         EditorGUILayout.PropertyField(state);
-                    if (changePriority.boolValue)
+                    if (changePriority.boolValue || replyIndex == -1)
                         EditorGUILayout.PropertyField(priority);
 
                     using (new GUILayout.HorizontalScope())
@@ -192,48 +192,42 @@ namespace GameplayIngredients.Comments.Editor
 
                     }
 
-                    if (changeType.boolValue)
-                    {
-                        using (new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.Label("Changed type to: ");
-                            TypeLabel((CommentType)type.intValue);
-                            GUILayout.FlexibleSpace();
-                        }
-                    }
-
-                    if (changeState.boolValue)
-                    {
-                        using (new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.Label("Changed state to: ");
-                            StateLabel((CommentState)state.intValue);
-                            GUILayout.FlexibleSpace();
-                        }
-                    }
-
-                    if (changePriority.boolValue)
-                    {
-                        using (new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.Label("Changed priority to: ");
-                            PriorityLabel((CommentPriority)priority.intValue);
-                            GUILayout.FlexibleSpace();
-                        }
-                    }
-
-
                     if (targets.arraySize > 0)
                     {
                         GUILayout.Space(12);
                         EditorGUILayout.LabelField("Attached Objects:", EditorStyles.boldLabel);
                         EditorGUI.BeginDisabledGroup(true);
-                        for(int i = 0; i<targets.arraySize; i++)
+                        for (int i = 0; i < targets.arraySize; i++)
                         {
                             EditorGUILayout.ObjectField(targets.GetArrayElementAtIndex(i));
                         }
                         EditorGUI.EndDisabledGroup();
                     }
+
+                    if(replyIndex == -1 
+                        || changeType.boolValue 
+                        || changeState.boolValue
+                        || changePriority.boolValue)
+                    {
+                        GUILayout.Space(12);
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("<b>Set Properties :</b>", Styles.multiline);
+                            if (replyIndex == -1 || changeType.boolValue)
+                                TypeLabel((CommentType)type.intValue);
+
+                            if (replyIndex == -1 || changeState.boolValue)
+                                StateLabel((CommentState)state.intValue);
+
+                            if (replyIndex == -1 || changePriority.boolValue)
+                                PriorityLabel((CommentPriority)priority.intValue);
+
+                            GUILayout.FlexibleSpace();
+                        }
+
+                    }
+
+
                     
                 }
             }
