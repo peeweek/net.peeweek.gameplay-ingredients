@@ -8,10 +8,7 @@ namespace GameplayIngredients.Comments
     {
 
 #if UNITY_EDITOR
-
         const string kUserPreference = "GameplayIngredients.Comments.User";
-
-        public bool UsePOV;
         public Comment comment => m_Comment;
         [SerializeField]
         Comment m_Comment;
@@ -24,6 +21,7 @@ namespace GameplayIngredients.Comments
         {
             m_Comment.title = "New Comment";
             m_Comment.message.body = "This is a new Comment";
+            m_Comment.message.from = EditorPrefs.GetString(kUserPreference, "user");
         }
 
 #endif

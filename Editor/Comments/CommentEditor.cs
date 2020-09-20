@@ -14,9 +14,7 @@ namespace GameplayIngredients.Comments.Editor
         SerializedProperty rootMessage;
         SerializedProperty replies;
         SerializedProperty title;
-        SerializedProperty type;
-        SerializedProperty state;
-        SerializedProperty priority;
+        SerializedProperty focus;
         string editMessagePath;
 
         bool editRoot => editMessagePath == rootMessage.propertyPath;
@@ -25,11 +23,10 @@ namespace GameplayIngredients.Comments.Editor
         {
             this.serializedObject = serializedObject;
             title = comment.FindPropertyRelative("title");
-            type = comment.FindPropertyRelative("type");
-            state = comment.FindPropertyRelative("state");
-            priority = comment.FindPropertyRelative("priority");
+
             rootMessage = comment.FindPropertyRelative("message");
             replies = comment.FindPropertyRelative("replies");
+            focus = comment.FindPropertyRelative("focus");
         }
 
         public bool DrawEditButton(bool edit)
@@ -63,6 +60,7 @@ namespace GameplayIngredients.Comments.Editor
             {
                 serializedObject.Update();
                 EditorGUILayout.PropertyField(title);
+                EditorGUILayout.PropertyField(focus);
                 serializedObject.ApplyModifiedProperties();
             }
             else

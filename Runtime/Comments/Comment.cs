@@ -12,6 +12,7 @@ namespace GameplayIngredients.Comments
         public string title;
         public CommentMessage message; 
         public CommentMessage[] replies;
+        public bool focus;
 
         public string[] users
         {
