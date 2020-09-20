@@ -3,7 +3,9 @@ using GameplayIngredients.Editor;
 using System.ComponentModel;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameplayIngredients.Comments.Editor
 {
@@ -21,11 +23,45 @@ namespace GameplayIngredients.Comments.Editor
             titleContent.text = "Comments";
             minSize = new Vector2(680, 180);
             Refresh();
+            EditorSceneManager.sceneOpened += EditorSceneManager_sceneOpened;
+            EditorSceneManager.sceneClosed += EditorSceneManager_sceneClosed;
+            EditorSceneSetup.onSetupLoaded += EditorSceneSetup_onSetupLoaded;
+            EditorSceneManager.sceneLoaded += SceneManager_sceneLoaded;
+            EditorSceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
+        }
+
+        private void EditorSceneSetup_onSetupLoaded(EditorSceneSetup setup)
+        {
+            Refresh();
+        }
+
+        private void EditorSceneManager_sceneClosed(Scene scene)
+        {
+            Refresh();
+        }
+
+        private void EditorSceneManager_sceneOpened(Scene scene, OpenSceneMode mode)
+        {
+            Refresh();
+        }
+
+        private void SceneManager_sceneUnloaded(Scene arg0)
+        {
+            Refresh();
+        }
+
+        private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
+        {
+            Refresh();
         }
 
         private void OnDisable()
         {
-
+            EditorSceneManager.sceneOpened -= EditorSceneManager_sceneOpened;
+            EditorSceneManager.sceneClosed -= EditorSceneManager_sceneClosed;
+            EditorSceneSetup.onSetupLoaded -= EditorSceneSetup_onSetupLoaded;
+            EditorSceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+            EditorSceneManager.sceneUnloaded -= SceneManager_sceneUnloaded;
         }
 
         public enum UserFilter
