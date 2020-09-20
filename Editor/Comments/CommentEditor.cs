@@ -4,7 +4,7 @@ using System.ComponentModel.Design;
 using System.Net.Http.Headers;
 using UnityEditor;
 using UnityEngine;
-
+using UnityEngine.Experimental.Rendering;
 
 namespace GameplayIngredients.Comments.Editor
 {
@@ -44,7 +44,9 @@ namespace GameplayIngredients.Comments.Editor
 
                 GUILayout.FlexibleSpace();
                 EditorGUI.BeginChangeCheck();
+                EditorGUI.BeginDisabledGroup(comment.message.from != CommentsWindow.user);
                 bool editRoot = DrawEditButton(this.editRoot);
+                EditorGUI.EndDisabledGroup();
                 if(EditorGUI.EndChangeCheck())
                 {
                     if (editRoot)
@@ -92,10 +94,8 @@ namespace GameplayIngredients.Comments.Editor
 
         void DrawMessage(SerializedProperty message, int replyIndex)
         {
-            GUI.backgroundColor = new Color(1, 1, 1, (replyIndex < 0 ? 0.1f : 0.2f));
             using(new EditorGUILayout.VerticalScope(Styles.message))
             {
-
                 SerializedProperty body = message.FindPropertyRelative("body");
                 SerializedProperty URL = message.FindPropertyRelative("URL");
                 SerializedProperty from = message.FindPropertyRelative("from");
@@ -173,6 +173,7 @@ namespace GameplayIngredients.Comments.Editor
                             replies.serializedObject.ApplyModifiedProperties();
                         }
                     }
+                    EditorGUILayout.Space();
                     EditorGUILayout.LabelField(body.stringValue, Styles.multiline);
 
                     if (!string.IsNullOrEmpty(URL.stringValue))
@@ -366,8 +367,6 @@ namespace GameplayIngredients.Comments.Editor
                 coloredLabel.padding = new RectOffset(12, 12, 2, 2);
 
                 message = new GUIStyle(EditorStyles.helpBox);
-                message.margin = new RectOffset(16, 2, 2, 2);
-                message.border = new RectOffset(4, 4, 4, 4);
                 SetWhiteBG(message);
 
                 miniButton = new GUIStyle(EditorStyles.miniButton);
@@ -380,9 +379,17 @@ namespace GameplayIngredients.Comments.Editor
                 reply = new GUIContent(EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/GUI/reply.png") as Texture);
             }
 
+            static Texture2D flat;
+
             static void SetWhiteBG(GUIStyle style)
             {
-                SetBGTexture(style, Texture2D.whiteTexture);
+                if(flat == null)
+                {
+                    flat = new Texture2D(1, 1, DefaultFormat.LDR, TextureCreationFlags.None);
+                    flat.SetPixel(0, 0, new Color(0.5f, 0.5f, 0.5f, 0.3f));
+                    flat.Apply();
+                }    
+                SetBGTexture(style, flat);
             }
             static void SetBGTexture(GUIStyle style, Texture2D texture)
             {

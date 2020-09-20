@@ -17,7 +17,7 @@ namespace GameplayIngredients.Comments.Editor
         private void OnEnable()
         {
             UpdateComment();
-            if(sceneComment.comment.focus)
+            if(sceneComment.comment.focus && SceneView.lastActiveSceneView != null)
                 SceneView.lastActiveSceneView.AlignViewToObject(sceneComment.transform);
         }
 
