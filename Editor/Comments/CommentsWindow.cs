@@ -76,19 +76,46 @@ namespace GameplayIngredients.Comments.Editor
         int mediumCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedPriority == CommentPriority.Medium);
         int lowCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedPriority == CommentPriority.Low);
 
-        string filter;
+        string searchFilter;
         Vector2 scrollPosition;
+
+
+        bool MatchFilter(SceneComment sc, string filter)
+        {
+            filter = filter.ToLowerInvariant();
+            return sc.gameObject.name.Contains(filter) 
+                || MatchFilter(sc.comment, filter)
+                ;
+        }
+
+        bool MatchFilter(Comment comment, string filter)
+        {
+            return comment.title.ToLowerInvariant().Contains(filter)
+                || comment.users.Any(o => o.ToLowerInvariant().Contains(filter))
+                || MatchFilter(comment.message, filter)
+                || comment.replies.Any(m => MatchFilter(m, filter))
+                ;
+        }
+
+        bool MatchFilter(CommentMessage message, string filter)
+        {
+            return message.body.ToLowerInvariant().Contains(filter)
+                || message.from.ToLowerInvariant().Contains(filter)
+                || message.targets.Any(o => o.name.ToLowerInvariant().Contains(filter))
+                || message.URL.ToLowerInvariant().Contains(filter)
+                ;
+        }
 
         private void OnGUI()
         {
             // Toolbar
-            using(new GUILayout.HorizontalScope(EditorStyles.toolbar))
+            using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
             {
                 userFilter = (UserFilter)EditorGUILayout.EnumPopup(userFilter, EditorStyles.toolbarDropDown, GUILayout.Width(140));
                 if (GUILayout.Button(EditorGUIUtility.IconContent("Refresh"), EditorStyles.toolbarButton, GUILayout.Width(24)))
                     Refresh();
 
-                filter = EditorGUILayout.DelayedTextField(filter, EditorStyles.toolbarSearchField, GUILayout.ExpandWidth(true));
+                searchFilter = EditorGUILayout.DelayedTextField(searchFilter, EditorStyles.toolbarSearchField, GUILayout.ExpandWidth(true));
 
                 showInfo = GUILayout.Toggle(showInfo, $"Info ({infoCount})", EditorStyles.toolbarButton, GUILayout.Width(48));
                 showBugs = GUILayout.Toggle(showBugs, $"Bugs ({bugCount})", EditorStyles.toolbarButton, GUILayout.Width(56));
@@ -103,7 +130,7 @@ namespace GameplayIngredients.Comments.Editor
             GUI.backgroundColor = Color.white * 1.25f;
 
             // Header
-            using(new GUILayout.HorizontalScope(EditorStyles.toolbar))
+            using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
             {
                 GUILayout.Button("Comment", Styles.header, GUILayout.Width(180));
                 GUILayout.Button("Description", Styles.header, GUILayout.Width(position.width - 461));
@@ -117,7 +144,7 @@ namespace GameplayIngredients.Comments.Editor
 
             int i = 0;
             // Lines
-            foreach(var sceneComment in sceneComments)
+            foreach (var sceneComment in sceneComments)
             {
                 if (sceneComment.comment.computedType == CommentType.Bug && !showBugs) continue;
                 if (sceneComment.comment.computedType == CommentType.Info && !showInfo) continue;
@@ -128,6 +155,9 @@ namespace GameplayIngredients.Comments.Editor
                 if (sceneComment.comment.computedPriority == CommentPriority.Low && !showLow) continue;
 
                 if (userFilter == UserFilter.MyComments && !sceneComment.comment.users.Contains(user))
+                    continue;
+
+                if (!string.IsNullOrEmpty(searchFilter) && !MatchFilter(sceneComment, searchFilter))
                     continue;
 
                 GUI.backgroundColor = (i%2 == 0)? Color.white : Color.white * 0.9f;
