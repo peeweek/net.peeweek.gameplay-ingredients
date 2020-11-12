@@ -1,5 +1,22 @@
 # Changelog
 
+## 2020.1.0
+
+The following release changes the main guidelines in order to install and update.
+
+* Installation and update now rely on Project Settings/Package Manager/Scoped Registries
+
+* Installation must declare the OpenUPM scoped registry to the project `https://package.openupm.com` with the following scopes:
+
+  * `net.peeweek`
+  * `com.dbrizov`
+
+* Once declared in the Scoped Registries, package manager shall display gameplay ingredients.
+
+#### Added
+
+* NoLabel property attribute (Hides label in inspector)
+
 ## 2019.3.7
 
 #### Added
