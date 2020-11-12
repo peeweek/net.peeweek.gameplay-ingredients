@@ -4,7 +4,7 @@ namespace GameplayIngredients.Events
 {
     public class OnUpdateEvent : EventBase
     {
-        [ReorderableList, ShowIf("AllowUpdateCalls"), InfoBox("Update Calls are disabled on this project. Check your GameplayIngredientsSettings asset if you want to allow them.", InfoBoxType.Warning, "ForbidUpdateCalls")]
+        [ReorderableList, ShowIf("AllowUpdateCalls")]
         public Callable[] OnUpdate;
 
         private void OnEnable()
