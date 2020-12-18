@@ -6,6 +6,8 @@
 
 #### Fixed
 
+* Fixed Take Screenshot Action : bad filename + tooltips
+
 ## 2019.3.6
 
 #### Added
