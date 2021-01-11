@@ -2,6 +2,10 @@
 
 ## 2019.3.7
 
+#### Added
+
+- Added option to FullScreenFadeAction to perform fade based on scaled/unscaled game time
+
 #### Fixed
 
 * Fixed Take Screenshot Action : Bad Filename + Added Tooltips
