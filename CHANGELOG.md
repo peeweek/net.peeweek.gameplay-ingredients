@@ -2,11 +2,11 @@
 
 ## 2019.3.7
 
-#### Added
-
 #### Fixed
 
-* Fixed Take Screenshot Action : bad filename + tooltips
+* Fixed Take Screenshot Action : Bad Filename + Added Tooltips
+* Fixed property name in NonNullCheck property drawer
+* Fixed Potential null in Discover Window
 
 ## 2019.3.6
 
