@@ -7,6 +7,7 @@
 #### Fixed
 
 * Fixed Take Screenshot Action : bad filename + tooltips
+* Fixed Welcome screen from showing up on domain reload.
 
 ## 2019.3.6
 
