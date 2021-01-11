@@ -7,6 +7,7 @@
 #### Fixed
 
 * Fixed Take Screenshot Action : bad filename + tooltips
+* Disabled File/New Scene from Template for 2020.2 or newer (superseded by built-in scene templates)
 
 ## 2019.3.6
 
