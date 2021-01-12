@@ -8,6 +8,7 @@
 
 #### Fixed
 
+* Fixed Welcome screen from showing up on domain reload.
 * Fixed Take Screenshot Action : Bad Filename + Added Tooltips
 * Fixed property name in NonNullCheck property drawer
 * Fixed Potential null in Discover Window
