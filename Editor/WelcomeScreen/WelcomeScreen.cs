@@ -41,13 +41,23 @@ namespace GameplayIngredients.Editor
         {
             if (showOnStartup && !GameplayIngredientsSettings.currentSettings.disableWelcomeScreenAutoStart)
                 EditorApplication.update += ShowAtStartup;
+
+            EditorApplication.quitting += EditorApplication_quitting;
+        }
+
+        const string kShowNextPreference = "GameplayIngredients.WelcomeScreen.ShowNextTime";
+
+        private static void EditorApplication_quitting()
+        {
+            EditorPrefs.SetBool(kShowNextPreference, true);
         }
 
         static void ShowAtStartup()
         {
-            if (!Application.isPlaying)
+            if (!Application.isPlaying && EditorPrefs.GetBool(kShowNextPreference, true))
             {
                 ShowFromMenu();
+                EditorPrefs.SetBool(kShowNextPreference, false);
             }
             EditorApplication.update -= ShowAtStartup;
         }
