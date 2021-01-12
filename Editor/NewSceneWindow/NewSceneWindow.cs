@@ -12,11 +12,15 @@ namespace GameplayIngredients.Editor
         const int WindowWidth = 640;
         const int WindowHeight = 380;
 
+#if UNITY_2020_2_OR_NEWER
+
+#else
         [MenuItem("File/New Scene From Template... &%N", priority = 150)]
         static void ShowNewSceneWindow()
         {
             GetWindow<NewSceneWindow>(true);
         }
+#endif
 
         private void OnEnable()
         {

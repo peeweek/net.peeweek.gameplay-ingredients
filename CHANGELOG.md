@@ -21,7 +21,15 @@ The following release changes the main guidelines in order to install and update
 
 #### Added
 
+- Added option to FullScreenFadeAction to perform fade based on scaled/unscaled game time
+
 #### Fixed
+
+* Disabled File/New Scene from Template for 2020.2 or newer (superseded by built-in scene templates)
+* Fixed Welcome screen from showing up on domain reload.
+* Fixed Take Screenshot Action : Bad Filename + Added Tooltips
+* Fixed property name in NonNullCheck property drawer
+* Fixed Potential null in Discover Window
 
 ## 2019.3.6
 
