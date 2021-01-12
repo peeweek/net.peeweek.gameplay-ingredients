@@ -4,10 +4,14 @@
 
 #### Added
 
+- Added option to FullScreenFadeAction to perform fade based on scaled/unscaled game time
+
 #### Fixed
 
-* Fixed Take Screenshot Action : bad filename + tooltips
 * Fixed Welcome screen from showing up on domain reload.
+* Fixed Take Screenshot Action : Bad Filename + Added Tooltips
+* Fixed property name in NonNullCheck property drawer
+* Fixed Potential null in Discover Window
 
 ## 2019.3.6
 

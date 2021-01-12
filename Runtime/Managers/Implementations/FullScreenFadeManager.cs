@@ -15,11 +15,17 @@ namespace GameplayIngredients
             ToBlack = 1
         }
 
+        public enum FadeTimingMode
+        {
+            UnscaledGameTime,
+            GameTime,
+        }
+
         public Image FullScreenFadePlane;
 
         private Coroutine m_Coroutine;
 
-        public void Fade(float duration, FadeMode mode, Callable[] OnComplete, GameObject instigator = null)
+        public void Fade(float duration, FadeMode mode, FadeTimingMode timingMode, Callable[] OnComplete, GameObject instigator = null)
         {
             if (m_Coroutine != null)
             {
@@ -49,10 +55,10 @@ namespace GameplayIngredients
                 switch (mode)
                 {
                     case FadeMode.ToBlack:
-                        m_Coroutine = StartCoroutine(FadeCoroutine(duration, 1.0f, 1.0f, OnComplete, instigator));
+                        m_Coroutine = StartCoroutine(FadeCoroutine(duration, 1.0f, 1.0f, timingMode, OnComplete, instigator));
                         break;
                     case FadeMode.FromBlack:
-                        m_Coroutine = StartCoroutine(FadeCoroutine(duration, 0.0f, -1.0f, OnComplete, instigator));
+                        m_Coroutine = StartCoroutine(FadeCoroutine(duration, 0.0f, -1.0f, timingMode, OnComplete, instigator));
                         break;
                     default: throw new NotImplementedException();
                 }
@@ -60,15 +66,26 @@ namespace GameplayIngredients
 
         }
 
-        IEnumerator FadeCoroutine(float duration, float target, float sign, Callable[] OnComplete, GameObject instigator)
+        IEnumerator FadeCoroutine(float duration, float target, float sign, FadeTimingMode timingMode, Callable[] OnComplete, GameObject instigator)
         {
             FullScreenFadePlane.gameObject.SetActive(true);
             Color c = FullScreenFadePlane.color;
 
             while (sign > 0 ? FullScreenFadePlane.color.a <= target : FullScreenFadePlane.color.a >= target)
             {
+                float t;
+                switch (timingMode)
+                {
+                    case FadeTimingMode.GameTime:
+                        t = Time.deltaTime;
+                        break;
+                    default:
+                    case FadeTimingMode.UnscaledGameTime:
+                        t = Time.unscaledDeltaTime;
+                        break;
+                }
                 c = FullScreenFadePlane.color;
-                c.a += sign * Time.unscaledDeltaTime / duration;
+                c.a += sign * t / duration;
                 FullScreenFadePlane.color = c;
                 yield return new WaitForEndOfFrame();
             }
