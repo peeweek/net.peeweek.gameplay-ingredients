@@ -46,7 +46,7 @@ openupm add net.peeweek.gameplay-ingredients
 
 - Ensure you have a **[Command Line Git](https://gitforwindows.org/) Installed**
 - With Unity 2019.3 closed, edit the `Packages/manifest.json` with a text editor
-- Append the line `    "net.peeweek.gameplay-ingredients": "https://github.com/peeweek/net.peeweek.gameplay-ingredients.git#2019.3.6",` under `dependencies`
+- Append the line `    "net.peeweek.gameplay-ingredients": "https://github.com/peeweek/net.peeweek.gameplay-ingredients.git#2019.3.7",` under `dependencies`
 
 You can check that the package was imported by looking at the project window, under Packages/ Hierarchy, there should be a `Gameplay Ingredients` hierarchy
 
