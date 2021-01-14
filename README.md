@@ -8,20 +8,31 @@ Gameplay Ingredients for your Unity Games - A collection of scripts that ease si
 
 ## Requirements
 
-* **Unity 2020.2** (Older versions compatible with 2018.3 / 2019.1 / 2019.2 / 2019.3 / 2019.4 / 2020.1)
-* Package Manager UI
-* (**Optional** : Command-line Git installed on your system, for example [Git For Windows](https://gitforwindows.org/))
+* **Unity 2020.2** (Older versions compatible with 2018.3 / 2019.1 / 2019.2 / 2019.3 / 2020.1)
+* (**Optional, for older versions or development** : Command-line Git installed on your system, for example [Git For Windows](https://gitforwindows.org/))
 
-## How to install
+## How to install (2020.2 and Newer)
 
-### Install as Local Package
+* In Unity, Open **Project Settings** Window (Edit/Project Settings) and navigate to **Package Manager**
+* Add a new **Scoped Registry** that references the [openupm registry](https://openupm.com): `https://package.openupm.com`
+* Add the following scopes to the OpenUPM Scoped Registry : `com.dbrizov`, `net.peeweek` 
 
-You can use a manual, local package installation if you need to alter the code locally or update the code base regularly. 
+![](https://raw.githubusercontent.com/peeweek/net.peeweek.gameplay-ingredients/master/Documentation%7E/Images/project-settings.png)
 
-- Clone this repository somewhere of your liking
-- In your project, open the `Window/Package Manager` window and use the + button to select the `Add Package from Disk...` option.
-- Navigate to your repository folder and select the `package.json` file
-- The package shall be added as a **local package**
+* Open the Package Manager window (Window/Package Manager) and Select **Packages : My Registries** in the toolbar.
+* Select Gameplay Ingredients in the list, then click the Install Button
+
+## How to install as Local Package (2020.2 and Newer)
+
+* Clone the repository.
+* In Unity, Open **Project Settings** Window (Edit/Project Settings) and navigate to **Package Manager**
+* Add a new **Scoped Registry** that references the [openupm registry](https://openupm.com): `https://package.openupm.com`
+* Add the following scopes to the OpenUPM Scoped Registry : `com.dbrizov`, `net.peeweek` 
+
+* Open the Package Manager window (Window/Package Manager)
+* Click the plus button, select "Add Pacakge from disk" and locate the `package.json` file located at the root of the package.
+
+## How to install (2019.3.x and Older)
 
 ### Install via OpenUPM
 
@@ -43,9 +54,10 @@ You can check that the package was imported by looking at the project window, un
 
 Gameplay Ingredients comes at latest version with the following compatibility:
 
-**Unity 2019.3** : clone and check out the `master` branch at the tag `2019.3.7` 
+**Unity 2020.2 +** : choose the tag  `2020.2.0` 
 
 #### Older Versions
 
 * **Unity 2018.3 / 2018.4 :** choose the tag `2018.3.0`
 * **Unity 2019.1 / 2019.2 :** choose the tag `2019.1.2` 
+* **Unity 2019.3 / 2020.1**  : choose the  the tag `2019.3.7` 

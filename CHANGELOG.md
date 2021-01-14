@@ -1,5 +1,24 @@
 # Changelog
 
+## 2020.2.0
+
+This release changes the minimal version to **Unity 2020.2**
+
+The following release changes the main guidelines in order to install and update:
+
+* Installation and update now rely on Project Settings/Package Manager/Scoped Registries
+
+* Installation must declare the OpenUPM scoped registry to the project `https://package.openupm.com` with the following scopes:
+
+  * `net.peeweek`
+  * `com.dbrizov` (used for NaughtyAttributes dependency, minimal version 2.0.8)
+
+* Once declared in the Scoped Registries, package manager shall display gameplay ingredients.
+
+#### Added
+
+* NoLabel property attribute (Hides label in inspector)
+
 ## 2019.3.7
 
 #### Added
