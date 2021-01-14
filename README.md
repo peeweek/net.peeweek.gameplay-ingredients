@@ -8,7 +8,7 @@ Gameplay Ingredients for your Unity Games - A collection of scripts that ease si
 
 ## Requirements
 
-* **Unity 2019.3** (Older versions compatible with 2018.3 / 2019.1 / 2019.2)
+* **Unity 2020.2** (Older versions compatible with 2018.3 / 2019.1 / 2019.2 / 2019.3 / 2019.4 / 2020.1)
 * Package Manager UI
 * (**Optional** : Command-line Git installed on your system, for example [Git For Windows](https://gitforwindows.org/))
 
@@ -43,7 +43,7 @@ You can check that the package was imported by looking at the project window, un
 
 Gameplay Ingredients comes at latest version with the following compatibility:
 
-**Unity 2019.3** : clone and check out the `master` branch at the tag `2019.3.6` 
+**Unity 2019.3** : clone and check out the `master` branch at the tag `2019.3.7` 
 
 #### Older Versions
 
