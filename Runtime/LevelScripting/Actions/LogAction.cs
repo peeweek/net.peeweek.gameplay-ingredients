@@ -12,7 +12,7 @@ namespace GameplayIngredients.Actions
 %TIME% : Time (since startup)
 ";
 
-        [Multiline, InfoBox(kHelpText, InfoBoxType.Normal)]
+        [Multiline, InfoBox(kHelpText, EInfoBoxType.Normal)]
         public string LogText = "Instigator = %INSTIGATOR%";
         public LogType type = LogType.Log;
 

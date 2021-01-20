@@ -9,7 +9,7 @@ namespace GameplayIngredients
     [ManagerDefaultPrefab("GameSaveManager")]
     public class GameSaveManager : Manager
     {
-        [InfoBox(@"Use PlayerPrefs will store save data in common target platform registry instead of individual files. For some platforms where writing on disk is forbidden, this is required.", InfoBoxType.Normal)]
+        [InfoBox(@"Use PlayerPrefs will store save data in common target platform registry instead of individual files. For some platforms where writing on disk is forbidden, this is required.", EInfoBoxType.Normal)]
         public bool UsePlayerPrefs = false;
 
         [DisableIf("UsePlayerPrefs"), SerializeField, Tooltip("The path where system and user saves will be stored. Relative to the Application.persistantDataPath folder.")]
