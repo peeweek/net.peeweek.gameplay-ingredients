@@ -6,6 +6,7 @@
 
 * Fixed Manager Init Logging : now dependant of Gameplay Ingredients Settings verbose calls boolean.
 * Added More information to Null Logging in ToggleBehaviourAction, ToggleGameObjectAction, ToggleUIAction
+* Removed "BestFit" option from Default GameSaveManager text prefab
 
 ## 2020.2.0
 
