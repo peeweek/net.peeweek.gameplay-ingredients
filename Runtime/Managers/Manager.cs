@@ -39,12 +39,14 @@ namespace GameplayIngredients
 
             var exclusionList = GameplayIngredientsSettings.currentSettings.excludedeManagers;
 
-            Debug.Log("Initializing all Managers...");
+            if(GameplayIngredientsSettings.currentSettings.verboseCalls)
+                Debug.Log("Initializing all Managers...");
+
             foreach(var type in kAllManagerTypes)
             {
                 if(exclusionList != null && exclusionList.ToList().Contains(type.Name))
                 {
-                    Debug.Log($"Manager : {type.Name} is in GameplayIngredientSettings.excludedeManagers List: ignoring Creation");
+                    Debug.LogWarning($"Manager : {type.Name} is in GameplayIngredientSettings.excludedeManagers List: ignoring Creation");
                     continue;
                 }
                 var attrib = type.GetCustomAttribute<ManagerDefaultPrefabAttribute>(); 
@@ -79,7 +81,8 @@ namespace GameplayIngredients
                 var comp = (Manager)gameObject.GetComponent(type);
                 s_Managers.Add(type,comp);
 
-                Debug.Log(string.Format(" -> <{0}> OK", type.Name));
+                if (GameplayIngredientsSettings.currentSettings.verboseCalls)
+                    Debug.Log(string.Format(" -> <{0}> OK", type.Name));
             }
         }
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2020.2.1
+
+#### Fixed
+
+* Fixed Manager Init Logging : now dependant of Gameplay Ingredients Settings verbose calls boolean.
+
 ## 2020.2.0
 
 This release changes the minimal version to **Unity 2020.2**
