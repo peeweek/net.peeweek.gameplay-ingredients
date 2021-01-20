@@ -1,5 +1,11 @@
 # Changelog
 
+### 2020.2.2
+
+#### Fixed
+
+* **BEHAVIOR CHANGE/FIX** : Managers are now initialized during `BeforeSceneLoad` both in editor and runtime to prevent behavior discrepancies and rare `Resource.Load<>()` issues. 
+
 ## 2020.2.1
 
 #### Fixed
@@ -40,7 +46,6 @@ The following release changes the main guidelines in order to install and update
 * Fixed Take Screenshot Action : Bad Filename + Added Tooltips
 * Fixed property name in NonNullCheck property drawer
 * Fixed Potential null in Discover Window
-* **BEHAVIOR CHANGE/FIX** : Managers are now initialized during `BeforeSceneLoad` both in editor and runtime to prevent behavior discrepancies and rare `Resource.Load<>()` issues. 
 
 ## 2019.3.6
 
