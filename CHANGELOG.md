@@ -5,6 +5,7 @@
 #### Fixed
 
 * Fixed Manager Init Logging : now dependant of Gameplay Ingredients Settings verbose calls boolean.
+* Added More information to Null Logging in ToggleBehaviourAction, ToggleGameObjectAction, ToggleUIAction
 
 ## 2020.2.0
 
