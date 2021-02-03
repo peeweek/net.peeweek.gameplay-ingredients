@@ -1,5 +1,11 @@
 # Changelog
 
+## 2020.2.2
+
+#### Added
+
+* Added Help Integration
+
 ## 2020.2.1
 
 #### Fixed

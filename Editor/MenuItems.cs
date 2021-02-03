@@ -145,11 +145,95 @@ namespace GameplayIngredients.Editor
 
         #region HELP
 
-        [MenuItem("Help/Gameplay Ingredients/Documentation")]
-        static void Help()
+        const string kBaseHelp = "https://peeweek.readthedocs.io/en/latest/gameplay-ingredients/";
+        static void OpenHelp(string page)
         {
-            Application.OpenURL("https://peeweek.readthedocs.io/en/latest/gameplay-ingredients/");
+            Application.OpenURL($"{kBaseHelp}{page}/");
         }
+
+        static void OpenHelp()
+        {
+            Application.OpenURL(kBaseHelp);
+        }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Table of Contents")]
+        static void Help_StartPage() { OpenHelp(); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Installing")]
+        static void Help_Install() { OpenHelp("install"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Settings Asset")]
+        static void Help_Settings() { OpenHelp("settings"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Version Compatibility")]
+        static void Help_Versions() { OpenHelp("versions"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Getting Involved")]
+        static void Help_Contribute() { OpenHelp("engage"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Runtime/Events,Logic and Actions")]
+        static void Help_EventLogicActions() { OpenHelp("events-logic-actions"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Runtime/Callables")]
+        static void Help_Callables() { OpenHelp("callable"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Runtime/Managers")]
+        static void Help_Managers() { OpenHelp("managers"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Runtime/Messager")]
+        static void Help_Messager() { OpenHelp("messager"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Runtime/Rigs")]
+        static void Help_Rigs() { OpenHelp("rigs"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Runtime/State Machines")]
+        static void Help_StateMachines() { OpenHelp("state-machines"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Runtime/Factories")]
+        static void Help_Factories() { OpenHelp("factories"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Runtime/Timers")]
+        static void Help_Timers() { OpenHelp("timers"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Runtime/Global and Local Variables")]
+        static void Help_Globals() { OpenHelp("globals"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Runtime/Counters")]
+        static void Help_Counters() { OpenHelp("counters"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Runtime/Interactive")]
+        static void Help_Interactive() { OpenHelp("interactive"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Editor/Welcome Screen")]
+        static void Help_WelcomeScreen() { OpenHelp("welcome-screen"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Editor/Play from Here")]
+        static void Help_PlayFromHere() { OpenHelp("play-from-here"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Editor/Advanced Hierarchy View")]
+        static void Help_AdvHierarchy() { OpenHelp("hierarchy-hints"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Editor/Link Game View")]
+        static void Help_LinkGameView() { OpenHelp("link-game-view"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Editor/Scene Point-of-Views")]
+        static void Help_ScenePOV() { OpenHelp("scene-pov"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Editor/Scene Setups")]
+        static void Help_SceneSetups() { OpenHelp("scene-setups"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Editor/Find and Replace")]
+        static void Help_FindReplace() { OpenHelp("find-and-replace"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Editor/Callable tree Explorer")]
+        static void Help_CallableTreeExplorer() { OpenHelp("callable-tree-explorer"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Editor/Folders")]
+        static void Help_Folders() { OpenHelp("folders"); }
+
+        [MenuItem("Help/Gameplay Ingredients/Documentation/Editor/Discover")]
+        static void Help_Discover() { OpenHelp("discover"); }
+
 
         [MenuItem("Help/Gameplay Ingredients/GitHub Repository (Issues and Releases)")]
         static void GitHub()
@@ -164,6 +248,6 @@ namespace GameplayIngredients.Editor
         }
 
 
-        #endregion
+#endregion
     }
 }
