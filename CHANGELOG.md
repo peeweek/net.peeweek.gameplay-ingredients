@@ -6,6 +6,10 @@
 
 * Added generic `bool Manager.TryGet<T>(out T manager)`
 
+#### Fixed
+
+* **BEHAVIOR CHANGE/FIX** : Managers are now initialized during `BeforeSceneLoad` both in editor and runtime to prevent behavior discrepancies and rare `Resource.Load<>()` issues. 
+
 ## 2020.2.1
 
 #### Fixed

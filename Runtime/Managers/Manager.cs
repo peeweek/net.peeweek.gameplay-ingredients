@@ -40,11 +40,7 @@ namespace GameplayIngredients
 
         static readonly Type[] kAllManagerTypes = GetAllManagerTypes();
 
-#if UNITY_EDITOR
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod]
-#endif
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void AutoCreateAll()
         {
             s_Managers.Clear();
