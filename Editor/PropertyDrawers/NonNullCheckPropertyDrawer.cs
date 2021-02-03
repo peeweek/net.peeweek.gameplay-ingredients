@@ -14,7 +14,7 @@ namespace GameplayIngredients.Editor
                 bool valid = property.objectReferenceValue != null;
                 var color = GUI.backgroundColor;
                 GUI.backgroundColor = valid ? color : Color.red; 
-                EditorGUI.ObjectField(position, property, new GUIContent(ObjectNames.NicifyVariableName(property.name)));
+                EditorGUI.ObjectField(position, property);
                 GUI.backgroundColor = color;
             }
             else

@@ -33,7 +33,7 @@ namespace GameplayIngredients
         }
 
         [Header("Blueprint")]
-        [ReorderableList, NonNullCheck]
+        [ReorderableList, NoLabel, NonNullCheck]
         public GameObject[] FactoryBlueprints;
         public BlueprintSelectionMode blueprintSelecionMode = BlueprintSelectionMode.Random;
         [ShowIf("usesGameSave")]

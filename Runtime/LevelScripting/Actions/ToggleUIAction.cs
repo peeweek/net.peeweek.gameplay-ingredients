@@ -15,7 +15,7 @@ namespace GameplayIngredients.Actions
             {
                 if (target.Selectable == null)
                 {
-                    Debug.Log("Target is null, ignoring");
+                    Debug.LogWarning($"({gameObject.name}) > ToggleUIAction ({this.Name}) Target is null, ignoring", this.gameObject);
                 }
                 else
                 {
