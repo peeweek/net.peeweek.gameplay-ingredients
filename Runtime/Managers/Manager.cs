@@ -10,6 +10,18 @@ namespace GameplayIngredients
     {
         private static Dictionary<Type, Manager> s_Managers = new Dictionary<Type, Manager>();
 
+        public static bool TryGet<T>(out T manager) where T: Manager
+        {
+            manager = null;
+            if(s_Managers.ContainsKey(typeof(T)))
+            {
+                manager = (T)s_Managers[typeof(T)];
+                return true;
+            }
+            else
+                return false;
+        }
+
         public static T Get<T>() where T: Manager
         {
             if(s_Managers.ContainsKey(typeof(T)))
