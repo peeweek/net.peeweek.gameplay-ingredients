@@ -1,5 +1,11 @@
 # Changelog
 
+## 2020.2.2
+
+#### Added
+
+* Added generic `bool Manager.TryGet<T>(out T manager)`
+
 ## 2020.2.1
 
 #### Fixed
