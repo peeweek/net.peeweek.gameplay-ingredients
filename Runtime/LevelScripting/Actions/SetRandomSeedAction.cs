@@ -12,10 +12,9 @@ namespace GameplayIngredients.Actions
         [Tooltip("If New Random Seed is False. the new Random seed to apply")]
         public int newSeed;
 
-
         public override void Execute(GameObject instigator = null)
         {
-            if(Manager.TryGet<RandomManager>(out RandomManager randomManager))
+            if(Manager.TryGet(out RandomManager randomManager))
             {
                 if (newRandomSeed)
                     randomManager.SetRandomSeed(new System.Random((int)(DateTime.Now.Ticks - new DateTime(2021,1,1).Ticks)).Next());
