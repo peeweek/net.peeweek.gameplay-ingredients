@@ -11,6 +11,7 @@
 
 * **BEHAVIOR CHANGE/FIX** : Managers are now initialized during `BeforeSceneLoad` both in editor and runtime to prevent behavior discrepancies and rare `Resource.Load<>()` issues. 
 * Deprecated `KeyboardGamepadPlayerInput`  as it did not work out of the box.
+* Updated Default `Assets/FirstPersonCharacter.prefab` in Startup Packages so it uses the new `SimplePlayerInput`
 
 ## 2020.2.1
 
