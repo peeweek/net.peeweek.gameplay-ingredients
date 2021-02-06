@@ -5,6 +5,14 @@
 #### Added
 
 * Added Help Integration
+* Added generic `bool Manager.TryGet<T>(out T manager)`
+* Added `SimplePlayerInput` to supersede `KeyboardGamepadPlayerInput` 
+
+#### Fixed
+
+* **BEHAVIOR CHANGE/FIX** : Managers are now initialized during `BeforeSceneLoad` both in editor and runtime to prevent behavior discrepancies and rare `Resource.Load<>()` issues. 
+* **DEPRECATED** `KeyboardGamepadPlayerInput`  as it did not work out of the box. The behaviour has been flagged as Obsolete and It will be removed in a later major version. 
+* Updated Default `Assets/FirstPersonCharacter.prefab` in Startup Packages so it uses the new `SimplePlayerInput`
 
 ## 2020.2.1
 
