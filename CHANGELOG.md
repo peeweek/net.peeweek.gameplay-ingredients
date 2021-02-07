@@ -6,6 +6,7 @@
 
 * Added generic `bool Manager.TryGet<T>(out T manager)`
 * Added `SimplePlayerInput` to supersede `KeyboardGamepadPlayerInput` 
+* Added new **RandomManager** and **SetRandomSeedAction**: Enables setting seeds for the `UnityEngine.Random`
 
 #### Fixed
 
