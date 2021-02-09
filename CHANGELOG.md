@@ -2,7 +2,9 @@
 
 ## 2020.2.3
 
-#### 
+#### Added
+
+* Added Scene Comments feature
 
 ## 2020.2.2
 
