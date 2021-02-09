@@ -6,6 +6,7 @@ namespace GameplayIngredients.Rigs
     {
         public override int defaultPriority => 0;
         public override UpdateMode defaultUpdateMode => UpdateMode.Update;
+        public override bool canChangeUpdateMode => false;
 
         public Space Space = Space.World;
         public Vector3 RotationAxis = Vector3.up;

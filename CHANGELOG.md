@@ -2,7 +2,9 @@
 
 ## 2020.2.3
 
-#### 
+#### Added
+
+* **Refactor**: Rigs Single Update. Rigs are now behaviors that are ticked at various rates and priorities. While this refactor is supposed to match as closely as possible the order of execution of rigs, the order can change slightly (for rigs of the same priority).  
 
 ## 2020.2.2
 
