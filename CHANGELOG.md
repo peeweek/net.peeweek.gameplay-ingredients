@@ -2,13 +2,14 @@
 
 ## 2020.2.3
 
-#### 
+#### Added
+
+* Added Help items in Menu, Added HelpURL class attributes
 
 ## 2020.2.2
 
 #### Added
 
-* Added Help Integration
 * Added generic `bool Manager.TryGet<T>(out T manager)`
 * Added `SimplePlayerInput` to supersede `KeyboardGamepadPlayerInput` 
 * Added new **RandomManager** and **SetRandomSeedAction**: Enables setting seeds for the `UnityEngine.Random`
