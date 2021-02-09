@@ -1,5 +1,9 @@
 # Changelog
 
+## 2020.2.3
+
+#### 
+
 ## 2020.2.2
 
 #### Added
@@ -7,6 +11,7 @@
 * Added Help Integration
 * Added generic `bool Manager.TryGet<T>(out T manager)`
 * Added `SimplePlayerInput` to supersede `KeyboardGamepadPlayerInput` 
+* Added new **RandomManager** and **SetRandomSeedAction**: Enables setting seeds for the `UnityEngine.Random`
 
 #### Fixed
 
