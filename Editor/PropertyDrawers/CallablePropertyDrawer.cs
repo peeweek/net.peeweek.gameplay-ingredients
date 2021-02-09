@@ -3,7 +3,6 @@ using UnityEditor;
 
 namespace GameplayIngredients.Editor
 {
-  
     [CustomPropertyDrawer(typeof(Callable))]
     public class CallablePropertyDrawer : PropertyDrawer
     {

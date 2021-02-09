@@ -17,7 +17,7 @@ namespace GameplayIngredients
         [NonNullCheck]
         public Timer timer;
 
-        [InfoBox("Use the following wildcards:\n - %h : hours\n - %m : minutes\n - %s : seconds\n - %x : milliseconds", InfoBoxType.Normal)]
+        [InfoBox("Use the following wildcards:\n - %h : hours\n - %m : minutes\n - %s : seconds\n - %x : milliseconds", EInfoBoxType.Normal)]
         public string format = "%h:%m:%s:%x";
 
         private void OnValidate()

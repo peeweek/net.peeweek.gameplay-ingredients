@@ -7,11 +7,15 @@ namespace GameplayIngredients.Editor
 {
     public class SceneTemplateList : ScriptableObject
     {
+#if UNITY_2020_2_OR_NEWER
+
+#else
         [MenuItem("Assets/Create/Scene Template List", priority = 201)]
         static void CreateSceneTemplateListAsset()
         {
             AssetFactory.CreateAssetInProjectWindow<SceneTemplateList>("", "New SceneTemplateList.asset");
         }
+#endif
 
         public string ListName = "New Template List";
         public SceneWindowTemplate[] Templates;

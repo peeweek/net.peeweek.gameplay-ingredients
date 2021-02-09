@@ -27,7 +27,7 @@ namespace GameplayIngredients.Actions
             {
                 if (target.GameObject == null)
                 {
-                    Debug.Log("Target is null, ignoring");
+                    Debug.LogWarning($"({gameObject.name}) > ToggleGameObjectAction ({this.Name}) Target is null, ignoring", this.gameObject);
                 }
                 else
                 {

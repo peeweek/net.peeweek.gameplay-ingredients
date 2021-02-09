@@ -12,7 +12,7 @@ namespace GameplayIngredients.Rigs
 
         [Header("Target")]
         [SerializeField]
-        [InfoBox("Target needs to have the same parent as the current game object", InfoBoxType.Warning, "warnLocalParent")]
+        [InfoBox("Target needs to have the same parent as the current game object", EInfoBoxType.Warning)]
         protected Transform m_Target;
         [Header("Motion")]
         public float Dampen = 1.0f;

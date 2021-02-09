@@ -1,5 +1,64 @@
 # Changelog
 
+## 2020.2.3
+
+#### 
+
+## 2020.2.2
+
+#### Added
+
+* Added generic `bool Manager.TryGet<T>(out T manager)`
+* Added `SimplePlayerInput` to supersede `KeyboardGamepadPlayerInput` 
+* Added new **RandomManager** and **SetRandomSeedAction**: Enables setting seeds for the `UnityEngine.Random`
+
+#### Fixed
+
+* **BEHAVIOR CHANGE/FIX** : Managers are now initialized during `BeforeSceneLoad` both in editor and runtime to prevent behavior discrepancies and rare `Resource.Load<>()` issues. 
+* **DEPRECATED** `KeyboardGamepadPlayerInput`  as it did not work out of the box. The behaviour has been flagged as Obsolete and It will be removed in a later major version. 
+* Updated Default `Assets/FirstPersonCharacter.prefab` in Startup Packages so it uses the new `SimplePlayerInput`
+
+## 2020.2.1
+
+#### Fixed
+
+* Fixed Manager Init Logging : now dependant of Gameplay Ingredients Settings verbose calls boolean.
+* Added More information to Null Logging in ToggleBehaviourAction, ToggleGameObjectAction, ToggleUIAction
+* Removed "BestFit" option from Default GameSaveManager text prefab
+
+## 2020.2.0
+
+This release changes the minimal version to **Unity 2020.2**
+
+The following release changes the main guidelines in order to install and update:
+
+* Installation and update now rely on Project Settings/Package Manager/Scoped Registries
+
+* Installation must declare the OpenUPM scoped registry to the project `https://package.openupm.com` with the following scopes:
+
+  * `net.peeweek`
+  * `com.dbrizov` (used for NaughtyAttributes dependency, minimal version 2.0.8)
+
+* Once declared in the Scoped Registries, package manager shall display gameplay ingredients.
+
+#### Added
+
+* NoLabel property attribute (Hides label in inspector)
+
+## 2019.3.7
+
+#### Added
+
+- Added option to FullScreenFadeAction to perform fade based on scaled/unscaled game time
+
+#### Fixed
+
+* Disabled File/New Scene from Template for 2020.2 or newer (superseded by built-in scene templates)
+* Fixed Welcome screen from showing up on domain reload.
+* Fixed Take Screenshot Action : Bad Filename + Added Tooltips
+* Fixed property name in NonNullCheck property drawer
+* Fixed Potential null in Discover Window
+
 ## 2019.3.6
 
 #### Added
