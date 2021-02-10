@@ -106,6 +106,8 @@ namespace GameplayIngredients.Editor
                 }
             }
 
+            selectedRig = null;
+
             m_NeedReload = false;
         }
 

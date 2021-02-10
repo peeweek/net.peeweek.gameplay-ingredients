@@ -53,10 +53,10 @@ namespace GameplayIngredients.Editor
 
         protected override void OnDisable()
         {
-            base.OnDisable();
-
             if (trackedEditors.ContainsKey(serializedObject.targetObject as Rig))
                 trackedEditors.Remove(serializedObject.targetObject as Rig);
+
+            base.OnDisable();
         }
 
         float m_pingValue;
