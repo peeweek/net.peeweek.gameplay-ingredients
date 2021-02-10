@@ -1,9 +1,10 @@
 using GameplayIngredients.Rigs;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameplayIngredients.Editor
 {
@@ -27,16 +28,38 @@ namespace GameplayIngredients.Editor
             titleContent = new GUIContent("Rigs Debug",EditorGUIUtility.IconContent("UnityEditor.ProfilerWindow").image);
             Reload();
             m_FilterString = string.Empty;
+            SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+            SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
+            EditorSceneManager.sceneOpened += EditorSceneManager_sceneOpened;
+            EditorSceneManager.sceneClosed += EditorSceneManager_sceneClosed;
         }
-
         private void OnDisable()
         {
-            
+            SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+            SceneManager.sceneUnloaded -= SceneManager_sceneUnloaded;
+            EditorSceneManager.sceneOpened -= EditorSceneManager_sceneOpened;
+            EditorSceneManager.sceneClosed -= EditorSceneManager_sceneClosed;
         }
+
+        private void EditorSceneManager_sceneClosed(Scene scene) { RequestReload(); }
+
+        private void EditorSceneManager_sceneOpened(Scene scene, OpenSceneMode mode) { RequestReload(); }
+ 
+        private void SceneManager_sceneUnloaded(Scene arg0) { RequestReload(); }
+
+        private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1) { RequestReload(); }
+
 
         Dictionary<int, List<Rig>> updateRigs;
         Dictionary<int, List<Rig>> fixedUpdateRigs;
         Dictionary<int, List<Rig>> lateUpdateRigs;
+
+        bool m_NeedReload = false;
+        void RequestReload()
+        {
+            m_NeedReload = true;
+            Repaint();
+        }
 
         void Reload()
         {
@@ -82,6 +105,8 @@ namespace GameplayIngredients.Editor
                         throw new NotImplementedException();
                 }
             }
+
+            m_NeedReload = false;
         }
 
         const string kPrefix = "GameplayIngredients.RigDebugWindow.Foldout.";
@@ -89,6 +114,9 @@ namespace GameplayIngredients.Editor
         Vector2 scroll;
         private void OnGUI()
         {
+            if (m_NeedReload)
+                Reload();
+
             using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
             {
                 if (GUILayout.Button("Reload", EditorStyles.toolbarButton))
