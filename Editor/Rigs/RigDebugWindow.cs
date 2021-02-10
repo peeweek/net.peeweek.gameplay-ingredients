@@ -26,6 +26,7 @@ namespace GameplayIngredients.Editor
         {
             titleContent = new GUIContent("Rigs Debug",EditorGUIUtility.IconContent("UnityEditor.ProfilerWindow").image);
             Reload();
+            m_FilterString = string.Empty;
         }
 
         private void OnDisable()
