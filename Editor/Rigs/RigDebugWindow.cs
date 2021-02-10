@@ -84,10 +84,17 @@ namespace GameplayIngredients.Editor
         }
 
         const string kPrefix = "GameplayIngredients.RigDebugWindow.Foldout.";
-
+        string m_FilterString;
         Vector2 scroll;
         private void OnGUI()
         {
+            using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
+            {
+                if (GUILayout.Button("Reload", EditorStyles.toolbarButton))
+                    Reload();
+                GUILayout.FlexibleSpace();
+                m_FilterString = EditorGUILayout.DelayedTextField(m_FilterString, EditorStyles.toolbarSearchField);
+            }
             EditorGUILayout.BeginScrollView(scroll);
             DrawDictEntries(updateRigs, "Update", "update");
             DrawDictEntries(fixedUpdateRigs, "FixedUpdate", "fixedupdate");
@@ -107,6 +114,13 @@ namespace GameplayIngredients.Editor
                             using (new EditorGUI.IndentLevelScope(1))
                                 foreach (var rig in dict[key])
                                 {
+                                    // Filter upon string
+                                    if (m_FilterString != string.Empty &&
+                                        !rig.gameObject.name.ToLower().Contains(m_FilterString.ToLower()) &&
+                                        !rig.GetType().Name.ToLower().Contains(m_FilterString.ToLower())
+                                        )
+                                        continue;
+
                                     Rect r = EditorGUILayout.BeginHorizontal();
                                     if (isSelected(rig))
                                         EditorGUI.DrawRect(r, new Color(15f / 256 , 128f / 256, 190f / 256));
