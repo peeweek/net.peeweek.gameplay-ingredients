@@ -153,12 +153,19 @@ namespace GameplayIngredients.Editor
                                         continue;
 
                                     Rect r = EditorGUILayout.BeginHorizontal();
+
                                     if (isSelected(rig))
                                         EditorGUI.DrawRect(r, new Color(15f / 256 , 128f / 256, 190f / 256));
 
                                     var texture = EditorGUIUtility.ObjectContent(rig, rig.GetType()).image;
                                         GUILayout.Space(EditorGUI.indentLevel * 16);
-                                        if (GUILayout.Button(new GUIContent($"{rig.gameObject.name} ({rig.GetType().Name})", texture), RigStyle(rig)))
+
+                                    if (rig == null)
+                                    {
+                                        GUILayout.Label("(Deleted Rig Object)");
+                                        EditorGUILayout.EndHorizontal();
+                                        continue;
+                                    } else if (GUILayout.Button(new GUIContent($"{rig.gameObject.name} ({rig.GetType().Name})", texture), RigStyle(rig)))
                                             SelectRig(rig);
 
                                     EditorGUILayout.EndHorizontal();
@@ -187,7 +194,7 @@ namespace GameplayIngredients.Editor
 
         bool isSelected(Rig rig)
         {
-            return rig == selectedRig;
+            return rig != null && rig == selectedRig;
         }
 
         bool Foldout(string label, string name, bool defaultValue = true)

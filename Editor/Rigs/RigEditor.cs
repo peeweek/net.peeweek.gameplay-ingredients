@@ -53,8 +53,16 @@ namespace GameplayIngredients.Editor
 
         protected override void OnDisable()
         {
-            if (trackedEditors.ContainsKey(serializedObject.targetObject as Rig))
-                trackedEditors.Remove(serializedObject.targetObject as Rig);
+            if (serializedObject != null && serializedObject.targetObject != null)
+            {
+                if (trackedEditors.ContainsKey(serializedObject.targetObject as Rig))
+                    trackedEditors.Remove(serializedObject.targetObject as Rig);
+            }
+            else // Delete or scene change
+            {
+                trackedEditors.Clear();
+            }
+
 
             base.OnDisable();
         }
