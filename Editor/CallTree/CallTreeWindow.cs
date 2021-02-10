@@ -18,7 +18,7 @@ namespace GameplayIngredients.Editor
     public class CallTreeWindow : EditorWindow
     {
         CallTreeView m_TreeView;
-        [MenuItem("Window/Gameplay Ingredients/Callable Tree Explorer", priority = MenuItems.kWindowMenuPriority)]
+        [MenuItem("Window/Gameplay Ingredients/Callable Tree Explorer", priority = MenuItems.kWindowMenuPriority + 30)]
         static void OpenWindow()
         {
             s_Instance = GetWindow<CallTreeWindow>();

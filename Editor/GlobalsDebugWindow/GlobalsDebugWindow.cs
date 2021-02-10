@@ -8,7 +8,7 @@ namespace GameplayIngredients.Editor
 {
     public class GlobalsDebugWindow : EditorWindow
     {
-        [MenuItem("Window/Gameplay Ingredients/Globals Debug")]
+        [MenuItem("Window/Gameplay Ingredients/Globals Debug", priority = MenuItems.kWindowMenuPriority + 30)]
         static void Open()
         {
             GetWindow<GlobalsDebugWindow>();
