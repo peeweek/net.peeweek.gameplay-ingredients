@@ -82,7 +82,6 @@ namespace GameplayIngredients.Editor
                     m_TreeView.SetStringFilter(filter);
                 }
 
-
                 Rect buttonRect = GUILayoutUtility.GetRect(52, 16);
                 if (GUI.Button(buttonRect, "Filter", EditorStyles.toolbarDropDown))
                 {
