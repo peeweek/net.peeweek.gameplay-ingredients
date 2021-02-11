@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System;
-using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
@@ -12,20 +9,28 @@ using GameplayIngredients.Logic;
 using GameplayIngredients.Actions;
 using GameplayIngredients.StateMachines;
 using UnityEngine.SceneManagement;
+using GameplayIngredients.Rigs;
 
 namespace GameplayIngredients.Editor
 {
-    public class CallTreeWindow : EditorWindow
+    public class IngredientsExplorerWindow : EditorWindow
     {
         CallTreeView m_TreeView;
-        [MenuItem("Window/Gameplay Ingredients/Callable Tree Explorer", priority = MenuItems.kWindowMenuPriority + 30)]
-        static void OpenWindow()
+        [MenuItem("Window/Gameplay Ingredients/Ingredients Explorer", priority = MenuItems.kWindowMenuPriority + 30)]
+        internal static void OpenWindow()
         {
-            s_Instance = GetWindow<CallTreeWindow>();
+            s_Instance = GetWindow<IngredientsExplorerWindow>();
+        }
+
+        internal static void OpenWindow(MonoBehaviour selected)
+        {
+            OpenWindow();
+            s_Instance.Repaint();
+            s_Instance.SelectItem(selected);
         }
 
         public static bool visible = false;
-        static CallTreeWindow s_Instance;
+        static IngredientsExplorerWindow s_Instance;
 
         private void OnDisable()
         {
@@ -37,7 +42,7 @@ namespace GameplayIngredients.Editor
         {
             nodeRoots = new Dictionary<string, List<CallTreeNode>>();
             m_TreeView = new CallTreeView(nodeRoots);
-            titleContent = new GUIContent("Callable Tree Explorer", CallTreeView.Styles.Callable);
+            titleContent = new GUIContent("Ingredients Explorer", CallTreeView.Styles.Callable);
             ReloadCallHierarchy();
             EditorSceneManager.sceneOpened += Reload;
             EditorSceneSetup.onSetupLoaded += ReloadSetup;
@@ -103,6 +108,12 @@ namespace GameplayIngredients.Editor
             m_TreeView.OnGUI(r);
         }
 
+        void SelectItem(MonoBehaviour target)
+        {
+            int selected = m_TreeView.FindID(target);
+            m_TreeView.SetSelection(new[] { selected }, TreeViewSelectionOptions.RevealAndFrame);
+        }
+
         Dictionary<string, List<CallTreeNode>> nodeRoots;
 
         List<MonoBehaviour> erroneous;
@@ -120,6 +131,7 @@ namespace GameplayIngredients.Editor
             AddToCategory<StateMachine>("State Machines");
             AddToCategory<Factory>("Factories");
             AddToCategory<SendMessageAction>("Messages");
+            AddRigs();
             CollectErroneousCallables();
             m_TreeView.Reload();
         }
@@ -141,6 +153,45 @@ namespace GameplayIngredients.Editor
         {
             if (!erroneous.Contains(bhv))
                 erroneous.Add(bhv);
+        }
+
+        void AddRigs()
+        {
+            // Populate rigs
+            Dictionary<Rig.UpdateMode, Dictionary<int, List<Rig>>> allRigs = new Dictionary<Rig.UpdateMode, Dictionary<int, List<Rig>>>();
+
+            var list = FindObjectsOfType<Rig>().ToList();
+            if (list.Count == 0)
+                return;
+
+            foreach(var rig in list)
+            {
+                if (!allRigs.ContainsKey(rig.updateMode))
+                    allRigs.Add(rig.updateMode, new Dictionary<int, List<Rig>>());
+
+                if (!allRigs[rig.updateMode].ContainsKey(rig.rigPriority))
+                    allRigs[rig.updateMode].Add(rig.rigPriority, new List<Rig>());
+
+                allRigs[rig.updateMode][rig.rigPriority].Add(rig);
+            }
+
+            // Construct tree
+            nodeRoots.Add("Rigs", new List<CallTreeNode>());
+            var listRoot = nodeRoots["Rigs"];
+            foreach(var updateMode in allRigs.Keys)
+            {
+                var group = GetGroupNode($"Update Mode: {updateMode}");
+                foreach(var index in allRigs[updateMode].Keys.OrderBy(o => o))
+                {
+                    var indexGroup = GetGroupNode($"Priority : #{index}");
+                    foreach(var rig in allRigs[updateMode][index])
+                    {
+                        indexGroup.Children.Add(new CallTreeNode(rig, CallTreeNodeType.Rig, $"{rig.gameObject.name} ({rig.GetType().Name})"));
+                    }
+                    group.Children.Add(indexGroup);
+                }
+                listRoot.Add(group);
+            }
         }
 
         void AddToCategory<T>(string name) where T:MonoBehaviour
@@ -270,6 +321,11 @@ namespace GameplayIngredients.Editor
             }
         }
 
+        CallTreeNode GetGroupNode(string name)
+        {
+            return new CallTreeNode(null, CallTreeNodeType.Group, name);
+        }
+
 
         CallTreeNode GetStateMachineNode(StateMachine sm, Stack<object> stack)
         {
@@ -339,7 +395,7 @@ namespace GameplayIngredients.Editor
         CallTreeNodeType GetType(MonoBehaviour bhv)
         {
             if (bhv == null)
-                return CallTreeNodeType.Callable;
+                return CallTreeNodeType.Group;
             else if (bhv is EventBase)
                 return CallTreeNodeType.Event;
             else if (bhv is LogicBase)
@@ -396,7 +452,9 @@ namespace GameplayIngredients.Editor
             Message,
             StateMachine,
             State,
-            Factory
+            Factory,
+            Rig,
+            Group,
         }
 
         class CallTreeView : TreeView
@@ -471,10 +529,10 @@ namespace GameplayIngredients.Editor
                     treeRoot.AddChild(currentRoot);
                     foreach (var node in kvp.Value)
                     {
-                        if (node.Filter(m_filter, m_StringFilter))
-                        {
-                            currentRoot.AddChild(GetNode(node, ref id, 1));
-                        }
+                        if (node.Type != CallTreeNodeType.Group && !node.Filter(m_filter, m_StringFilter))
+                            continue;
+
+                        currentRoot.AddChild(GetNode(node, ref id, 1));
                     }
                 }
                 if (treeRoot.children == null)
@@ -483,6 +541,14 @@ namespace GameplayIngredients.Editor
                 }
 
                 return treeRoot;
+            }
+
+            public int FindID(MonoBehaviour target)
+            {
+                if (m_Bindings.Any(o => o.Value.Target == target))
+                    return m_Bindings.Where(o => o.Value.Target == target).First().Key;
+                else
+                    return int.MinValue;
             }
 
             TreeViewItem GetNode(CallTreeNode node, ref int id, int depth)
@@ -494,6 +560,10 @@ namespace GameplayIngredients.Editor
 
                 foreach(var child in node.Children)
                 {
+                    // If this is a group, filter all its direct children
+                    if (node.Type == CallTreeNodeType.Group && !child.Filter(m_filter, m_StringFilter))
+                        continue;
+
                     item.AddChild(GetNode(child, ref id, depth + 1));
                 }
                 return item;
@@ -511,6 +581,10 @@ namespace GameplayIngredients.Editor
                 switch(type)
                 {
                     default:
+                    case CallTreeNodeType.Group:
+                        return Styles.Group;
+                    case CallTreeNodeType.Rig:
+                        return Styles.Rig;
                     case CallTreeNodeType.Callable:
                         return Styles.Callable;
                     case CallTreeNodeType.Action:
@@ -537,12 +611,21 @@ namespace GameplayIngredients.Editor
 
                 base.SelectionChanged(selectedIds);
                 if (selectedIds.Count > 0 && m_Bindings.ContainsKey(selectedIds[0]))
-                    Selection.activeObject = m_Bindings[selectedIds[0]].Target.gameObject;
+                    if(m_Bindings[selectedIds[0]].Target != null)
+                    {
+                        var node = m_Bindings[selectedIds[0]];
+                        Selection.activeObject = node.Target;
+
+                        if (node.Type == CallTreeNodeType.Rig)
+                            RigEditor.PingObject(node.Target as Rig);
+                    }
             }
 
             public static class Styles
             {
+                public static Texture2D Group = null;
                 public static Texture2D Callable = Icon("Misc/ic-callable.png");
+                public static Texture2D Rig = Icon("Misc/ic-callable.png");
                 public static Texture2D Action = Icon("Actions/ic-action-generic.png");
                 public static Texture2D Logic = Icon("Logic/ic-generic-logic.png");
                 public static Texture2D Event = Icon("Events/ic-event-generic.png");

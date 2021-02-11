@@ -122,7 +122,6 @@ namespace GameplayIngredients.Editor
                         NaughtyEditorGUI.PropertyField_Layout(m_UpdateMode, true);
                         NaughtyEditorGUI.PropertyField_Layout(m_RigPriority, true);
                     }
-                    
                 }
 
                 GUILayout.Space(8);
@@ -130,7 +129,7 @@ namespace GameplayIngredients.Editor
                 if (GUILayout.Button(EditorGUIUtility.IconContent("UnityEditor.ProfilerWindow"), GUILayout.Width(48), GUILayout.ExpandHeight(true)))
                 {
                     // Open Debug Window
-                    RigDebugWindow.OpenWindow(this.serializedObject.targetObject as Rig);
+                    IngredientsExplorerWindow.OpenWindow(this.serializedObject.targetObject as Rig);
                 }
             }
 
