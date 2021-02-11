@@ -7,6 +7,7 @@
 * **Refactor**: Rigs Single Update. Rigs are now behaviors that are ticked at various rates and priorities. While this refactor is supposed to match as closely as possible the order of execution of rigs, the order can change slightly (for rigs of the same priority).  
 * Renamed **Call Tree Explorer** to **Ingredients Explorer** as it is more general purpose now. 
 * Added Rigs to **Ingredients Explorer** : that view summarizes currently loaded rigs, and groups them in update groups.
+* Added abstract `PingableEditor` class for MonoBehaviours that can be Pinged to stand out in the inspector.
 
 ## 2020.2.2
 
