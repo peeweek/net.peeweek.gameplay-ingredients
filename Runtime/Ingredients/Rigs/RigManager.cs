@@ -61,7 +61,14 @@ namespace GameplayIngredients.Rigs
         public void RemoveRig(Rig rig)
         {
             Dictionary<int, List<Rig>> dict;
-            switch (rig.updateMode)
+
+            Rig.UpdateMode updateMode;
+            if (rig.canChangeUpdateMode)
+                updateMode = rig.updateMode;
+            else
+                updateMode = rig.defaultUpdateMode;
+
+            switch (updateMode)
             {
                 default:
                 case Rig.UpdateMode.Update:
@@ -76,9 +83,14 @@ namespace GameplayIngredients.Rigs
             }
 
             int priority = rig.rigPriority;
+
             if (dict.ContainsKey(priority) && dict[priority].Contains(rig))
             {
                 dict[priority].Remove(rig);
+            }
+            else
+            {
+                Debug.LogError($"Could not remove rig {rig.gameObject.name} ({rig.GetType().Name}) from {updateMode}/#{priority.ToString()}");
             }
 
             if(dict.ContainsKey(priority) && dict[priority].Count == 0)
