@@ -19,6 +19,13 @@ namespace GameplayIngredients.Rigs
             m_FixedUpdateRigs = new Dictionary<int, List<Rig>>();
         }
 
+        private void OnDisable()
+        {
+            m_UpdateRigs.Clear();
+            m_LateUpdateRigs.Clear();
+            m_FixedUpdateRigs.Clear();
+        }
+
 
         public void RegistedRig(Rig rig)
         {
@@ -74,7 +81,7 @@ namespace GameplayIngredients.Rigs
                 dict[priority].Remove(rig);
             }
 
-            if(dict[priority].Count == 0)
+            if(dict.ContainsKey(priority) && dict[priority].Count == 0)
             {
                 dict.Remove(priority);
             }
