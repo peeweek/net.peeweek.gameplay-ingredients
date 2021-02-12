@@ -2,13 +2,16 @@ using UnityEngine;
 
 namespace GameplayIngredients.Rigs
 {
-    public class LookAtRig : MonoBehaviour
+    public class LookAtRig : Rig
     {
+        public override int defaultPriority => 0;
+        public override UpdateMode defaultUpdateMode => UpdateMode.LateUpdate;
+
         public Transform LookAtTarget;
         public Space UpVectorSpace = Space.World;
         public Vector3 UpVector = Vector3.up;
 
-        void Update()
+        public override void UpdateRig(float deltaTime)
         {
             if (LookAtTarget != null)
             {
