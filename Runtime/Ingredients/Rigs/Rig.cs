@@ -47,12 +47,18 @@ namespace GameplayIngredients.Rigs
 
         protected virtual void OnEnable()
         {
-            Manager.Get<RigManager>().RegistedRig(this);
+            if (Manager.TryGet(out RigManager rigManager))
+                rigManager.RegistedRig(this);
+            else
+                Debug.LogWarning($"{gameObject.name} : Could not register the Rig of type {GetType().Name}. Rig Manager is not present or has been excluded. Please check your Assets/GameplayIngredientsSettings asset");
         }
 
         protected virtual void OnDisable()
         {
-            Manager.Get<RigManager>().RemoveRig(this);
+            if (Manager.TryGet(out RigManager rigManager))
+                rigManager.RemoveRig(this);
+            else
+                Debug.LogWarning($"{gameObject.name} : Could not remove the Rig of type {GetType().Name}. Rig Manager is not present or has been excluded. Please check your Assets/GameplayIngredientsSettings asset");
         }
 
         public abstract void UpdateRig(float deltaTime);

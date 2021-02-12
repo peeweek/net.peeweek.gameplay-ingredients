@@ -3,6 +3,7 @@ using UnityEditor;
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 using NaughtyAttributes.Editor;
 using GameplayIngredients.Rigs;
 
@@ -49,8 +50,19 @@ namespace GameplayIngredients.Editor
 
         public override void OnInspectorGUI_PingArea()
         {
-
             serializedObject.Update();
+
+            bool excludedRigManager = GameplayIngredientsSettings.currentSettings.excludedeManagers.Any(s => s == "RigManager");
+
+            if (excludedRigManager)
+            {
+                EditorGUILayout.HelpBox("This Rig depends on the Rig Manager which is excluded in your Gameplay Ingredients Settings. This rig component will be inactive unless the manager is not excluded.", MessageType.Error, true);
+                if (GUILayout.Button("Open Settings"))
+                    Selection.activeObject = GameplayIngredientsSettings.currentSettings;
+            }
+
+            EditorGUI.BeginDisabledGroup(excludedRigManager);
+
             EditorGUI.BeginChangeCheck();
 
             GUILayout.Label("Rig : Update Properties", EditorStyles.boldLabel);
@@ -88,6 +100,8 @@ namespace GameplayIngredients.Editor
             {
                 serializedObject.ApplyModifiedProperties();
             }
+
+            EditorGUI.EndDisabledGroup();
 
         }
     }
