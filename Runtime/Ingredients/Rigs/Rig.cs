@@ -1,9 +1,5 @@
-﻿using ICSharpCode.NRefactory.Ast;
+﻿using UnityEngine;
 using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 
 namespace GameplayIngredients.Rigs
 {
