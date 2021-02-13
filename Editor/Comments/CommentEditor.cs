@@ -23,7 +23,6 @@ namespace GameplayIngredients.Comments.Editor
         {
             this.serializedObject = serializedObject;
             title = comment.FindPropertyRelative("title");
-
             rootMessage = comment.FindPropertyRelative("message");
             replies = comment.FindPropertyRelative("replies");
             focus = comment.FindPropertyRelative("focus");
@@ -62,7 +61,20 @@ namespace GameplayIngredients.Comments.Editor
             {
                 serializedObject.Update();
                 EditorGUILayout.PropertyField(title);
-                EditorGUILayout.PropertyField(focus);
+                using(new GUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.PropertyField(focus);
+                    if(GUILayout.Button("Align to SceneView", GUILayout.ExpandWidth(true)))
+                    {
+                        focus.boolValue = true;
+                        if(SceneView.lastActiveSceneView != null)
+                        {
+                            SceneComment c = serializedObject.targetObject as SceneComment;
+                            c.gameObject.transform.position = SceneView.lastActiveSceneView.camera.transform.position;
+                            c.gameObject.transform.rotation = SceneView.lastActiveSceneView.camera.transform.rotation;
+                        }
+                    }
+                }
                 serializedObject.ApplyModifiedProperties();
             }
             else
@@ -99,7 +111,7 @@ namespace GameplayIngredients.Comments.Editor
                 SerializedProperty body = message.FindPropertyRelative("body");
                 SerializedProperty URL = message.FindPropertyRelative("URL");
                 SerializedProperty from = message.FindPropertyRelative("from");
-                SerializedProperty targets = message.FindPropertyRelative("targets");
+                SerializedProperty targets = message.FindPropertyRelative("attachedObjects");
                 SerializedProperty changeType = message.FindPropertyRelative("changeType");
                 SerializedProperty changeState = message.FindPropertyRelative("changeState");
                 SerializedProperty changePriority = message.FindPropertyRelative("changePriority");
@@ -114,7 +126,10 @@ namespace GameplayIngredients.Comments.Editor
                     EditorGUILayout.PropertyField(body);
                     EditorGUILayout.PropertyField(URL);
                     EditorGUILayout.PropertyField(from);
-                    EditorGUILayout.PropertyField(targets);
+                    using (new EditorGUI.IndentLevelScope(1))
+                    {
+                        EditorGUILayout.PropertyField(targets);
+                    }
 
                     if(replyIndex >= 0)
                     {
@@ -147,11 +162,11 @@ namespace GameplayIngredients.Comments.Editor
                     GUILayout.Space(2);
                     message.serializedObject.ApplyModifiedProperties();
                 }
-                else
+                else // Display Message
                 {
                     using (new GUILayout.HorizontalScope())
                     {
-                        GUILayout.Label($"<color={(from.stringValue == CommentsWindow.user ? "lime" : "white")}><b>{from.stringValue}</b></color>", Styles.from);
+                        GUILayout.Label($"<b>From:</b> <color={(from.stringValue == CommentsWindow.user ? "lime" : "white")}><b>{from.stringValue}</b></color>", Styles.from);
                         GUILayout.FlexibleSpace();
 
                         if (replyIndex > -1 && from.stringValue == CommentsWindow.user 

@@ -34,7 +34,6 @@ namespace GameplayIngredients.Comments.Editor
 
         public override void OnInspectorGUI()
         {
-            sceneComment.transform.hideFlags = HideFlags.HideInInspector;
             UpdateComment();
             GUILayout.Space(4);
             m_CommentEditor.DrawComment(sceneComment.comment);

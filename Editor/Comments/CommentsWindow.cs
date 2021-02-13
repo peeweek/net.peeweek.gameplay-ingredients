@@ -1,6 +1,5 @@
-﻿using Boo.Lang;
-using GameplayIngredients.Editor;
-using System.ComponentModel;
+﻿using GameplayIngredients.Editor;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -137,7 +136,7 @@ namespace GameplayIngredients.Comments.Editor
         {
             return message.body.ToLowerInvariant().Contains(filter)
                 || message.from.ToLowerInvariant().Contains(filter)
-                || message.targets.Any(o => o.name.ToLowerInvariant().Contains(filter))
+                || message.attachedObjects.Any(o => o.name.ToLowerInvariant().Contains(filter))
                 || message.URL.ToLowerInvariant().Contains(filter)
                 ;
         }

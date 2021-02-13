@@ -85,7 +85,7 @@ namespace GameplayIngredients.Comments
         [Multiline]
         public string body;
         [ReorderableList]
-        public UnityEngine.Object[] targets;
+        public UnityEngine.Object[] attachedObjects;
 
         public bool changeType;
         public bool changeState;
