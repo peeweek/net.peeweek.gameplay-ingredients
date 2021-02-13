@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
-    [HelpURL("https://peeweek.readthedocs.io/en/latest/gameplay-ingredients/events-logic-actions/")]
+    [HelpURL(Help.URL + "events-logic-actions")]
     public abstract class EventBase : MonoBehaviour
     {
         protected bool AllowUpdateCalls()

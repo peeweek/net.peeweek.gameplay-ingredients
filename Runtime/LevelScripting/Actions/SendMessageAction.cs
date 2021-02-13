@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
-    [HelpURL("https://peeweek.readthedocs.io/en/latest/gameplay-ingredients/messager/")]
+    [HelpURL(Help.URL + "messager")]
     public class SendMessageAction : ActionBase
     {
         public string MessageToSend = "Message";

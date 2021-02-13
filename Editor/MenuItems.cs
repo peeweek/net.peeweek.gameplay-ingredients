@@ -144,16 +144,16 @@ namespace GameplayIngredients.Editor
         #endregion
 
         #region HELP
+        static string helpBaseURL => Help.URL;
 
-        const string kBaseHelp = "https://peeweek.readthedocs.io/en/latest/gameplay-ingredients/";
         static void OpenHelp(string page)
         {
-            Application.OpenURL($"{kBaseHelp}{page}/");
+            Application.OpenURL($"{helpBaseURL}{page}/");
         }
 
         static void OpenHelp()
         {
-            Application.OpenURL(kBaseHelp);
+            Application.OpenURL(helpBaseURL);
         }
 
         [MenuItem("Help/Gameplay Ingredients/Documentation/Table of Contents")]
@@ -246,8 +246,6 @@ namespace GameplayIngredients.Editor
         {
             Application.OpenURL("https://openupm.com/packages/net.peeweek.gameplay-ingredients/");
         }
-
-
-#endregion
+        #endregion
     }
 }

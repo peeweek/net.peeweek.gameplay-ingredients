@@ -7,7 +7,7 @@ using System.Reflection;
 namespace GameplayIngredients
 {
     
-    [HelpURL("https://peeweek.readthedocs.io/en/latest/gameplay-ingredients/managers/")]
+    [HelpURL(Help.URL + "managers")]
     public abstract class Manager : MonoBehaviour
     {
         private static Dictionary<Type, Manager> s_Managers = new Dictionary<Type, Manager>();

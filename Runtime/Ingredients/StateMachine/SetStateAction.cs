@@ -5,7 +5,7 @@ using GameplayIngredients.StateMachines;
 
 namespace GameplayIngredients.Actions
 {
-    [HelpURL("https://peeweek.readthedocs.io/en/latest/gameplay-ingredients/state-machines/")]
+    [HelpURL(Help.URL + "state-machines")]
     public class SetStateAction : ActionBase
     {
         [NonNullCheck]

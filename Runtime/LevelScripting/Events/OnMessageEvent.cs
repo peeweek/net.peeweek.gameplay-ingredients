@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
-    [HelpURL("https://peeweek.readthedocs.io/en/latest/gameplay-ingredients/messager/")]
+    [HelpURL(Help.URL + "messager")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Events/ic-event-message.png")]
     public class OnMessageEvent : EventBase
     {
