@@ -3,8 +3,11 @@ using UnityEngine;
 
 namespace GameplayIngredients.Rigs
 {
-    public class ReachPositionRig : MonoBehaviour
+    public class ReachPositionRig : Rig
     {
+        public override int defaultPriority => 0;
+        public override UpdateMode defaultUpdateMode => UpdateMode.LateUpdate;
+
         public Transform target => m_Target;
 
         [Header("Target")]
@@ -28,7 +31,7 @@ namespace GameplayIngredients.Rigs
             return m_Target != null && m_Target.transform.parent != transform.parent;
         }
 
-        void LateUpdate()
+        public override void UpdateRig(float deltaTime)
         {
             if(m_Target != null)
             {
@@ -53,7 +56,7 @@ namespace GameplayIngredients.Rigs
                 else
                 {
                     var delta = m_Target.position - transform.position;
-                    var speed = Time.deltaTime * Mathf.Min((Dampen * delta.magnitude), MaximumVelocity);
+                    var speed = deltaTime * Mathf.Min((Dampen * delta.magnitude), MaximumVelocity);
                     gameObject.transform.position += delta.normalized * speed;
                     m_PositionReached = false;
                 }
