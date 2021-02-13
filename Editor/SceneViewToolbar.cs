@@ -109,12 +109,17 @@ namespace GameplayIngredients.Editor
                         EditorWindow.GetWindow<CheckWindow>();
                     }
 
-                    // Check Window
+                    // Comments Window
                     GUILayout.Space(16);
                     if (GUILayout.Button(Contents.commentsWindow, EditorStyles.toolbarButton))
                     {
                         CommentsWindow.Open();
                     }
+                    if (GUILayout.Button(Contents.addComment, EditorStyles.toolbarButton))
+                    {
+                        SceneCommentEditor.CreateComment();
+                    }
+
                     // Custom Code here
                     if (OnSceneViewToolbarGUI != null)
                         OnSceneViewToolbarGUI.Invoke(sceneView);
@@ -164,6 +169,7 @@ namespace GameplayIngredients.Editor
             public static GUIContent linkGameViewCinemachine;
             public static GUIContent checkWindow;
             public static GUIContent commentsWindow;
+            public static GUIContent addComment;
 
             static Contents()
             {
@@ -183,6 +189,7 @@ namespace GameplayIngredients.Editor
                 commentsWindow = new GUIContent(EditorGUIUtility.IconContent("console.infoicon.inactive.sml"));
                 commentsWindow.text = "Comments";
 
+                addComment = new GUIContent("+");
             }
         }
 

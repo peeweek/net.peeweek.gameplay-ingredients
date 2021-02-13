@@ -146,6 +146,12 @@ namespace GameplayIngredients.Comments.Editor
             // Toolbar
             using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
             {
+                if (GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(24)))
+                {
+                    SceneCommentEditor.CreateComment();
+                    Refresh();
+                }
+
                 userFilter = (UserFilter)EditorGUILayout.EnumPopup(userFilter, EditorStyles.toolbarDropDown, GUILayout.Width(140));
                 if (GUILayout.Button(EditorGUIUtility.IconContent("Refresh"), EditorStyles.toolbarButton, GUILayout.Width(24)))
                     Refresh();
@@ -181,6 +187,12 @@ namespace GameplayIngredients.Comments.Editor
             // Lines
             foreach (var sceneComment in sceneComments)
             {
+                if(sceneComment == null)
+                {
+                    Refresh();
+                    break;
+                }
+
                 if (sceneComment.comment.computedType == CommentType.Bug && !showBugs) continue;
                 if (sceneComment.comment.computedType == CommentType.Info && !showInfo) continue;
                 if (sceneComment.comment.computedType == CommentType.Request && !showRequests) continue;
