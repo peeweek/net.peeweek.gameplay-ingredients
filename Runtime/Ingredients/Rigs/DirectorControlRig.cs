@@ -4,11 +4,15 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using NaughtyAttributes;
+using UnityEngine.PlayerLoop;
 
 namespace GameplayIngredients.Rigs
 {
-    public class DirectorControlRig : MonoBehaviour
+    public class DirectorControlRig : Rig
     {
+        public override int defaultPriority => 0;
+        public override UpdateMode defaultUpdateMode => UpdateMode.Update;
+
         public enum PlayMode
         {
             Stop,
@@ -41,8 +45,10 @@ namespace GameplayIngredients.Rigs
         float m_StopTime = -1.0f;
         PlayMode m_PlayMode;
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+
             if (director != null)
             {
                 m_PlayMode = InitialPlayMode;
@@ -51,7 +57,7 @@ namespace GameplayIngredients.Rigs
             }
         }
 
-        public void Update()
+        public override void UpdateRig(float deltaTime)
         {
             if(m_PlayMode != PlayMode.Stop)
             {
@@ -100,8 +106,6 @@ namespace GameplayIngredients.Rigs
                             break;
                     }
                 }
-
-
             }
         }
     }
