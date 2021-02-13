@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Interactions
 {
+    [HelpURL(Help.URL + "interactive")]
     public class Interaction : ActionBase
     {
         public InteractiveUser InteractiveUser;

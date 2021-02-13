@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Interactions
 {
+    [HelpURL(Help.URL + "interactive")]
     public abstract class InteractiveUser : MonoBehaviour
     {
         public abstract bool CanInteract(Interactive interactive);

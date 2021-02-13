@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Interactions
 {
+    [HelpURL(Help.URL + "interactive")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-interactive.png")]
     public abstract class Interactive : EventBase
     {

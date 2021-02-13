@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [HelpURL(Help.URL + "globals")]
     public class GlobalLogic : LogicBase
     {
         [Header("Base Value")]

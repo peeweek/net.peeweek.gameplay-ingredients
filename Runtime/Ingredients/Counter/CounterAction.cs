@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [HelpURL(Help.URL + "counters")]
     public class CounterAction : ActionBase
     {
         public enum CounterOperation

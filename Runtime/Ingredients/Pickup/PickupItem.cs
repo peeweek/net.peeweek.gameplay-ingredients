@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Pickup
 {
+    [HelpURL(Help.URL + "pickup")]
     [RequireComponent(typeof(Collider))]
     public class PickupItem : MonoBehaviour
     {

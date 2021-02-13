@@ -5,6 +5,7 @@ using GameplayIngredients.StateMachines;
 
 namespace GameplayIngredients.Actions
 {
+    [HelpURL(Help.URL + "state-machines")]
     public class SetStateAction : ActionBase
     {
         [NonNullCheck]

@@ -6,6 +6,7 @@ using GameplayIngredients.Actions;
 
 namespace GameplayIngredients.StateMachines
 {
+    [HelpURL(Help.URL + "state-machines")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-StateMachine.png")]
     public class StateMachine : MonoBehaviour
     {

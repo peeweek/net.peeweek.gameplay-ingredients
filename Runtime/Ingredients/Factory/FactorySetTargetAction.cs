@@ -5,6 +5,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
+    [HelpURL(Help.URL + "factory")]
     public class FactorySetTargetAction : ActionBase
     {
         [NonNullCheck]

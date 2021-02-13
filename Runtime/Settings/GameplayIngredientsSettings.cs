@@ -5,6 +5,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients
 {
+    [HelpURL(Help.URL + "settings")]
     public class GameplayIngredientsSettings : ScriptableObject
     {
         public string[] excludedeManagers { get { return m_ExcludedManagers; } }
