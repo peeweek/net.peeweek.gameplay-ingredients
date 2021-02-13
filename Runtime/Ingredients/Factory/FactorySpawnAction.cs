@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [HelpURL(Help.URL + "factory")]
     public class FactorySpawnAction : ActionBase
     {
         [NonNullCheck]

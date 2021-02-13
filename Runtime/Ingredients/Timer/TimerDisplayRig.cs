@@ -6,6 +6,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients
 {
+    [HelpURL(Help.URL + "timers")]
     public class TimerDisplayRig : MonoBehaviour
     {
         [NonNullCheck]

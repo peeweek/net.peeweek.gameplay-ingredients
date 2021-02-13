@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Pickup
 {
+    [HelpURL(Help.URL + "pickup")]
     public abstract class PickupOwnerBase : MonoBehaviour
     {
         public bool PickUp(PickupItem pickup)

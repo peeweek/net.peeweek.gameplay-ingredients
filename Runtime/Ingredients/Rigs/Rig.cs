@@ -3,6 +3,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Rigs
 {
+    [HelpURL(Help.URL + "rigs")]
     public abstract class Rig : MonoBehaviour
     {
         public UpdateMode updateMode

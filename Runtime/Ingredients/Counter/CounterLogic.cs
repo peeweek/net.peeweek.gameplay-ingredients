@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [HelpURL(Help.URL + "counters")]
     public class CounterLogic : LogicBase
     {
         public enum ValueSourceType

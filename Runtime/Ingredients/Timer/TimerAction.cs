@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [HelpURL(Help.URL + "timers")]
     public class TimerAction : ActionBase
     {
         public enum Action
