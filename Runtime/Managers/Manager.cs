@@ -6,6 +6,8 @@ using System.Reflection;
 
 namespace GameplayIngredients
 {
+    
+    [HelpURL(Help.URL + "managers")]
     public abstract class Manager : MonoBehaviour
     {
         private static Dictionary<Type, Manager> s_Managers = new Dictionary<Type, Manager>();

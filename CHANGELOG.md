@@ -8,6 +8,7 @@
 * Renamed **Call Tree Explorer** to **Ingredients Explorer** as it is more general purpose now. 
 * Added Rigs to **Ingredients Explorer** : that view summarizes currently loaded rigs, and groups them in update groups.
 * Added abstract `PingableEditor` class for MonoBehaviours that can be Pinged to stand out in the inspector.
+* Added Help items in Menu, Added HelpURL class attributes
 
 ## 2020.2.2
 

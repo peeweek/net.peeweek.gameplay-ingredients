@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [HelpURL(Help.URL + "globals")]
     public class SetGlobalAction : ActionBase
     {
         public Globals.Scope scope = Globals.Scope.Global;

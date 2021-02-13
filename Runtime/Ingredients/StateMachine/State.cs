@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.StateMachines
 {
+    [HelpURL(Help.URL + "state-machines")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-State.png")]
     public class State : MonoBehaviour
     {

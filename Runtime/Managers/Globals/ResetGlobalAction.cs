@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [HelpURL(Help.URL + "globals")]
     public class ResetGlobalAction : ActionBase
     {
         public ResetType resetType = ResetType.Locals;
