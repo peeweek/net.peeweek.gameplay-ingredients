@@ -22,6 +22,9 @@ namespace GameplayIngredients.Comments
             m_Comment.title = "New Comment";
             m_Comment.message.body = "This is a new Comment, it can describe a problem in the scene, a note to the attention of other user, or a bug encountered.";
             m_Comment.message.from = EditorPrefs.GetString(kUserPreference, "user");
+            m_Comment.message.type = CommentType.Info;
+            m_Comment.message.priority = CommentPriority.Low;
+            m_Comment.message.state = CommentState.Open;
         }
 
 #endif

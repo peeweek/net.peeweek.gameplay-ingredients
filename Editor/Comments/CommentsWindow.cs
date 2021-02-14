@@ -1,4 +1,5 @@
 ﻿using GameplayIngredients.Editor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -26,7 +27,7 @@ namespace GameplayIngredients.Comments.Editor
             EditorSceneManager.sceneClosed += EditorSceneManager_sceneClosed;
             EditorSceneSetup.onSetupLoaded += EditorSceneSetup_onSetupLoaded;
             EditorSceneManager.sceneLoaded += SceneManager_sceneLoaded;
-            EditorSceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
+            EditorSceneManager.sceneUnloaded += SceneManager_sceneUnloaded;      
         }
 
         private void EditorSceneSetup_onSetupLoaded(EditorSceneSetup setup)
@@ -69,8 +70,9 @@ namespace GameplayIngredients.Comments.Editor
             AllComments,
         }
 
-        const string kUserFilterPreference = "GameplayIngredients.Comments.UserFilter";
-        const string kUserPreference = "GameplayIngredients.Comments.User";
+        const string kPrefixPreference = "GameplayIngredients.Comments.";
+        static readonly string kUserFilterPreference = $"{kPrefixPreference}UserFilter";
+        static readonly string kUserPreference = $"{kPrefixPreference}User";
 
         static UserFilter userFilter
         {
@@ -94,25 +96,34 @@ namespace GameplayIngredients.Comments.Editor
             set { EditorPrefs.SetString(kUserPreference, value); }
         }
 
-        bool showInfo = true;
-        bool showBugs = true;
-        bool showRequests = true;
-        bool showTodo = true;
+        bool GetShowPref(Enum item)
+        {
+            string name = $"{kPrefixPreference}.Show.{item.GetType().Name}.{item}";
+            return EditorPrefs.GetBool(name, true);
+        }
 
-        bool showHigh = true;
-        bool showMedium = true;
-        bool showLow = true;
+        void SetShowPref(Enum item, bool value)
+        {
+            EditorPrefs.SetBool($"{kPrefixPreference}.Show.{item.GetType().Name}.{item}", value);
+        }
 
-        int infoCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedType == CommentType.Info);
-        int bugCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedType == CommentType.Bug);
-        int requestCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedType == CommentType.Request);
-        int todoCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedType == CommentType.ToDo);
+        void ToggleShowPref(Enum item)
+        {
+            SetShowPref(item, !GetShowPref(item));
+        }
+
+        void MenuToggleShowPref(object item)
+        {
+            ToggleShowPref(item as Enum);
+        }
+
         int highCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedPriority == CommentPriority.High);
         int mediumCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedPriority == CommentPriority.Medium);
         int lowCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedPriority == CommentPriority.Low);
 
         string searchFilter;
         Vector2 scrollPosition;
+
 
 
         bool MatchFilter(SceneComment sc, string filter)
@@ -152,20 +163,42 @@ namespace GameplayIngredients.Comments.Editor
                     Refresh();
                 }
 
-                userFilter = (UserFilter)EditorGUILayout.EnumPopup(userFilter, EditorStyles.toolbarDropDown, GUILayout.Width(140));
                 if (GUILayout.Button(EditorGUIUtility.IconContent("Refresh"), EditorStyles.toolbarButton, GUILayout.Width(24)))
                     Refresh();
 
                 searchFilter = EditorGUILayout.DelayedTextField(searchFilter, EditorStyles.toolbarSearchField, GUILayout.ExpandWidth(true));
-
-                showInfo = GUILayout.Toggle(showInfo, $"Info ({infoCount})", EditorStyles.toolbarButton, GUILayout.Width(48));
-                showBugs = GUILayout.Toggle(showBugs, $"Bugs ({bugCount})", EditorStyles.toolbarButton, GUILayout.Width(56));
-                showRequests = GUILayout.Toggle(showRequests, $"Requests ({requestCount})", EditorStyles.toolbarButton, GUILayout.Width(80));
-                showTodo = GUILayout.Toggle(showTodo, $"To Do ({todoCount})", EditorStyles.toolbarButton, GUILayout.Width(60));
+                userFilter = (UserFilter)EditorGUILayout.EnumPopup(userFilter, EditorStyles.toolbarDropDown, GUILayout.Width(128));
+                if (GUILayout.Button("Type", EditorStyles.toolbarDropDown, GUILayout.Width(64)))
+                {
+                    var menu = new GenericMenu();
+                    menu.AddItem(new GUIContent(CommentType.Bug.ToString()), GetShowPref(CommentType.Bug), MenuToggleShowPref, CommentType.Bug);
+                    menu.AddItem(new GUIContent(CommentType.Info.ToString()), GetShowPref(CommentType.Info), MenuToggleShowPref, CommentType.Info);
+                    menu.AddItem(new GUIContent(CommentType.Request.ToString()), GetShowPref(CommentType.Request), MenuToggleShowPref, CommentType.Request);
+                    menu.AddItem(new GUIContent(CommentType.ToDo.ToString()), GetShowPref(CommentType.ToDo), MenuToggleShowPref, CommentType.ToDo);
+                    menu.DropDown(new Rect(position.width - 240, 10, 12, 12));
+                }
+                if (GUILayout.Button("State", EditorStyles.toolbarDropDown, GUILayout.Width(64)))
+                {
+                    var menu = new GenericMenu();
+                    menu.AddItem(new GUIContent(CommentState.Open.ToString()), GetShowPref(CommentState.Open), MenuToggleShowPref, CommentState.Open);
+                    menu.AddItem(new GUIContent(CommentState.Resolved.ToString()), GetShowPref(CommentState.Resolved), MenuToggleShowPref, CommentState.Resolved);
+                    menu.AddItem(new GUIContent(CommentState.Closed.ToString()), GetShowPref(CommentState.Closed), MenuToggleShowPref, CommentState.Closed);
+                    menu.AddItem(new GUIContent(CommentState.WontFix.ToString()), GetShowPref(CommentState.WontFix), MenuToggleShowPref, CommentState.WontFix);
+                    menu.AddItem(new GUIContent(CommentState.Blocked.ToString()), GetShowPref(CommentState.Blocked), MenuToggleShowPref, CommentState.Blocked);
+                    menu.DropDown(new Rect(position.width - 176, 10, 12, 12));
+                }
                 GUILayout.Space(16);
-                showHigh = GUILayout.Toggle(showHigh, CommentEditor.GetPriorityContent(highCount.ToString(), CommentPriority.High), EditorStyles.toolbarButton, GUILayout.Width(32));
-                showMedium = GUILayout.Toggle(showMedium, CommentEditor.GetPriorityContent(mediumCount.ToString(), CommentPriority.Medium), EditorStyles.toolbarButton, GUILayout.Width(32));
-                showLow = GUILayout.Toggle(showLow, CommentEditor.GetPriorityContent(lowCount.ToString(), CommentPriority.Low), EditorStyles.toolbarButton, GUILayout.Width(32));
+
+                EditorGUI.BeginChangeCheck();
+                bool showHigh = GUILayout.Toggle(GetShowPref(CommentPriority.High), CommentEditor.GetPriorityContent(highCount.ToString(), CommentPriority.High), EditorStyles.toolbarButton, GUILayout.Width(32));
+                bool showMedium = GUILayout.Toggle(GetShowPref(CommentPriority.Medium), CommentEditor.GetPriorityContent(mediumCount.ToString(), CommentPriority.Medium), EditorStyles.toolbarButton, GUILayout.Width(32));
+                bool showLow = GUILayout.Toggle(GetShowPref(CommentPriority.Low), CommentEditor.GetPriorityContent(lowCount.ToString(), CommentPriority.Low), EditorStyles.toolbarButton, GUILayout.Width(32));
+                if(EditorGUI.EndChangeCheck())
+                {
+                    SetShowPref(CommentPriority.High, showHigh);
+                    SetShowPref(CommentPriority.Medium, showMedium);
+                    SetShowPref(CommentPriority.Low, showMedium);
+                }
             }
 
             GUI.backgroundColor = Color.white * 1.25f;
@@ -193,13 +226,20 @@ namespace GameplayIngredients.Comments.Editor
                     break;
                 }
 
-                if (sceneComment.comment.computedType == CommentType.Bug && !showBugs) continue;
-                if (sceneComment.comment.computedType == CommentType.Info && !showInfo) continue;
-                if (sceneComment.comment.computedType == CommentType.Request && !showRequests) continue;
-                if (sceneComment.comment.computedType == CommentType.ToDo && !showTodo) continue;
-                if (sceneComment.comment.computedPriority == CommentPriority.High && !showHigh) continue;
-                if (sceneComment.comment.computedPriority == CommentPriority.Medium && !showMedium) continue;
-                if (sceneComment.comment.computedPriority == CommentPriority.Low && !showLow) continue;
+                if (sceneComment.comment.computedState == CommentState.Open && !GetShowPref(CommentState.Open)) continue;
+                if (sceneComment.comment.computedState == CommentState.Resolved && !GetShowPref(CommentState.Resolved)) continue;
+                if (sceneComment.comment.computedState == CommentState.Blocked && !GetShowPref(CommentState.Blocked)) continue;
+                if (sceneComment.comment.computedState == CommentState.WontFix && !GetShowPref(CommentState.WontFix)) continue;
+                if (sceneComment.comment.computedState == CommentState.Closed && !GetShowPref(CommentState.Closed)) continue;
+
+                if (sceneComment.comment.computedType == CommentType.Bug && !GetShowPref(CommentType.Bug)) continue;
+                if (sceneComment.comment.computedType == CommentType.Info && !GetShowPref(CommentType.Info)) continue;
+                if (sceneComment.comment.computedType == CommentType.Request && !GetShowPref(CommentType.Request)) continue;
+                if (sceneComment.comment.computedType == CommentType.ToDo && !GetShowPref(CommentType.ToDo)) continue;
+
+                if (sceneComment.comment.computedPriority == CommentPriority.High && !GetShowPref(CommentPriority.High)) continue;
+                if (sceneComment.comment.computedPriority == CommentPriority.Medium && !GetShowPref(CommentPriority.Medium)) continue;
+                if (sceneComment.comment.computedPriority == CommentPriority.Low && !GetShowPref(CommentPriority.Low)) continue;
 
                 if (userFilter == UserFilter.MyComments && !sceneComment.comment.users.Contains(user))
                     continue;
