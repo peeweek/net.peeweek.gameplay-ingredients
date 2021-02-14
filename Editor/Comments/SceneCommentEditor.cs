@@ -14,6 +14,11 @@ namespace GameplayIngredients.Comments.Editor
         [SerializeField]
         CommentEditor m_CommentEditor;
 
+
+        public static void RequestEdit() { m_NeedEditNext = true; }
+        public static bool m_NeedEditNext = false;
+
+
         private void OnEnable()
         {
             UpdateComment();
@@ -36,7 +41,11 @@ namespace GameplayIngredients.Comments.Editor
         {
             UpdateComment();
             GUILayout.Space(4);
-            m_CommentEditor.DrawComment(sceneComment.comment);
+            m_CommentEditor.DrawComment(sceneComment.comment, m_NeedEditNext);
+
+            if (m_NeedEditNext)
+                m_NeedEditNext = false;
+
             GUILayout.Space(16);
         }
 
@@ -58,6 +67,7 @@ namespace GameplayIngredients.Comments.Editor
 
             Selection.activeGameObject = go;
             go.GetComponent<SceneComment>().SetDefault();
+            SceneCommentEditor.RequestEdit();
         }
     }
 }

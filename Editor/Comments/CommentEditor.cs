@@ -33,8 +33,14 @@ namespace GameplayIngredients.Comments.Editor
             return GUILayout.Toggle(edit, edit ? "Close" : "Edit", EditorStyles.miniButton, GUILayout.Width(64));
         }
 
-        public void DrawComment(Comment comment)
+        public void DrawComment(Comment comment, bool requireEdit = false)
         {
+            if(requireEdit)
+            {
+                editMessagePath = rootMessage.propertyPath;
+                requireEdit = false;
+            }
+
             using (new GUILayout.HorizontalScope())
             {
                 TypeLabel(comment.computedType);
