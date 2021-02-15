@@ -1,7 +1,4 @@
 ﻿using GameplayIngredients.Editor;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Net.Http.Headers;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;

@@ -4,7 +4,7 @@ using UnityEditor;
 
 namespace GameplayIngredients.Comments.Editor
 {
-    public class CommentAsset : ScriptableObject
+    class CommentAsset : ScriptableObject
     {
         public Comment comment => m_Comment;
 

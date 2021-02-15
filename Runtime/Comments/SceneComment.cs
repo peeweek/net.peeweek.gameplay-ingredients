@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameplayIngredients.Comments
 {
@@ -25,7 +23,6 @@ namespace GameplayIngredients.Comments
             m_Comment.message.priority = CommentPriority.Low;
             m_Comment.message.state = CommentState.Open;
         }
-
 #endif
     }
 }

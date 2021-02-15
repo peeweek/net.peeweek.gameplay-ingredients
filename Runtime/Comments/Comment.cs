@@ -1,7 +1,6 @@
 ﻿using NaughtyAttributes;
 using System;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 namespace GameplayIngredients.Comments
@@ -9,8 +8,10 @@ namespace GameplayIngredients.Comments
     [Serializable]
     public struct Comment
     {
+#if UNITY_EDITOR
         const string kUserPreference = "GameplayIngredients.Comments.User";
-        public static string currentUser => EditorPrefs.GetString(kUserPreference, "user");
+        public static string currentUser => UnityEditor.EditorPrefs.GetString(kUserPreference, "user");
+#endif
 
         public string title;
         public CommentMessage message; 
