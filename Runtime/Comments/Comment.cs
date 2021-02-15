@@ -9,6 +9,9 @@ namespace GameplayIngredients.Comments
     [Serializable]
     public struct Comment
     {
+        const string kUserPreference = "GameplayIngredients.Comments.User";
+        public static string currentUser => EditorPrefs.GetString(kUserPreference, "user");
+
         public string title;
         public CommentMessage message; 
         public CommentMessage[] replies;

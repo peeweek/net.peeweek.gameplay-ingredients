@@ -18,14 +18,15 @@ namespace GameplayIngredients.Comments.Editor
         string editMessagePath;
 
         bool editRoot => editMessagePath == rootMessage.propertyPath;
-
-        public CommentEditor(SerializedObject serializedObject, SerializedProperty comment)
+        bool m_IsAsset;
+        public CommentEditor(SerializedObject serializedObject, SerializedProperty comment, bool isAsset = false)
         {
             this.serializedObject = serializedObject;
             title = comment.FindPropertyRelative("title");
             rootMessage = comment.FindPropertyRelative("message");
             replies = comment.FindPropertyRelative("replies");
             focus = comment.FindPropertyRelative("focus");
+            m_IsAsset = isAsset;
         }
 
         public bool DrawEditButton(bool edit)
@@ -70,7 +71,8 @@ namespace GameplayIngredients.Comments.Editor
                 using(new GUILayout.HorizontalScope())
                 {
                     EditorGUILayout.PropertyField(focus);
-                    if(GUILayout.Button("Align to SceneView", GUILayout.ExpandWidth(true)))
+
+                    if(!m_IsAsset && GUILayout.Button("Align to SceneView", GUILayout.ExpandWidth(true)))
                     {
                         focus.boolValue = true;
                         if(SceneView.lastActiveSceneView != null)

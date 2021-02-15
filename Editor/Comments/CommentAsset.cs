@@ -1,21 +1,25 @@
-﻿using System.Collections.Generic;
-using UnityEditor;
+using GameplayIngredients.Editor;
 using UnityEngine;
+using UnityEditor;
 
-namespace GameplayIngredients.Comments
+namespace GameplayIngredients.Comments.Editor
 {
-    public class SceneComment : MonoBehaviour
+    public class CommentAsset : ScriptableObject
     {
-#if UNITY_EDITOR
         public Comment comment => m_Comment;
+
         [SerializeField]
         Comment m_Comment;
+
+        [SerializeField, HideInInspector]
+        public bool firstTimeEdit;
+
         private void Reset()
         {
-            m_Comment.message.from = Comment.currentUser; 
-            transform.hideFlags = HideFlags.HideInInspector;
+            SetDefault();
+            firstTimeEdit = true;
         }
-
+         
         public void SetDefault()
         {
             m_Comment.title = "New Comment";
@@ -26,6 +30,12 @@ namespace GameplayIngredients.Comments
             m_Comment.message.state = CommentState.Open;
         }
 
-#endif
+        [MenuItem("Assets/Create/Comment")]
+        static void CreateAsset()
+        {
+            AssetFactory.CreateAssetInProjectWindow<CommentAsset>("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-comment.png", "New Comment.asset");
+        }
+
     }
 }
+
