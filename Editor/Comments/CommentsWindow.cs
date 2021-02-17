@@ -11,10 +11,12 @@ namespace GameplayIngredients.Comments.Editor
 {
     public class CommentsWindow : EditorWindow
     {
+        static CommentsWindow s_Instance;
+
         [MenuItem("Window/Gameplay Ingredients/Comments")]
         public static void Open()
         {
-            EditorWindow.GetWindow<CommentsWindow>();
+            s_Instance = EditorWindow.GetWindow<CommentsWindow>();
         }
 
         private void OnEnable()
@@ -63,6 +65,19 @@ namespace GameplayIngredients.Comments.Editor
             EditorSceneManager.sceneLoaded -= SceneManager_sceneLoaded;
             EditorSceneManager.sceneUnloaded -= SceneManager_sceneUnloaded;
         }
+
+        enum SortMode
+        {
+            None,
+            Name,
+            Description,
+            Location,
+            From,
+            Type,
+            State
+        }
+
+        SortMode sortMode = SortMode.None;
 
         public enum UserFilter
         {
@@ -117,9 +132,9 @@ namespace GameplayIngredients.Comments.Editor
             ToggleShowPref(item as Enum);
         }
 
-        int highCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedPriority == CommentPriority.High);
-        int mediumCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedPriority == CommentPriority.Medium);
-        int lowCount => sceneComments == null ? 0 : sceneComments.Count(o => o.comment.computedPriority == CommentPriority.Low);
+        int highCount => results == null ? 0 : results.Count(o => o.Item1.computedPriority == CommentPriority.High);
+        int mediumCount => results == null ? 0 : results.Count(o => o.Item1.computedPriority == CommentPriority.Medium);
+        int lowCount => results == null ? 0 : results.Count(o => o.Item1.computedPriority == CommentPriority.Low);
 
         string searchFilter;
         Vector2 scrollPosition;
@@ -204,44 +219,55 @@ namespace GameplayIngredients.Comments.Editor
             // Header
             using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
             {
-                GUILayout.Button("Comment", Styles.header, GUILayout.Width(180));
-                GUILayout.Button("Description", Styles.header, GUILayout.Width(position.width - 461));
-                GUILayout.Button("Location", Styles.header, GUILayout.Width(100));
-                GUILayout.Button("From", Styles.header, GUILayout.Width(80));
-                GUILayout.Button("Type", Styles.header, GUILayout.Width(50));
-                GUILayout.Button("Status", Styles.header, GUILayout.Width(50));
+                SortButton("Commment", SortMode.Name, 180);
+                SortButton("Description", SortMode.Description, position.width - 461);
+                SortButton("Location", SortMode.Location, 100);
+                SortButton("From", SortMode.From, 80);
+                SortButton("Type", SortMode.Type, 50);
+                SortButton("State", SortMode.State, 50);
             }
             GUI.backgroundColor = Color.white;
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
+
+
             int i = 0;
             // Lines
-            foreach (var sceneComment in sceneComments)
+            foreach (var comment in results)
             {
-                if(sceneComment == null)
+                if(comment.Item2 == null)
                 {
                     Refresh();
                     break;
                 }
-                if (!DrawComment(sceneComment.comment, i, sceneComment.gameObject))
-                    continue;
 
-                i++;
-            }
-            foreach (var commentAsset in commentAssets)
-            {
-                if (commentAsset == null)
+                if(comment.Item2 is SceneComment)
                 {
-                    Refresh();
-                    break;
-                }
-                if (!DrawComment(commentAsset.comment, i, commentAsset))
-                    continue;
 
+                    if (!DrawComment(comment.Item1, i, (comment.Item2 as SceneComment).gameObject))
+                        continue;
+                } 
+                else
+                {
+                    if (!DrawComment(comment.Item1, i, comment.Item2 as CommentAsset))
+                        continue;
+                }
                 i++;
             }
 
             EditorGUILayout.EndScrollView();
+        }
+
+        void SortButton(string label, SortMode mode, float width)
+        {
+            if (GUILayout.Button(label, sortMode == mode ? Styles.sortHeader : Styles.header, GUILayout.Width(width)))
+            {
+                if(Event.current.shift)
+                    sortMode = SortMode.None;
+                else if (sortMode != mode)
+                        sortMode = mode;
+            }
+            SortResults();
         }
 
         bool DrawComment(Comment comment, int index, UnityEngine.Object parent)
@@ -286,21 +312,65 @@ namespace GameplayIngredients.Comments.Editor
             return true;
         }
 
-        List<SceneComment> sceneComments;
-        List<CommentAsset> commentAssets;
+
+
+        List<Tuple<Comment, UnityEngine.Object>> results;
+
+        public static void RequestRefresh()
+        {
+            if (s_Instance != null)
+                s_Instance.Refresh();
+
+        }
 
         void Refresh()
         {
-            sceneComments = new List<SceneComment>();
+            if (results == null)
+                results = new List<Tuple<Comment, UnityEngine.Object>>();
+            else
+                results.Clear();
+
             foreach(var obj in Resources.FindObjectsOfTypeAll(typeof(SceneComment)))
             {
-                sceneComments.Add((SceneComment)obj);
+                results.Add(new Tuple<Comment, UnityEngine.Object>((obj as SceneComment).comment, obj));
             }
-            commentAssets = new List<CommentAsset>();
             foreach (var guid in AssetDatabase.FindAssets($"t:{typeof(CommentAsset).Name}"))
             {
                 CommentAsset ca = AssetDatabase.LoadAssetAtPath<CommentAsset>(AssetDatabase.GUIDToAssetPath(guid));
-                commentAssets.Add(ca);
+                results.Add(new Tuple<Comment, UnityEngine.Object>(ca.comment, ca));
+            }
+            SortResults();
+            Repaint();
+        }
+
+        void SortResults()
+        {
+            if (results == null)
+                return;
+            switch (sortMode)
+            {
+                case SortMode.None:
+                    break;
+                case SortMode.Name:
+                    results = results.OrderBy(o => o.Item2.name).ToList();
+                    break;
+                case SortMode.Description:
+                    results = results.OrderBy(o => o.Item1.title).ToList();
+                    break;
+                case SortMode.Location:
+                    results = results.OrderBy(o => o.Item2 is GameObject ? (o.Item2 as GameObject).scene.name : o.Item2.name ).ToList();
+                    break;
+                case SortMode.From:
+                    results = results.OrderBy(o => o.Item1.message.from).ToList();
+                    break;
+                case SortMode.Type:
+                    results = results.OrderBy(o => o.Item1.computedType).ToList();
+                    break;
+                case SortMode.State:
+                    results = results.OrderBy(o => o.Item1.computedState).ToList();
+                    break;
+                default:
+                    break;
             }
         }
 

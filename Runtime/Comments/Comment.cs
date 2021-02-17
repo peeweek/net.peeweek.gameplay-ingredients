@@ -88,7 +88,7 @@ namespace GameplayIngredients.Comments
         public string URL;
         [Multiline]
         public string body;
-        [ReorderableList]
+        [ReorderableList, NoLabel]
         public UnityEngine.Object[] attachedObjects;
 
         public bool changeType;

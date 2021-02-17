@@ -81,6 +81,7 @@ namespace GameplayIngredients.Comments.Editor
                     }
                 }
                 serializedObject.ApplyModifiedProperties();
+                CommentsWindow.RequestRefresh();
             }
             else
             {
@@ -162,10 +163,14 @@ namespace GameplayIngredients.Comments.Editor
                             replies.serializedObject.Update();
                             replies.DeleteArrayElementAtIndex(replyIndex);
                             replies.serializedObject.ApplyModifiedProperties();
+                            CommentsWindow.RequestRefresh();
+
                         }
                     }
                     GUILayout.Space(2);
                     message.serializedObject.ApplyModifiedProperties();
+                    CommentsWindow.RequestRefresh();
+
                 }
                 else // Display Message
                 {
@@ -189,8 +194,9 @@ namespace GameplayIngredients.Comments.Editor
                             reply.FindPropertyRelative("body").stringValue = string.Empty;
                             reply.FindPropertyRelative("URL").stringValue = string.Empty;
                             reply.FindPropertyRelative("from").stringValue = CommentsWindow.user;
-                            reply.FindPropertyRelative("targets").ClearArray();
+                            reply.FindPropertyRelative("attachedObjects").ClearArray();
                             replies.serializedObject.ApplyModifiedProperties();
+                            CommentsWindow.RequestRefresh();
                         }
                     }
                     EditorGUILayout.Space();
