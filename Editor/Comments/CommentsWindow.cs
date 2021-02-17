@@ -74,6 +74,7 @@ namespace GameplayIngredients.Comments.Editor
             Location,
             From,
             Type,
+            Priority,
             State
         }
 
@@ -220,11 +221,12 @@ namespace GameplayIngredients.Comments.Editor
             using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
             {
                 SortButton("Commment", SortMode.Name, 180);
-                SortButton("Description", SortMode.Description, position.width - 461);
+                SortButton("Description", SortMode.Description, position.width - 541);
                 SortButton("Location", SortMode.Location, 100);
                 SortButton("From", SortMode.From, 80);
                 SortButton("Type", SortMode.Type, 50);
-                SortButton("State", SortMode.State, 50);
+                SortButton("Priority", SortMode.Priority, 60);
+                SortButton("State", SortMode.State, 70);
             }
             GUI.backgroundColor = Color.white;
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
@@ -299,7 +301,7 @@ namespace GameplayIngredients.Comments.Editor
                 if (GUILayout.Button(CommentEditor.GetPriorityContent(comment.title, comment.computedPriority), Styles.line, GUILayout.Width(180)))
                     Selection.activeObject = parent;
 
-                GUILayout.Label(comment.message.body, Styles.line, GUILayout.Width(position.width - 461));
+                GUILayout.Label(comment.message.body, Styles.line, GUILayout.Width(position.width - 541));
                 if(parent is GameObject)
                     GUILayout.Label((parent as GameObject).scene.name, Styles.line, GUILayout.Width(100));
                 else
@@ -307,7 +309,8 @@ namespace GameplayIngredients.Comments.Editor
 
                 GUILayout.Label(comment.message.from, Styles.line, GUILayout.Width(80));
                 GUILayout.Label(comment.computedType.ToString(), Styles.line, GUILayout.Width(50));
-                GUILayout.Label(comment.computedState.ToString(), Styles.line, GUILayout.Width(50));
+                GUILayout.Label(comment.computedPriority.ToString(), Styles.line, GUILayout.Width(60));
+                GUILayout.Label(comment.computedState.ToString(), Styles.line, GUILayout.Width(70));
             }
             return true;
         }
@@ -365,6 +368,9 @@ namespace GameplayIngredients.Comments.Editor
                     break;
                 case SortMode.Type:
                     results = results.OrderBy(o => o.Item1.computedType).ToList();
+                    break;
+                case SortMode.Priority:
+                    results = results.OrderBy(o => o.Item1.computedPriority).ToList();
                     break;
                 case SortMode.State:
                     results = results.OrderBy(o => o.Item1.computedState).ToList();
