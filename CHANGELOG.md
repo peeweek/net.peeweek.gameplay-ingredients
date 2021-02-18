@@ -10,6 +10,7 @@
 * Added abstract `PingableEditor` class for MonoBehaviours that can be Pinged to stand out in the inspector.
 * Added Help items in Menu, Added HelpURL class attributes
 * Feature: Scene Comments
+* Added preferences to control visibility of buttons in Additional Scene View Toolbar
 
 ## 2020.2.2
 

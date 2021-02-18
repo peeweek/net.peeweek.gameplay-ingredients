@@ -21,6 +21,9 @@ namespace GameplayIngredients.Editor
 
         private static void OnSceneGUI(SceneView sceneView)
         {
+            if (!Preferences.showToolbar)
+                return;
+
             var r = new Rect(Vector2.zero, new Vector2(sceneView.position.width,24));
             Handles.BeginGUI();
             using (new GUILayout.AreaScope(r))
@@ -28,101 +31,117 @@ namespace GameplayIngredients.Editor
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
 
-                    if(PlayFromHere.IsReady)
+                    if(Preferences.showPlayFromHere)
                     {
-                        bool play = GUILayout.Toggle(EditorApplication.isPlaying, Contents.playFromHere, EditorStyles.toolbarButton);
-
-                        if(GUI.changed)
+                        using(new EditorGUI.DisabledGroupScope(!PlayFromHere.IsReady))
                         {
-                            if (play)
-                                PlayFromHere.Play(sceneView);
-                            else
-                                EditorApplication.isPlaying = false;
-                        }
+                            bool play = GUILayout.Toggle(EditorApplication.isPlaying, Contents.playFromHere, EditorStyles.toolbarButton);
 
+                            if (GUI.changed)
+                            {
+                                if (play)
+                                    PlayFromHere.Play(sceneView);
+                                else
+                                    EditorApplication.isPlaying = false;
+                            }
+
+                        }
                         GUILayout.Space(24);
                     }
 
-                    Color backup = GUI.color;
-
-                    bool isLinked = LinkGameView.Active;
-                    bool isLocked = LinkGameView.LockedSceneView == sceneView;
-
-
-                    if(isLinked && isLocked)
+                    if(Preferences.showLinkGameView)
                     {
-                        GUI.color = Styles.lockedLinkColor * 2;
-                    }
-                    else if (isLinked && LinkGameView.CinemachineActive)
-                    {
-                        GUI.color = Styles.cineColor * 2;
-                    }
 
-                    isLinked = GUILayout.Toggle(isLinked, LinkGameView.CinemachineActive? Contents.linkGameViewCinemachine: Contents.linkGameView, EditorStyles.toolbarButton, GUILayout.Width(64));
+                        Color backup = GUI.color;
 
-                    if (GUI.changed)
-                    {
-                        if(Event.current.shift)
+                        bool isLinked = LinkGameView.Active;
+                        bool isLocked = LinkGameView.LockedSceneView == sceneView;
+
+
+                        if (isLinked && isLocked)
                         {
-                            if (!LinkGameView.Active)
-                                LinkGameView.Active = true;
-
-                            LinkGameView.CinemachineActive = !LinkGameView.CinemachineActive;
+                            GUI.color = Styles.lockedLinkColor * 2;
                         }
-                        else
+                        else if (isLinked && LinkGameView.CinemachineActive)
                         {
-                            LinkGameView.Active = isLinked;
-                            LinkGameView.CinemachineActive = false;
+                            GUI.color = Styles.cineColor * 2;
                         }
-                    }
 
-                    isLocked = GUILayout.Toggle(isLocked, Contents.lockLinkGameView, EditorStyles.toolbarButton);
+                        isLinked = GUILayout.Toggle(isLinked, LinkGameView.CinemachineActive ? Contents.linkGameViewCinemachine : Contents.linkGameView, EditorStyles.toolbarButton, GUILayout.Width(64));
 
-                    if (GUI.changed)
-                    {
-                        if (isLocked)
+                        if (GUI.changed)
                         {
-                            LinkGameView.CinemachineActive = false;
-                            LinkGameView.LockedSceneView = sceneView;
+                            if (Event.current.shift)
+                            {
+                                if (!LinkGameView.Active)
+                                    LinkGameView.Active = true;
+
+                                LinkGameView.CinemachineActive = !LinkGameView.CinemachineActive;
+                            }
+                            else
+                            {
+                                LinkGameView.Active = isLinked;
+                                LinkGameView.CinemachineActive = false;
+                            }
                         }
-                        else
+
+                        isLocked = GUILayout.Toggle(isLocked, Contents.lockLinkGameView, EditorStyles.toolbarButton);
+
+                        if (GUI.changed)
                         {
-                            LinkGameView.LockedSceneView = null;
+                            if (isLocked)
+                            {
+                                LinkGameView.CinemachineActive = false;
+                                LinkGameView.LockedSceneView = sceneView;
+                            }
+                            else
+                            {
+                                LinkGameView.LockedSceneView = null;
+                            }
+                        }
+
+                        GUI.color = backup;
+                        GUILayout.Space(16);
+                    }
+
+                    if(Preferences.showPOV)
+                    {
+                        if (GUILayout.Button("POV", EditorStyles.toolbarDropDown))
+                        {
+                            Rect btnrect = GUILayoutUtility.GetLastRect();
+                            btnrect.yMax += 17;
+                            SceneViewPOV.ShowPopup(btnrect, sceneView);
+                        }
+                        GUILayout.Space(16);
+                    }
+
+                    if(Preferences.showCheck)
+                    {
+                        if (GUILayout.Button(Contents.checkWindow, EditorStyles.toolbarButton))
+                        {
+                            EditorWindow.GetWindow<CheckWindow>();
+                        }
+                        GUILayout.Space(16);
+                    }
+
+                    if(Preferences.showComments)
+                    {
+                        if (GUILayout.Button(Contents.commentsWindow, EditorStyles.toolbarButton))
+                        {
+                            CommentsWindow.Open();
+                        }
+                        if (GUILayout.Button(Contents.addComment, EditorStyles.toolbarButton))
+                        {
+                            SceneCommentEditor.CreateComment();
                         }
                     }
 
-                    GUI.color = backup;
-
-                    // SceneViewPOV
-                    GUILayout.Space(16);
-                    if(GUILayout.Button("POV", EditorStyles.toolbarDropDown))
+                    if(Preferences.showCustom)
                     {
-                        Rect btnrect = GUILayoutUtility.GetLastRect();
-                        btnrect.yMax += 17;
-                        SceneViewPOV.ShowPopup(btnrect, sceneView);
+                        // Custom Callback here
+                        if (OnSceneViewToolbarGUI != null)
+                            OnSceneViewToolbarGUI.Invoke(sceneView);
                     }
-
-                    // Check Window
-                    GUILayout.Space(16);
-                    if (GUILayout.Button(Contents.checkWindow, EditorStyles.toolbarButton))
-                    {
-                        EditorWindow.GetWindow<CheckWindow>();
-                    }
-
-                    // Comments Window
-                    GUILayout.Space(16);
-                    if (GUILayout.Button(Contents.commentsWindow, EditorStyles.toolbarButton))
-                    {
-                        CommentsWindow.Open();
-                    }
-                    if (GUILayout.Button(Contents.addComment, EditorStyles.toolbarButton))
-                    {
-                        SceneCommentEditor.CreateComment();
-                    }
-
-                    // Custom Code here
-                    if (OnSceneViewToolbarGUI != null)
-                        OnSceneViewToolbarGUI.Invoke(sceneView);
 
                     GUILayout.FlexibleSpace();
                     // Saving Space not to overlap view controls
@@ -159,6 +178,89 @@ namespace GameplayIngredients.Editor
             GUI.color = color;
             GUI.Label(r, text);
             GUI.color = Color.white;
+        }
+
+        static class Preferences
+        {
+            // Public Getters
+            public static bool showToolbar => Get(kShowToolbar);
+            public static bool showPlayFromHere => Get(kShowPlayFromHere);
+            public static bool showLinkGameView => Get(kShowLinkGameView);
+            public static bool showPOV => Get(kShowPOV);
+            public static bool showCheck => Get(kShowCheck);
+            public static bool showComments => Get(kShowComments);
+            public static bool showCustom => Get(kShowCustom);
+
+            const string kShowToolbar = "showToolbar";
+            const string kShowPlayFromHere = "showPlayFromHere";
+            const string kShowLinkGameView = "showLinkGameView";
+            const string kShowPOV = "showPOV";
+            const string kShowCheck = "showCheck";
+            const string kShowComments = "showComments";
+            const string kShowCustom = "showCustom";
+
+            const string kPrefPrefix = "GameplayIngredients.SceneViewToolbar";
+            static readonly Dictionary<string, bool> defaults = new Dictionary<string, bool>
+            {
+                { kShowToolbar , true },
+                { kShowPlayFromHere , true },
+                { kShowLinkGameView , true },
+                { kShowPOV , true },
+                { kShowCheck , true },
+                { kShowComments , true },
+                { kShowCustom , true },
+            };
+
+            static bool Default(string name)
+            {
+                if (defaults.ContainsKey(name))
+                    return defaults[name];
+                else
+                    return false;
+            }
+
+            static bool Get(string name)
+            {
+                return EditorPrefs.GetBool($"{kPrefPrefix}.{name}", Default(name));
+            }
+
+            static void Set(string name, bool value)
+            {
+                EditorPrefs.SetBool($"{kPrefPrefix}.{name}", value);
+            }
+
+            [SettingsProvider]
+            public static SettingsProvider GetPreferences()
+            {
+                static void PreferenceItem(string label, string name)
+                {
+                    EditorGUI.BeginChangeCheck();
+                    bool val = EditorGUILayout.Toggle(label, Get(name));
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        Set(name, val);
+                        SceneView.RepaintAll();
+                    }
+                };
+
+                return new SettingsProvider("Preferences/Gameplay Ingredients/Scene View", SettingsScope.User)
+                {
+                    label = "Scene View",
+                    guiHandler = (searchContext) =>
+                    {
+                        PreferenceItem("Show Toolbar", "showToolbar");
+                        using (new EditorGUI.IndentLevelScope(1))
+                        {
+                            PreferenceItem("Play From Here", kShowPlayFromHere);
+                            PreferenceItem("Link Game View", kShowLinkGameView);
+                            PreferenceItem("Point of View", kShowPOV);
+                            PreferenceItem("Check Window", kShowCheck);
+                            PreferenceItem("Comments Window", kShowComments);
+                            PreferenceItem("Custom Toolbar Items", kShowCustom);
+                        }
+                    }
+                };
+            }
         }
 
         static class Contents
