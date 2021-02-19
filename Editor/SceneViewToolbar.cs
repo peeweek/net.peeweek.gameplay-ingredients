@@ -232,13 +232,25 @@ namespace GameplayIngredients.Editor
             [SettingsProvider]
             public static SettingsProvider GetPreferences()
             {
-                static void PreferenceItem(string label, string name)
+                static void OnToggleAll(bool toggle)
+                {
+                    OnToggleLinkGameView(toggle);
+                }
+
+                static void OnToggleLinkGameView(bool toggle)
+                {
+                    if (!toggle)
+                        LinkGameView.Active = false;
+                }
+
+                static void PreferenceItem(string label, string name, Action<bool> onToggle = null)
                 {
                     EditorGUI.BeginChangeCheck();
                     bool val = EditorGUILayout.Toggle(label, Get(name));
                     if (EditorGUI.EndChangeCheck())
                     {
                         Set(name, val);
+                        onToggle?.Invoke(val);
                         SceneView.RepaintAll();
                     }
                 };
@@ -248,11 +260,11 @@ namespace GameplayIngredients.Editor
                     label = "Scene View",
                     guiHandler = (searchContext) =>
                     {
-                        PreferenceItem("Show Toolbar", "showToolbar");
+                        PreferenceItem("Show Toolbar", "showToolbar", OnToggleAll);
                         using (new EditorGUI.IndentLevelScope(1))
                         {
                             PreferenceItem("Play From Here", kShowPlayFromHere);
-                            PreferenceItem("Link Game View", kShowLinkGameView);
+                            PreferenceItem("Link Game View", kShowLinkGameView, OnToggleLinkGameView);
                             PreferenceItem("Point of View", kShowPOV);
                             PreferenceItem("Check Window", kShowCheck);
                             PreferenceItem("Comments Window", kShowComments);
@@ -261,6 +273,8 @@ namespace GameplayIngredients.Editor
                     }
                 };
             }
+
+
         }
 
         static class Contents
