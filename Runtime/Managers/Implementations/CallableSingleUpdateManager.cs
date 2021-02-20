@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace GameplayIngredients.Managers
 {
+    [NonExcludeableManager]
     public class CallableSingleUpdateManager : Manager
     {
         class Call
