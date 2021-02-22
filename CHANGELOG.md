@@ -11,6 +11,10 @@
 * Added Help items in Menu, Added HelpURL class attributes
 * Feature: Scene Comments
 * Added preferences to control visibility of buttons in Additional Scene View Toolbar
+* Added a `[NonExcludeableManager]` class attribute for managers that should not be excluded in Gameplay Ingredients Settings
+* Added **SingleUpdateManager** to register/remove update methods that will be updated in its Update() instead of each Dedicated behavior Update()
+* **BEHAVIOR CHANGE** : State Machine update and OnUpdateEvent are now updated using the SingleUpdateManager
+* GameplayIngredientsSettings Manager Exclusion List now only displays managers that can be excluded.
 
 ## 2020.2.2
 
