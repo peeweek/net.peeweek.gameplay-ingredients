@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using GameplayIngredients.Actions;
+using GameplayIngredients.Managers;
 
 namespace GameplayIngredients.StateMachines
 {
@@ -71,6 +72,19 @@ namespace GameplayIngredients.StateMachines
             }
         }
 
+
+        private void OnEnable()
+        {
+            if (GameplayIngredientsSettings.currentSettings.allowUpdateCalls)
+                Manager.Get<SingleUpdateManager>().Register(SingleUpdate);
+        }
+
+        private void OnDisable()
+        {
+            if (GameplayIngredientsSettings.currentSettings.allowUpdateCalls)
+                Manager.Get<SingleUpdateManager>().Remove(SingleUpdate);
+        }
+
         void Start()
         {
             foreach (var state in States)
@@ -102,14 +116,14 @@ namespace GameplayIngredients.StateMachines
                 // Then Set new current state
                 m_CurrentState = newState;
 
-                // Finally, call State enter
+                // Call State enter
                 Callable.Call(m_CurrentState.OnStateEnter, gameObject);
             }
             else
                 Debug.LogWarning(string.Format("{0} : Trying to set unknown state {1}", gameObject.name, stateName), gameObject);
         }
 
-        void Update()
+        void SingleUpdate()
         {
             if (GameplayIngredientsSettings.currentSettings.allowUpdateCalls 
                 && m_CurrentState != null 

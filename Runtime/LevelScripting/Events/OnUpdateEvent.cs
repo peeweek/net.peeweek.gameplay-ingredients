@@ -1,3 +1,4 @@
+using GameplayIngredients.Managers;
 using NaughtyAttributes;
 
 namespace GameplayIngredients.Events
@@ -9,15 +10,17 @@ namespace GameplayIngredients.Events
 
         private void OnEnable()
         {
-            
+            if(AllowUpdateCalls())
+                Manager.Get<SingleUpdateManager>().Register(SingleUpdate);
         }
 
         private void OnDisable()
         {
-            
+            if (AllowUpdateCalls())
+                Manager.Get<SingleUpdateManager>().Remove(SingleUpdate);
         }
 
-        private void Update()
+        private void SingleUpdate()
         {
             Callable.Call(OnUpdate, gameObject); 
         }
