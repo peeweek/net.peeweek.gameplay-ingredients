@@ -11,7 +11,6 @@ namespace GameplayIngredients.Editor
         {
             if (importedAssets.Contains(WelcomeScreen.kSettingsAssetPath))
             {
-                Debug.Log("Imported GameplayIngredientsSettings");
                 WelcomeScreen.Reload();
             }
 

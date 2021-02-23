@@ -20,14 +20,6 @@ namespace GameplayIngredients.Rigs
             m_FixedUpdateRigs = new Dictionary<int, List<Rig>>();
         }
 
-        private void OnDisable()
-        {
-            m_UpdateRigs.Clear();
-            m_LateUpdateRigs.Clear();
-            m_FixedUpdateRigs.Clear();
-        }
-
-
         public void RegistedRig(Rig rig)
         {
             Rig.UpdateMode updateMode;
