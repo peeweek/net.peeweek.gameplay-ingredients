@@ -19,7 +19,7 @@ namespace GameplayIngredients
         protected bool m_DisableWelcomeScreenAutoStart;
 
         [BoxGroup("Managers")]
-        [SerializeField, ReorderableList, TypeDropDown(typeof(Manager))]
+        [SerializeField, ReorderableList, ExcludedManager]
         protected string[] m_ExcludedManagers;
 
         [BoxGroup("Callables")]
