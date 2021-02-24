@@ -4,6 +4,10 @@
 
 #### Added
 
+#### Fixed
+
+* Fixed Rig Manager Update not executing correctly when collection is modified during its execution.
+
 ## 2020.2.3
 
 #### Added
