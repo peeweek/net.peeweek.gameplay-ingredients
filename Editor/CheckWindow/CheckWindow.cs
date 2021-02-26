@@ -446,55 +446,81 @@ namespace GameplayIngredients.Editor
                         if (!(component is Transform))
                         {
                             Type t = component.GetType();
-                            FieldInfo[] fields = t.GetFields(BindingFlags.Public
+                            MemberInfo[] members = t.GetFields(BindingFlags.Public
                                              | BindingFlags.Instance
                                              | BindingFlags.NonPublic);
 
-                            foreach (var f in fields)
+                            PropertyInfo[] properties = t.GetProperties();
+
+                            members = members.Union(properties).ToArray();
+
+                            foreach (var m in members)
                             {
-                                if (f.FieldType == typeof(GameObject))
+                                
+                                Type type = null;
+                                object value = null;
+                                try
                                 {
-                                    var go = f.GetValue(component) as GameObject;
+                                    if (m is FieldInfo)
+                                    {
+                                        type = (m as FieldInfo).FieldType;
+                                        value = (m as FieldInfo).GetValue(component);
+                                    }
+                                    else if (m is PropertyInfo)
+                                    {
+                                        type = (m as PropertyInfo).ReflectedType;
+                                        value = (m as PropertyInfo).GetValue(component);
+                                    }
+                                    else
+                                        continue;
+                                }
+                                catch
+                                {
+                                    continue;
+                                }
+
+                                if (type == typeof(GameObject))
+                                {
+                                    var go = value as GameObject;
                                     if (go != null && go != component.gameObject)
                                     {
                                         referencedGameObjects.Add(go);
                                     }
                                 }
-                                else if (f.FieldType == typeof(Transform))
+                                else if (type == typeof(Transform))
                                 {
-                                    var tr = f.GetValue(component) as Transform;
+                                    var tr = value as Transform;
                                     if (tr != null && tr.gameObject != component.gameObject)
                                     {
                                         referencedGameObjects.Add(tr.gameObject);
                                     }
                                 }
-                                else if (f.FieldType.IsSubclassOf(typeof(Component)))
+                                else if (type.IsSubclassOf(typeof(Component)))
                                 {
-                                    var comp = f.GetValue(component) as Component;
+                                    var comp = value as Component;
                                     if (comp != null && comp.gameObject != component.gameObject)
                                     {
                                         referencedComponents.Add(comp);
                                     }
                                 }
-                                else if (f.FieldType == typeof(UnityEvent))
+                                else if (type == typeof(UnityEvent))
                                 {
-                                    var ue = f.GetValue(component) as UnityEvent;
+                                    var ue = value as UnityEvent;
                                     int evtCount = ue.GetPersistentEventCount();
-                                    for(int k = 0; k< evtCount; k++)
+                                    for (int k = 0; k < evtCount; k++)
                                     {
                                         var target = ue.GetPersistentTarget(k);
                                         if (target is GameObject)
                                             referencedGameObjects.Add(target as GameObject);
-                                        else if(target.GetType().IsSubclassOf(typeof(Component)))
+                                        else if (target.GetType().IsSubclassOf(typeof(Component)))
                                             referencedGameObjects.Add((target as Component).gameObject);
                                     }
                                 }
-                                else if (f.FieldType.IsSubclassOf(typeof(UnityEngine.Object)))
+                                else if (type.IsSubclassOf(typeof(UnityEngine.Object)))
                                 {
-                                    var obj = f.GetValue(component) as UnityEngine.Object;
+                                    var obj = value as UnityEngine.Object;
                                     referencedObjects.Add(obj);
                                 }
-
                             }
                         }
                     }
