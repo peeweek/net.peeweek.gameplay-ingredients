@@ -409,28 +409,31 @@ namespace GameplayIngredients.Editor
 
     public class SceneObjects
     {
-        public GameObject[] sceneObjects;
+        public GameObject[] allObjects;
         public List<GameObject> referencedGameObjects;
         public List<Component> referencedComponents;
         public List<UnityEngine.Object> referencedObjects;
 
         public SceneObjects()
         {
-            sceneObjects = GameObject.FindObjectsOfType<GameObject>();
+            allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+            allObjects = allObjects.Where(o => !PrefabUtility.IsPartOfPrefabAsset(o)).ToArray();
+
             referencedGameObjects = new List<GameObject>();
             referencedComponents = new List<Component>();
             referencedObjects = new List<UnityEngine.Object>();
 
-            if (sceneObjects == null || sceneObjects.Length == 0)
+            if (allObjects == null || allObjects.Length == 0)
                 return;
 
             try
             {
-                int count = sceneObjects.Length;
+                int count = allObjects.Length;
                 int i = 0;
 
-                foreach (var sceneObject in sceneObjects)
+                foreach (var sceneObject in allObjects)
                 {
+
                     float progress = ++i / (float)count;
                     if (EditorUtility.DisplayCancelableProgressBar("Building Reference Table...", $"{sceneObject.name}", progress))
                     {

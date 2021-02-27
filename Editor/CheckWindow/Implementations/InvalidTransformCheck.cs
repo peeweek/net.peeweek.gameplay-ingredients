@@ -21,10 +21,10 @@ namespace GameplayIngredients.Editor
         {
             try
             {
-                int count = so.sceneObjects.Length;
+                int count = so.allObjects.Length;
                 int i = 0;
 
-                foreach (var go in so.sceneObjects)
+                foreach (var go in so.allObjects)
                 {
                     float progress = ++i / count;
                     if (EditorUtility.DisplayCancelableProgressBar("Finding Transforms...", $"{go.name}", progress))
