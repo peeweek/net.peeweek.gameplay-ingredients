@@ -417,7 +417,7 @@ namespace GameplayIngredients.Editor
         public SceneObjects()
         {
             allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
-            allObjects = allObjects.Where(o => !PrefabUtility.IsPartOfPrefabAsset(o)).ToArray();
+            allObjects = allObjects.Where(o => !PrefabUtility.IsPartOfPrefabAsset(o) && o.hideFlags == HideFlags.None).ToArray();
 
             referencedGameObjects = new List<GameObject>();
             referencedComponents = new List<Component>();
