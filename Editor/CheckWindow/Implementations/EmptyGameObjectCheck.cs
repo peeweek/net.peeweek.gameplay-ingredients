@@ -48,7 +48,7 @@ namespace GameplayIngredients.Editor
                             {
                                 if (!so.referencedGameObjects.Contains(go) && !so.referencedComponents.Contains(go.transform))
                                 {
-                                    var result =  new CheckResult(this, CheckResult.Result.Notice, "Empty Static Game Object has no children and could be deleted if unused.", go);
+                                    var result =  new CheckResult(this, CheckResult.Result.Notice, "Empty Static Game Object is not referenced, and has no children", go);
                                     result.resolutionActionIndex = 1;
                                     yield return result;
                                 }
