@@ -56,8 +56,13 @@ namespace GameplayIngredients.Editor
                 EditorPrefs.SetBool(kShowIgnoredPreference, value); 
             }
         }
+
         Vector2 Scroll = new Vector2();
         Dictionary<Check, bool> s_CheckStates;
+
+        int noticeCount;
+        int warningCount;
+        int errorCount;
 
         enum SortMode
         {
@@ -185,9 +190,9 @@ namespace GameplayIngredients.Editor
                 filterString = EditorGUILayout.DelayedTextField(filterString, EditorStyles.toolbarSearchField, GUILayout.Width(180));
 
                 showIgnored = GUILayout.Toggle(showIgnored, "Ignored", EditorStyles.toolbarButton);
-                showNotice = GUILayout.Toggle(showNotice, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Notice).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Notice)), EditorStyles.toolbarButton);
-                showWarning = GUILayout.Toggle(showWarning, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Warning).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Warning)), EditorStyles.toolbarButton);
-                showError = GUILayout.Toggle(showError, new GUIContent(m_Results.Where(o => o.result == CheckResult.Result.Failed).Count().ToString(), CheckResult.GetIcon(CheckResult.Result.Failed)), EditorStyles.toolbarButton);
+                showNotice = GUILayout.Toggle(showNotice, new GUIContent(noticeCount.ToString(), CheckResult.GetIcon(CheckResult.Result.Notice)), EditorStyles.toolbarButton);
+                showWarning = GUILayout.Toggle(showWarning, new GUIContent(warningCount.ToString(), CheckResult.GetIcon(CheckResult.Result.Warning)), EditorStyles.toolbarButton);
+                showError = GUILayout.Toggle(showError, new GUIContent(errorCount.ToString(), CheckResult.GetIcon(CheckResult.Result.Failed)), EditorStyles.toolbarButton);
 
             }
             using(new GUILayout.VerticalScope())
@@ -199,8 +204,7 @@ namespace GameplayIngredients.Editor
                     SortButton("Object", SortMode.ObjectName, GUILayout.Width(128));
                     SortButton("Message", SortMode.Message, GUILayout.ExpandWidth(true));
                     SortButton("Resolution", SortMode.Resolution, GUILayout.Width(128));
-                    if(showIgnored)
-                        SortButton("Ignored", SortMode.Ignored, GUILayout.Width(64));
+                    SortButton("Ignored", SortMode.Ignored, GUILayout.Width(64));
                     GUILayout.Space(12);
                 }
 
@@ -211,7 +215,6 @@ namespace GameplayIngredients.Editor
                     bool odd = true;
                     foreach (var result in m_Results)
                     {
-
                         if (!showIgnored && IsIgnored(result) || result.mainObject == null)
                             continue;
 
@@ -244,17 +247,14 @@ namespace GameplayIngredients.Editor
 
                             EditorGUI.EndDisabledGroup();
 
-                            if(showIgnored)
+                            GUILayout.Space(18);
+                            EditorGUI.BeginChangeCheck();
+                            var ignored = GUILayout.Toggle(IsIgnored(result),"", EditorStyles.toggle ,GUILayout.Width(24));
+                            if (EditorGUI.EndChangeCheck())
                             {
-                                GUILayout.Space(18);
-                                EditorGUI.BeginChangeCheck();
-                                var ignored = GUILayout.Toggle(IsIgnored(result),"", EditorStyles.toggle ,GUILayout.Width(24));
-                                if (EditorGUI.EndChangeCheck())
-                                {
-                                    SetIgnored(result, ignored);
-                                }
-                                GUILayout.Space(18);
+                                SetIgnored(result, ignored);
                             }
+                            GUILayout.Space(18);
 
                         }
                     }
@@ -380,9 +380,15 @@ namespace GameplayIngredients.Editor
                 m_Results = results;
 
             sortMode = SortMode.None;
+
+            noticeCount = m_Results.Where(o => o.result == CheckResult.Result.Notice).Count();
+            warningCount = m_Results.Where(o => o.result == CheckResult.Result.Warning).Count();
+            errorCount = m_Results.Where(o => o.result == CheckResult.Result.Failed).Count();
+
             BuildIgnoredList();
             Repaint();
         }
+
 
         static class Styles
         {
@@ -409,28 +415,31 @@ namespace GameplayIngredients.Editor
 
     public class SceneObjects
     {
-        public GameObject[] sceneObjects;
+        public GameObject[] allObjects;
         public List<GameObject> referencedGameObjects;
         public List<Component> referencedComponents;
         public List<UnityEngine.Object> referencedObjects;
 
         public SceneObjects()
         {
-            sceneObjects = GameObject.FindObjectsOfType<GameObject>();
+            allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+            allObjects = allObjects.Where(o => !PrefabUtility.IsPartOfPrefabAsset(o) && o.hideFlags == HideFlags.None).ToArray();
+
             referencedGameObjects = new List<GameObject>();
             referencedComponents = new List<Component>();
             referencedObjects = new List<UnityEngine.Object>();
 
-            if (sceneObjects == null || sceneObjects.Length == 0)
+            if (allObjects == null || allObjects.Length == 0)
                 return;
 
             try
             {
-                int count = sceneObjects.Length;
+                int count = allObjects.Length;
                 int i = 0;
 
-                foreach (var sceneObject in sceneObjects)
+                foreach (var sceneObject in allObjects)
                 {
+
                     float progress = ++i / (float)count;
                     if (EditorUtility.DisplayCancelableProgressBar("Building Reference Table...", $"{sceneObject.name}", progress))
                     {
@@ -443,7 +452,22 @@ namespace GameplayIngredients.Editor
                     var components = sceneObject.GetComponents<Component>();
                     foreach (var component in components)
                     {
-                        if (!(component is Transform))
+                        if (component is Transform)
+                            continue;
+                        else if(component is Renderer)
+                        {
+                            var renderer = component as Renderer;
+                            if (renderer.probeAnchor != null)
+                            {
+                                referencedComponents.Add(renderer.probeAnchor);
+                                referencedGameObjects.Add(renderer.probeAnchor.gameObject);
+                            }
+                            foreach(var sharedMat in renderer.sharedMaterials)
+                            {
+                                referencedObjects.Add(sharedMat);
+                            }
+                        }
+                        else 
                         {
                             Type t = component.GetType();
                             FieldInfo[] fields = t.GetFields(BindingFlags.Public
@@ -460,21 +484,52 @@ namespace GameplayIngredients.Editor
                                         referencedGameObjects.Add(go);
                                     }
                                 }
+                                else if (f.FieldType == typeof(GameObject[]))
+                                {
+                                    var golist = f.GetValue(component) as GameObject[];
+                                    foreach (var go in golist)
+                                        if (go != null && go != component.gameObject)
+                                        {
+                                            referencedGameObjects.Add(go);
+                                        }
+                                }
                                 else if (f.FieldType == typeof(Transform))
                                 {
                                     var tr = f.GetValue(component) as Transform;
                                     if (tr != null && tr.gameObject != component.gameObject)
                                     {
                                         referencedGameObjects.Add(tr.gameObject);
+                                        referencedComponents.Add(tr);
                                     }
+                                }
+                                else if (f.FieldType == typeof(Transform[]))
+                                {
+                                    var trlist = f.GetValue(component) as Transform[];
+                                    foreach (var tr in trlist)
+                                        if (tr != null && tr.gameObject != component.gameObject)
+                                        {
+                                            referencedGameObjects.Add(tr.gameObject);
+                                            referencedComponents.Add(tr);
+                                        }
                                 }
                                 else if (f.FieldType.IsSubclassOf(typeof(Component)))
                                 {
                                     var comp = f.GetValue(component) as Component;
                                     if (comp != null && comp.gameObject != component.gameObject)
                                     {
+                                        referencedGameObjects.Add(comp.gameObject);
                                         referencedComponents.Add(comp);
                                     }
+                                }
+                                else if (f.FieldType.IsSubclassOf(typeof(Component[])))
+                                {
+                                    var complist = f.GetValue(component) as Component[];
+                                    foreach(var comp in complist)
+                                        if (comp != null && comp.gameObject != component.gameObject)
+                                        {
+                                            referencedGameObjects.Add(comp.gameObject);
+                                            referencedComponents.Add(comp);
+                                        }
                                 }
                                 else if (f.FieldType == typeof(UnityEvent))
                                 {

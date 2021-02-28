@@ -19,10 +19,10 @@ namespace GameplayIngredients.Editor
         {
             try
             {
-                int count = so.sceneObjects.Length;
+                int count = so.allObjects.Length;
                 int i = 0;
 
-                foreach (var go in so.sceneObjects)
+                foreach (var go in so.allObjects)
                 {
                     float progress = ++i / count;
                     if (EditorUtility.DisplayCancelableProgressBar("Finding Empty Game Objects...", $"{go.name}", progress))
@@ -48,7 +48,7 @@ namespace GameplayIngredients.Editor
                             {
                                 if (!so.referencedGameObjects.Contains(go) && !so.referencedComponents.Contains(go.transform))
                                 {
-                                    var result =  new CheckResult(this, CheckResult.Result.Notice, "Empty Static Game Object has no children and could be deleted if unused.", go);
+                                    var result =  new CheckResult(this, CheckResult.Result.Notice, "Empty Static Game Object is not referenced, and has no children", go);
                                     result.resolutionActionIndex = 1;
                                     yield return result;
                                 }

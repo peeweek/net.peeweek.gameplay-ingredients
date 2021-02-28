@@ -15,7 +15,7 @@ namespace GameplayIngredients.Editor
 
         public override IEnumerable<CheckResult> GetResults(SceneObjects sceneObjects)
         {
-            foreach(var obj in sceneObjects.sceneObjects)
+            foreach(var obj in sceneObjects.allObjects)
             {
                 if(obj.TryGetComponent(out Renderer r))
                 {
