@@ -97,10 +97,14 @@ namespace GameplayIngredients.Rigs
             var priorities = dict.Keys.OrderBy(i => i);
             foreach(int priority in priorities)
             {
-                foreach(var rig in dict[priority])
+                if(dict.ContainsKey(priority))
                 {
-                    rig.UpdateRig(deltaTime);
+                    foreach (var rig in dict[priority].ToArray())
+                    {
+                        rig.UpdateRig(deltaTime);
+                    }
                 }
+
             }
         }
 
