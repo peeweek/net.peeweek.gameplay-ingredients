@@ -2,7 +2,9 @@
 
 ## 2020.2.4
 
-#### Added
+#### Fixed
+
+* CheckWindow: Better search for referenced objects in scene
 
 ## 2020.2.3
 
