@@ -13,22 +13,14 @@ namespace GameplayIngredients.Editor
 
             EditorGUI.BeginChangeCheck();
 
-            GUILayout.Label("Event Properties", EditorStyles.boldLabel);
+            string name = this.serializedObject.targetObject.GetType().Name;
 
-            using (new GUILayout.HorizontalScope())
+            DrawBreadCrumb("Event", Color.yellow, () =>
             {
-                using (new GUILayout.VerticalScope(GUILayout.ExpandWidth(true)))
-                {
-                    using (new EditorGUI.IndentLevelScope(1))
-                    {
-                        EditorGUILayout.LabelField(this.serializedObject.targetObject.GetType().Name);
-                    }
-                }
-
-                GUILayout.Space(8);
-
-                DrawDebugButton(this.serializedObject.targetObject as EventBase, GUILayout.Width(48), GUILayout.ExpandHeight(true));
-            }
+                GUILayout.Label(ObjectNames.NicifyVariableName(name));
+                GUILayout.FlexibleSpace();
+                OpenIngredientsExplorerButton(serializedObject.targetObject as EventBase, GUILayout.Width(48), GUILayout.Height(24));
+            });
 
             DrawBaseProperties();
 

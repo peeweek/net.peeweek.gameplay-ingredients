@@ -37,7 +37,7 @@ namespace GameplayIngredients.Editor
 
                 GUILayout.Space(8);
 
-                DrawDebugButton(this.serializedObject.targetObject as ActionBase, GUILayout.Width(48), GUILayout.ExpandHeight(true));
+                OpenIngredientsExplorerButton(serializedObject.targetObject as ActionBase, GUILayout.Width(48), GUILayout.ExpandHeight(true));
             }
 
             DrawBaseProperties();
