@@ -39,23 +39,21 @@ namespace GameplayIngredients.Editor
 
             EditorGUI.BeginChangeCheck();
 
-            GUILayout.Label("Rig : Update Properties", EditorStyles.boldLabel);
-
-            using (new GUILayout.HorizontalScope())
+            DrawBreadCrumb("Rig", color, () =>
             {
-                using (new GUILayout.VerticalScope(GUILayout.ExpandWidth(true)))
+                GUILayout.Label(ObjectNames.NicifyVariableName(serializedObject.targetObject.GetType().Name), GUILayout.ExpandWidth(true));
+
+                OpenIngredientsExplorerButton(serializedObject.targetObject as Rig);
+            });
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox, GUILayout.ExpandWidth(true)))
+            {
+                GUILayout.Label("Rig Update Properties", EditorStyles.boldLabel);
+                using (new EditorGUI.IndentLevelScope(1))
                 {
-                    using (new EditorGUI.IndentLevelScope(1))
-                    {
-                        NaughtyEditorGUI.PropertyField_Layout(m_UpdateMode, true);
-                        NaughtyEditorGUI.PropertyField_Layout(m_RigPriority, true);
-                    }
+                    NaughtyEditorGUI.PropertyField_Layout(m_UpdateMode, true);
+                    NaughtyEditorGUI.PropertyField_Layout(m_RigPriority, true);
                 }
-
-                GUILayout.Space(8);
-
-                OpenIngredientsExplorerButton(serializedObject.targetObject as Rig, GUILayout.Width(48), GUILayout.ExpandHeight(true));
-
             }
 
             DrawBaseProperties();
@@ -68,5 +66,8 @@ namespace GameplayIngredients.Editor
             EditorGUI.EndDisabledGroup();
 
         }
+
+        static readonly Color color = new Color(1f, .5f, .1f, 1f);
+
     }
 }

@@ -2,6 +2,7 @@ using GameplayIngredients.Editor;
 using NaughtyAttributes.Editor;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -35,15 +36,18 @@ public abstract class IngredientEditor : PingableEditor
         }
     }
 
-    protected void DrawBaseProperties()
+    protected void DrawBaseProperties(params string[] excludedNames)
     {
         EditorGUILayout.Space();
 
-        GUILayout.Label("Properties", EditorStyles.boldLabel);
         using (new EditorGUI.IndentLevelScope(1))
         {
             foreach (var prop in baseProperties)
+            {
+                if (excludedNames.Any(o => o == prop.name))
+                    continue;
                 NaughtyEditorGUI.PropertyField_Layout(prop, true);
+            }    
         }
     }
 
@@ -52,14 +56,15 @@ public abstract class IngredientEditor : PingableEditor
         using (new GUILayout.HorizontalScope(Styles.breadCrumbBar))
         {
             Color c = GUI.backgroundColor;
-            color *= 0.5f;
+            color *= 0.6f;
             color.a = 1;
             GUI.backgroundColor = color;
             GUILayout.Label(label, Styles.breadCrumb);
             GUI.backgroundColor = c;
 
             if (content != null)
-                content.Invoke();
+                using(new GUILayout.HorizontalScope(GUILayout.ExpandWidth(true)))
+                   content.Invoke();
             else
                 GUILayout.FlexibleSpace();
         }
@@ -73,9 +78,9 @@ public abstract class IngredientEditor : PingableEditor
         }
     }
 
-    protected void OpenIngredientsExplorerButton(MonoBehaviour target, params GUILayoutOption[] options)
+    protected void OpenIngredientsExplorerButton(MonoBehaviour target)
     {
-        DrawDebugButton(Styles.callableIconContent, ()=> IngredientsExplorerWindow.OpenWindow(target), options);
+        DrawDebugButton(Styles.callableIconContent, ()=> IngredientsExplorerWindow.OpenWindow(target), GUILayout.Width(28));
     }
 
     protected static class Styles
@@ -90,17 +95,17 @@ public abstract class IngredientEditor : PingableEditor
             callableIconContent = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-callable.png"));
 
             drawDebugButton = new GUIStyle(EditorStyles.miniButton);
-            drawDebugButton.margin = new RectOffset(2,2,2,2);
-            drawDebugButton.fixedHeight = 24;
+            drawDebugButton.margin = new RectOffset(1,1,1,1);
+            drawDebugButton.fixedHeight = 20;
 
 
             breadCrumbBar = new GUIStyle(EditorStyles.toolbar);
-            breadCrumbBar.fixedHeight = 28;
+            breadCrumbBar.fixedHeight = 22;
             breadCrumbBar.margin = new RectOffset(0, 0, 0, 8);
 
 
             bgTexture = new Texture2D(1, 1);
-            bgTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.3f));
+            bgTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.1f));
             bgTexture.Apply();
 
             breadCrumbBar.onNormal.background = bgTexture;
@@ -112,13 +117,11 @@ public abstract class IngredientEditor : PingableEditor
             breadCrumbBar.focused.background = bgTexture;
             breadCrumbBar.hover.background = bgTexture;
 
-
-
             var bc = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/net.peeweek.gameplay-ingredients/Icons/BreadCrumb.png");
             breadCrumb = new GUIStyle(EditorStyles.boldLabel);
-            breadCrumb.fixedHeight = 28;
+            breadCrumb.fixedHeight = 22;
             breadCrumb.border = new RectOffset(8, 28, 0, 0);
-            breadCrumb.padding = new RectOffset(8, 32, 2, 2);
+            breadCrumb.padding = new RectOffset(8, 32, 0, 0);
             breadCrumb.margin = new RectOffset();
 
             breadCrumb.onNormal.background = bc;

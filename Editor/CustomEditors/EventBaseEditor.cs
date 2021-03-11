@@ -15,11 +15,11 @@ namespace GameplayIngredients.Editor
 
             string name = this.serializedObject.targetObject.GetType().Name;
 
-            DrawBreadCrumb("Event", Color.yellow, () =>
+            DrawBreadCrumb("Event", color, () =>
             {
                 GUILayout.Label(ObjectNames.NicifyVariableName(name));
                 GUILayout.FlexibleSpace();
-                OpenIngredientsExplorerButton(serializedObject.targetObject as EventBase, GUILayout.Width(48), GUILayout.Height(24));
+                OpenIngredientsExplorerButton(serializedObject.targetObject as EventBase);
             });
 
             DrawBaseProperties();
@@ -29,5 +29,7 @@ namespace GameplayIngredients.Editor
                 serializedObject.ApplyModifiedProperties();
             }
         }
+
+        static readonly Color color = new Color(.1f, .5f, 1f, 1f);
     }
 }

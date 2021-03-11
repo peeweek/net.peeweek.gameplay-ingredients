@@ -22,30 +22,22 @@ namespace GameplayIngredients.Editor
 
             EditorGUI.BeginChangeCheck();
 
-            GUILayout.Label("Logic Properties", EditorStyles.boldLabel);
-
-            using (new GUILayout.HorizontalScope())
+            DrawBreadCrumb("Logic", color, () =>
             {
-                using (new GUILayout.VerticalScope(GUILayout.ExpandWidth(true)))
-                {
-                    using (new EditorGUI.IndentLevelScope(1))
-                    {
-                        NaughtyEditorGUI.PropertyField_Layout(m_Name, true);
-                    }
-                }
+                NaughtyEditorGUI.PropertyField_Layout(m_Name, true);
+                OpenIngredientsExplorerButton(serializedObject.targetObject as LogicBase);
+            });
 
-                GUILayout.Space(8);
-
-                OpenIngredientsExplorerButton(serializedObject.targetObject as LogicBase, GUILayout.Width(48), GUILayout.ExpandHeight(true));
-
-            }
-
-            DrawBaseProperties();
+            DrawBaseProperties("Name");
 
             if (EditorGUI.EndChangeCheck())
             {
                 serializedObject.ApplyModifiedProperties();
             }
         }
+
+        static readonly Color color = new Color(.5f, 1f, .1f, 1f);
+
+
     }
 }
