@@ -38,6 +38,5 @@ namespace GameplayIngredients.Editor
         }
 
         static readonly Color color = new Color(1f, .1f, .5f, 1f);
-
     }
 }

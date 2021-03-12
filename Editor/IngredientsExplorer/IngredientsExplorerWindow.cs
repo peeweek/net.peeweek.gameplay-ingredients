@@ -615,8 +615,14 @@ namespace GameplayIngredients.Editor
                         var node = m_Bindings[selectedIds[0]];
                         Selection.activeObject = node.Target;
 
-                        if (node.Type == CallTreeNodeType.Rig)
-                            RigEditor.PingObject(node.Target as Rig);
+                        if (node.Type == CallTreeNodeType.Rig
+                            || node.Type == CallTreeNodeType.Action
+                            || node.Type == CallTreeNodeType.Logic
+                            || node.Type == CallTreeNodeType.Event
+                            || node.Type == CallTreeNodeType.StateMachine
+                            || node.Type == CallTreeNodeType.State
+                            )
+                            PingableEditor.PingObject(node.Target);
                     }
             }
 
