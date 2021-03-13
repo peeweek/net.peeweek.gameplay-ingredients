@@ -49,6 +49,8 @@ public abstract class IngredientEditor : PingableEditor
                 NaughtyEditorGUI.PropertyField_Layout(prop, true);
             }    
         }
+
+        DrawButtons();
     }
 
     protected void DrawBreadCrumb(string label, Color color, Action content = null)
