@@ -20,5 +20,9 @@ namespace GameplayIngredients.Actions
             if(DestroyInstigator && instigator != null)
                 Destroy(instigator);
         }
+        public override string GetDefaultName()
+        {
+            return $"Destroy {(DestroyInstigator?"instigator": "objects")}";
+        }
     }
 }

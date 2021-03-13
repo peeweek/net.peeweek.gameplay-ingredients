@@ -15,6 +15,11 @@ public class AudioMixSnapshotAction : ActionBase
 
     public override void Execute(GameObject instigator = null)
     {
-        Mixer.TransitionToSnapshots(new AudioMixerSnapshot[]{ Mixer.FindSnapshot(SnapshotName)}, new float[]{ 1.0f}, TimeToReach);
+        Mixer?.TransitionToSnapshots(new AudioMixerSnapshot[]{ Mixer.FindSnapshot(SnapshotName)}, new float[]{ 1.0f}, TimeToReach);
+    }
+
+    public override string GetDefaultName()
+    {
+        return $"Set Mixer Snapshot:'{SnapshotName}' ({TimeToReach})s";
     }
 }

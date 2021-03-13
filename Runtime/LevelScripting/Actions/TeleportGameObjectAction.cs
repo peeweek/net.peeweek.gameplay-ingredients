@@ -36,5 +36,10 @@ namespace GameplayIngredients.Actions
             obj.transform.position = worldPosition;
             obj.transform.rotation = rotation;
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Teleport {(TeleportInstigator?"instigator":"objects")} to {(TeleportTarget ? TeleportTarget.name : "(null)")}";
+        }
     }
 }

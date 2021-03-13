@@ -37,6 +37,11 @@ namespace GameplayIngredients.Actions
                     Debug.LogWarning($"{gameObject.name}: ReachPositionRigSetTarget action could not set target : Target is null");
             }
         }
+
+        public override string GetDefaultName()
+        {
+            return $"ReachPositionRig Set Target : '{(UseInstigatorAsTarget?"instigator": target?.name)}'";
+        }
     }
 }
 

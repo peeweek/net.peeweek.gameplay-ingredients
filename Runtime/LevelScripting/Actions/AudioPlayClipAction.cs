@@ -6,6 +6,7 @@ namespace GameplayIngredients.Actions
     public class AudioPlayClipAction : ActionBase
     {
         public AudioClip Clip;
+        [NonNullCheck]
         public AudioSource Source;
         public bool RandomizePitch = false;
         [ShowIf("RandomizePitch")]
@@ -29,6 +30,14 @@ namespace GameplayIngredients.Actions
 
                 Source.Play();
             }
+        }
+
+        public override string GetDefaultName()
+        {
+            if(Clip == null)
+                return $"Play Audio Source: '{Source?.name}'";
+            else
+                return $"Play Audio clip '{Clip.name}' on '{Source?.name}'";
         }
     }
 }

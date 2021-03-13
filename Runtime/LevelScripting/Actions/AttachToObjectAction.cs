@@ -50,5 +50,10 @@ namespace GameplayIngredients.Actions
                 attachment.transform.parent = null;
             }
         }
+
+        public override string GetDefaultName()
+        {
+            return $"{action} : {(AttachInstigator?"instigator":"objects")} to '{parentObject?.name}'";
+        }
     }
 }

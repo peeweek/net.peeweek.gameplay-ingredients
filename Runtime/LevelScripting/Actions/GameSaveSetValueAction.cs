@@ -32,6 +32,19 @@ namespace GameplayIngredients.Actions
             }
         }
 
+        public override string GetDefaultName()
+        {
+            string value = "";
+            switch (valueType)
+            {
+                case GameSaveManager.ValueType.Bool: value = BoolValue.ToString(); break;
+                case GameSaveManager.ValueType.Int: value = IntValue.ToString(); break;
+                case GameSaveManager.ValueType.Float: value = FloatValue.ToString(); break;
+                case GameSaveManager.ValueType.String: value = StringValue.ToString(); break;
+            }
+            return $"Game Save Set {valueType} '{Key}' = {value}";
+        }
+
         bool isString() { return valueType == GameSaveManager.ValueType.String; }
         bool isBool() { return valueType == GameSaveManager.ValueType.Bool; }
         bool isInt() { return valueType == GameSaveManager.ValueType.Int; }

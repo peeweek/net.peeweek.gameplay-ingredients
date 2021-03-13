@@ -12,6 +12,10 @@ namespace GameplayIngredients.Actions
             Application.Quit();
 #endif
         }
+        public override string GetDefaultName()
+        {
+            return $"Exit Application";
+        }
     }
 }
 

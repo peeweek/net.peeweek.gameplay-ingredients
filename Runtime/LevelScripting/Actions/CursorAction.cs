@@ -12,6 +12,10 @@ namespace GameplayIngredients.Actions
             Cursor.lockState = LockState;
             Cursor.visible = CursorVisible;
         }
+        public override string GetDefaultName()
+        {
+            return $"{(CursorVisible ? "Show" : "Hide")} Cursor / Lock: {LockState}";
+        }
     }
 }
 

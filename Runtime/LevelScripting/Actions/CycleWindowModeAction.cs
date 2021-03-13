@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace GameplayIngredients.Actions
 {
+    [Obsolete]
     public class CycleWindowModeAction : ActionBase
     {
         public Text ButtonLabel;

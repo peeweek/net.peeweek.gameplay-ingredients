@@ -54,5 +54,10 @@ namespace GameplayIngredients.Actions
                 directorControlRig.timeline = TimelineAsset;
 
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Set DirectorControlRig:{(SetPlayMode? " "+PlayMode.ToString():"")}{(SetWrapMode ? " " + WrapMode.ToString() : "")}{(SetTime ? " Time: " + Time.ToString() : "")}{(SetStopTime ? " Stop Time: " + Time.ToString() : "")}{(SetTimeline ? " Timeline: " + TimelineAsset?.name : "")}";
+        }
     }
 }
