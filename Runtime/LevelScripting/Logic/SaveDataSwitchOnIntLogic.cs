@@ -57,6 +57,11 @@ namespace GameplayIngredients.Logic
             }
         }
 
+        public override string GetDefaultName()
+        {
+            return $"Switch on Integer {SaveLocation} Save Data '{Key}'";
+        }
+
         void WarnNotExist(string name, GameSaveManager.ValueType type, GameSaveManager.Location location)
         {
             Debug.LogWarning(string.Format("Save Data Logic: Trying to get {0} value to non existent {1} data in {2} save.", type, name, location));

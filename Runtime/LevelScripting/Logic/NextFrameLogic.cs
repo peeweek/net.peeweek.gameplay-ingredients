@@ -23,6 +23,11 @@ namespace GameplayIngredients.Logic
             Callable.Call(OnNextFrame, instigator);
             m_Coroutine = null;
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Call Next Frame";
+        }
     }
 }
 

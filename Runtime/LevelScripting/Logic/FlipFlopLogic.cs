@@ -39,5 +39,10 @@ namespace GameplayIngredients.Logic
                 state = State.Flop;
             }
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Flip-Flop (Default {state})";
+        }
     }
 }
