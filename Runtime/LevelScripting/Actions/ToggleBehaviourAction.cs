@@ -35,6 +35,11 @@ namespace GameplayIngredients.Actions
             }
         }
 
+        public override string GetDefaultName()
+        {
+            return $"Toggle Behaviours";
+        }
+
         [System.Serializable]
         public struct BehaviourToggle
         {

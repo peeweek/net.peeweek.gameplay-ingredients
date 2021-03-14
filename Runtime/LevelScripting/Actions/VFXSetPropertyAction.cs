@@ -93,7 +93,7 @@ public class VFXSetPropertyAction : ActionBase
     public override string GetDefaultName()
     {
         if (!Override)
-            return $"Reset VFX override for parameter :'{property}' ({dataType})";
+            return $"Reset VFX override for property :'{property}' ({dataType})";
         else
         {
             switch (dataType)
@@ -109,7 +109,7 @@ public class VFXSetPropertyAction : ActionBase
                 case DataType.UInt:         return $"{visualEffect.name} {property} {UIntValue} ";
                 case DataType.Int:          return $"{visualEffect.name} {property} {IntValue} ";
                 default:
-                    return $"Set VFX <UNKNOWN> parameter :'{property}'";
+                    return $"Set VFX <UNKNOWN> property :'{property}'";
             }
         }
     }

@@ -30,6 +30,11 @@ namespace GameplayIngredients.Actions
                 case TimelineControlMode.Hold: director.extrapolationMode = DirectorWrapMode.Hold; break;
             }
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Timeline {mode} : '{director?.gameObject.name}'";
+        }
     }
 }
 

@@ -51,5 +51,29 @@ namespace GameplayIngredients.Actions
             showFloat = (parameterType == AnimatorParameterType.Float);
             showInt = (parameterType == AnimatorParameterType.Int);
         }
+
+        public override string GetDefaultName()
+        {
+            string value = "";
+            switch (parameterType)
+            {
+                case AnimatorParameterType.Bool: 
+                    value = boolValue.ToString(); 
+                    break;
+                case AnimatorParameterType.Float:
+                    value = floatValue.ToString(); 
+                    break;
+                case AnimatorParameterType.Int:
+                    value = intValue.ToString();
+                    break;
+                case AnimatorParameterType.Trigger:
+                    value = "Trigger";
+                    break;
+                default:
+                    break;
+            }
+
+            return $"Set Animator '{parameterName}' {parameterType} Parameter = '{value}' ({animator?.gameObject.name})";
+        }
     }
 }

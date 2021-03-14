@@ -17,5 +17,10 @@ namespace GameplayIngredients.Actions
             ScreenCapture.CaptureScreenshot(fileName + screenshotNumber.ToString().PadLeft(figureCount, '0') + ".png", supersampleRate);
             screenshotNumber += 1;
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Take Screenshot : {screenshotNumber.ToString().PadLeft(figureCount, '#')}.png";
+        }
     }
 }

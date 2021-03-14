@@ -2,13 +2,17 @@
 
 ## 2020.2.4
 
+#### Added
+
+* Custom Pingable Inspectors for Events, Logic, Actions, State Machines and States.
+* Better Automatic Naming for Logic and Actions.
+
 #### Fixed
 
 * CheckWindow: Better search for referenced objects in scene
 
-#### Fixed
-
 * Fixed Rig Manager Update not executing correctly when collection is modified during its execution.
+* Obsoleted **SwitcherAction** (left over from the old world)
 
 ## 2020.2.3
 

@@ -14,4 +14,9 @@ public class VFXSendEventAction : ActionBase
         var attrib = visualEffect.CreateVFXEventAttribute();
         visualEffect.SendEvent(eventName, attrib);
     }
+
+    public override string GetDefaultName()
+    {
+        return $"Send VFX Event '{eventName}' to {visualEffect?.gameObject.name}";
+    }
 }

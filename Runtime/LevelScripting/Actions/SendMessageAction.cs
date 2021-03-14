@@ -11,6 +11,11 @@ namespace GameplayIngredients.Actions
         {
             Messager.Send(MessageToSend, instigator);
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Send Message : '{MessageToSend}'";
+        }
     }
 }
 

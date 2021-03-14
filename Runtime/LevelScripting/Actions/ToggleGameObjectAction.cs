@@ -47,6 +47,11 @@ namespace GameplayIngredients.Actions
             }
         }
 
+        public override string GetDefaultName()
+        {
+            return $"Toggle GameObject(s)";
+        }
+
         [System.Serializable]
         public struct GameObjectToggle
         {
