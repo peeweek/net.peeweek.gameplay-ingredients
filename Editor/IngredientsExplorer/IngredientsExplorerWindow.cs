@@ -29,6 +29,13 @@ namespace GameplayIngredients.Editor
             s_Instance.SelectItem(selected);
         }
 
+        const string kPref = "GameplayIngredients.IngredientsExplorer.ShowPanel";
+        static bool showPanel
+        {
+            get => EditorPrefs.GetBool(kPref, false);
+            set => EditorPrefs.SetBool(kPref, value);
+        }
+
         public static bool visible = false;
         static IngredientsExplorerWindow s_Instance;
 
@@ -47,6 +54,7 @@ namespace GameplayIngredients.Editor
             EditorSceneManager.sceneOpened += Reload;
             EditorSceneSetup.onSetupLoaded += ReloadSetup;
             visible = true;
+            
         }
 
         void Reload(Scene scene, OpenSceneMode mode)
@@ -101,10 +109,68 @@ namespace GameplayIngredients.Editor
                     });
                     menu.DropDown(buttonRect);
                 }
+                if(position.width > 460)
+                    showPanel = GUILayout.Toggle(showPanel, "...", EditorStyles.toolbarButton);
 
             }
-            Rect r = GUILayoutUtility.GetRect(position.width, position.height - tbHeight);
-            m_TreeView.OnGUI(r);
+            using(new GUILayout.HorizontalScope())
+            {
+                Rect r = GUILayoutUtility.GetRect(position.width - 400, position.height - tbHeight);
+                m_TreeView.OnGUI(r);
+
+                if (position.width > 460 && showPanel)
+                {
+                    PanelGUI();
+                }
+            }
+        }
+
+        static void SetEditorFor(MonoBehaviour bh)
+        {
+            if (bh == null)
+                s_Editor = null;
+
+            if (bh is EventBase)
+                s_Editor = UnityEditor.Editor.CreateEditor(bh, typeof(EventBaseEditor));
+            else if (bh is LogicBase)
+                s_Editor = UnityEditor.Editor.CreateEditor(bh, typeof(LogicBaseEditor));
+            else if (bh is ActionBase)
+                s_Editor = UnityEditor.Editor.CreateEditor(bh, typeof(ActionBaseEditor));
+            else if (bh is Rig)
+                s_Editor = UnityEditor.Editor.CreateEditor(bh, typeof(RigEditor));
+            else if (bh is StateMachine)
+                s_Editor = UnityEditor.Editor.CreateEditor(bh, typeof(StateMachineEditor));
+            else if (bh is State)
+                s_Editor = UnityEditor.Editor.CreateEditor(bh, typeof(StateEditor));
+            else
+                s_Editor = UnityEditor.Editor.CreateEditor(bh);
+
+        }
+
+        static UnityEditor.Editor s_Editor;
+
+        void PanelGUI()
+        {
+            using (new GUILayout.HorizontalScope(GUILayout.Width(400),GUILayout.ExpandHeight(true)))
+            {
+                Rect r = GUILayoutUtility.GetRect(1, 1, GUILayout.Width(1), GUILayout.ExpandHeight(true));
+                GUILayout.Space(16);
+                EditorGUI.DrawRect(r, Color.black);
+                using(new GUILayout.VerticalScope())
+                {
+                    GUILayout.Space(4);
+                    s_Editor?.OnInspectorGUI();
+                }
+                GUILayout.Space(4);
+
+                if (s_Editor is PingableEditor)
+                {
+                    if((s_Editor as PingableEditor).needRepaint)
+                    {
+                        Repaint();
+                    }
+                }
+            }
         }
 
         void SelectItem(MonoBehaviour target)
@@ -223,7 +289,6 @@ namespace GameplayIngredients.Editor
                     listRoot.Add(GetNode(item, stack));
                 }
             }
-
         }
 
         CallTreeNode GetNode(MonoBehaviour bhv, Stack<object> stack)
@@ -622,7 +687,13 @@ namespace GameplayIngredients.Editor
                             || node.Type == CallTreeNodeType.StateMachine
                             || node.Type == CallTreeNodeType.State
                             )
+                        {
                             PingableEditor.PingObject(node.Target);
+                            SetEditorFor(node.Target);
+                        }
+                        else
+                            SetEditorFor(null);
+
                     }
             }
 

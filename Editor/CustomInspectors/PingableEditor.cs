@@ -7,6 +7,7 @@ namespace GameplayIngredients.Editor
 {
     public abstract class PingableEditor : NaughtyInspector
     {
+        public bool needRepaint { get => m_pingValue > 0; }
         float m_pingValue;
         static MonoBehaviour m_NextToPing;
 
@@ -42,7 +43,7 @@ namespace GameplayIngredients.Editor
         public override void OnInspectorGUI()
         {
             Rect r = EditorGUILayout.BeginVertical();
-            bool needRepaint = UpdatePing(r);
+            UpdatePing(r);
 
             OnInspectorGUI_PingArea();
 
