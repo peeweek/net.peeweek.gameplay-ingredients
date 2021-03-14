@@ -148,9 +148,11 @@ namespace GameplayIngredients.Editor
         }
 
         static UnityEditor.Editor s_Editor;
+        static Vector2 s_panelScroll;
 
         void PanelGUI()
         {
+
             using (new GUILayout.HorizontalScope(GUILayout.Width(400),GUILayout.ExpandHeight(true)))
             {
                 Rect r = GUILayoutUtility.GetRect(1, 1, GUILayout.Width(1), GUILayout.ExpandHeight(true));
@@ -158,8 +160,10 @@ namespace GameplayIngredients.Editor
                 EditorGUI.DrawRect(r, Color.black);
                 using(new GUILayout.VerticalScope())
                 {
+                    s_panelScroll = GUILayout.BeginScrollView(s_panelScroll);
                     GUILayout.Space(4);
                     s_Editor?.OnInspectorGUI();
+                    GUILayout.EndScrollView();
                 }
                 GUILayout.Space(4);
 
