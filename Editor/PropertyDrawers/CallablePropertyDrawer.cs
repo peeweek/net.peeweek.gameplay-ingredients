@@ -1,19 +1,24 @@
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 namespace GameplayIngredients.Editor
 {
     [CustomPropertyDrawer(typeof(Callable))]
     public class CallablePropertyDrawer : PropertyDrawer
     {
-        private Callable setNextObjectValue = null;
+        private static Dictionary<string, Callable> setNextObjectValue = new Dictionary<string, Callable>();
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            if(setNextObjectValue != null)
+            string path = Binding.propertyToPath(property);
+            if (setNextObjectValue.ContainsKey(path))
             {
-                property.objectReferenceValue = setNextObjectValue;
-                setNextObjectValue = null;
+                property.objectReferenceValue = setNextObjectValue[path];
+                property.serializedObject.ApplyModifiedProperties();
+                GUI.changed = true;
+                setNextObjectValue.Remove(path);
+
                 if(IngredientsExplorerWindow.visible)
                 {
                     IngredientsExplorerWindow.Refresh();
@@ -35,8 +40,6 @@ namespace GameplayIngredients.Editor
 
             var objRect = new Rect(position);
             objRect.xMax -= 188;
-
-
 
             var obj = EditorGUI.ObjectField(objRect, property.objectReferenceValue, typeof(Callable), true);
 
@@ -74,7 +77,7 @@ namespace GameplayIngredients.Editor
             var components = (property.objectReferenceValue as Callable).gameObject.GetComponents<Callable>();
             foreach(var component in components)
             {
-                menu.AddItem(new GUIContent(component.GetType().Name + " - " + component.Name), component == property.objectReferenceValue, SetMenu, component);
+                menu.AddItem(new GUIContent(component.GetType().Name + " - " + component.Name), component == property.objectReferenceValue, SetMenu, new Binding(property, component));
             }
 
             menu.ShowAsContext();
@@ -82,9 +85,28 @@ namespace GameplayIngredients.Editor
 
         void SetMenu(object o)
         {
-            Callable component = o as Callable;
-            setNextObjectValue = component;
+            Binding binding = o as Binding;
+            if (setNextObjectValue.ContainsKey(binding.propertyPath))
+                setNextObjectValue[binding.propertyPath] = binding.callable;
+            else
+                setNextObjectValue.Add(binding.propertyPath, binding.callable);
 
+        }
+
+        class Binding
+        {
+            public string propertyPath;
+            public Callable callable;
+            public Binding(SerializedProperty serializedProperty, Callable value)
+            {
+                propertyPath = propertyToPath(serializedProperty);
+                callable = value;
+            }
+
+            public static string propertyToPath(SerializedProperty serializedProperty)
+            {
+                return $"{serializedProperty.serializedObject.targetObject.GetInstanceID()}:{serializedProperty.propertyPath}";
+            }
         }
         
     }
