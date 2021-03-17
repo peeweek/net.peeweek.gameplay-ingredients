@@ -26,5 +26,10 @@ namespace GameplayIngredients.Actions
                     break;
             }
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Game Manager Send : {messageType}";
+        }
     }
 }

@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Obsolete]
     public class SwitcherAction : MonoBehaviour
     {
         public GameObject[] Objects;

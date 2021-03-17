@@ -80,5 +80,10 @@ namespace GameplayIngredients.Actions
             force = (actionType == RigidbodyActionType.Force || actionType == RigidbodyActionType.Torque);
             explosion = (actionType == RigidbodyActionType.ExplosionForce);
         }
+
+        public override string GetDefaultName()
+        {
+            return $"RigidBody {actionType} on {(ApplyOnInstigator?"instigator":m_Rigidbody?.gameObject.name)}";
+        }
     }
 }

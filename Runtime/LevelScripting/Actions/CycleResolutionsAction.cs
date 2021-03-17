@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine.UI;
 
 namespace GameplayIngredients.Actions
 {
+    [Obsolete]
     public class CycleResolutionsAction : ActionBase
     {
         public Text ButtonLabel;

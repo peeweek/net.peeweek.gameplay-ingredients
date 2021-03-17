@@ -22,6 +22,11 @@ namespace GameplayIngredients.Actions
                     randomManager.SetRandomSeed(newSeed);
             }
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Set Random Seed :'{(newRandomSeed ? "New Seed at Random":newSeed.ToString())}'";
+        }
     }
 }
 

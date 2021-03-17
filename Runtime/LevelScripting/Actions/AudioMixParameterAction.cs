@@ -10,7 +10,7 @@ namespace GameplayIngredients.Actions
     {
         public AudioMixer AudioMixer;
 
-        public string Parameter;
+        public string Parameter = "Parameter";
         public float Value;
         public float InterpDuration = 0;
 
@@ -52,6 +52,11 @@ namespace GameplayIngredients.Actions
             {
                 throw new InvalidOperationException("Parameter " + parameter + " does not exist on target AudioMixer : " + mixer.name);
             }
+        }
+
+        public override string GetDefaultName()
+        {
+            return $"Set Mixer Param:'{Parameter}' to {Value} ({InterpDuration})s";
         }
     }
 }

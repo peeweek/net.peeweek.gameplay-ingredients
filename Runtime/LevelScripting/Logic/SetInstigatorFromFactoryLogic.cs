@@ -24,6 +24,11 @@ namespace GameplayIngredients.Logic
                     Call(Next, instance);
             }
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Set Instigator From Factory: '{Factory?.gameObject.name}' #{FactoryIndex}";
+        }
     }
 }
 

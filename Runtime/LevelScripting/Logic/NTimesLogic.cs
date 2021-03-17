@@ -32,6 +32,11 @@ namespace GameplayIngredients.Logic
                 Callable.Call(Calls, instigator);
             }
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Call only {Count} Times";
+        }
     }
 }
 

@@ -16,5 +16,9 @@ namespace GameplayIngredients.Actions
                 UIObjectToFocus.Select();
             }
         }
+        public override string GetDefaultName()
+        {
+            return $"Focus UI : '{UIObjectToFocus?.name}'";
+        }
     }
 }

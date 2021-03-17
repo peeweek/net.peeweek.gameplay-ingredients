@@ -16,6 +16,11 @@ namespace GameplayIngredients.Logic
         {
             Call(Next, NewInstigator);
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Set Instigator : '{NewInstigator?.gameObject.name}'";
+        }
     }
 }
 

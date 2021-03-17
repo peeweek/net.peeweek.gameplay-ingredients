@@ -35,6 +35,11 @@ namespace GameplayIngredients.Actions
             }
         }
 
+        public override string GetDefaultName()
+        {
+            return $"Toggle UI";
+        }
+
         [System.Serializable]
         public struct UIToggle
         {

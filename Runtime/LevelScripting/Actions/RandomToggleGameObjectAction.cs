@@ -30,5 +30,10 @@ namespace GameplayIngredients.Actions
                 Targets[i] = transform.GetChild(i).gameObject;
             }
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Toggle Random Object from List";
+        }
     }
 }

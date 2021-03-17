@@ -35,6 +35,11 @@ namespace GameplayIngredients.Logic
             else
                 Call(OnTestInvalid, instigator);
         }
+
+        public override string GetDefaultName()
+        {
+            return $"If Platform {inclusionMode} : {string.Join(", ",platforms)}";
+        }
     }
 }
 

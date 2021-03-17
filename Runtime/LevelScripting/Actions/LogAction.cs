@@ -35,5 +35,10 @@ namespace GameplayIngredients.Actions
 
             return text;
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Log {type} : '{LogText}'";
+        }
     }
 }

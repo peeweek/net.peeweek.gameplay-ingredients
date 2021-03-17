@@ -33,5 +33,10 @@ namespace GameplayIngredients.Actions
                     Manager.Get<GameSaveManager>().SaveUserSave(UserSaveIndex);
             }
         }
+
+        public override string GetDefaultName()
+        {
+            return $"{action} Game Save ({saveLocation}{(saveLocation == GameSaveManager.Location.User?UserSaveIndex.ToString():"")})";
+        }
     }
 }

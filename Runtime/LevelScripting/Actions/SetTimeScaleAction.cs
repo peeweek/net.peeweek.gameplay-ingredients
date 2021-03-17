@@ -16,5 +16,10 @@ namespace GameplayIngredients.Actions
             TimeScale = value;
             Execute();
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Set Time Scale : {TimeScale}";
+        }
     }
 }

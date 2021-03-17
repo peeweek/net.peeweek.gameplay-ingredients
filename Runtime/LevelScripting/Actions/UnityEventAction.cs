@@ -11,5 +11,10 @@ namespace GameplayIngredients.Actions
         {
             OnExecute.Invoke();
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Call UnityEvent(s)";
+        }
     }
 }

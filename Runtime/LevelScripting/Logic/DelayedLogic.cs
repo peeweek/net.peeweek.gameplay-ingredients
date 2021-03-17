@@ -36,6 +36,7 @@ namespace GameplayIngredients.Logic
                 m_Coroutine = null;
             }
         }
+
         public override void Execute(GameObject instigator = null)
         {
             float newDelay;
@@ -47,11 +48,17 @@ namespace GameplayIngredients.Logic
             m_Coroutine = RunDelay(newDelay, instigator);
             StartCoroutine(m_Coroutine);
         }
+
         IEnumerator RunDelay(float Seconds, GameObject instigator = null)
         {
             yield return new WaitForSeconds(Seconds);
             Callable.Call(OnDelayComplete, instigator);
             m_Coroutine = null;
+        }
+
+        public override string GetDefaultName()
+        {
+            return $"{delayMode} Delay ({(delayMode == DelayMode.Constant? Delay+"s.":DelayRange.x+"s.~"+DelayRange.y+"s.")})";
         }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
-    public class OnAwakeEvent : MonoBehaviour
+    public class OnAwakeEvent : EventBase
     {
         [ReorderableList]
         public Callable[] onAwake;

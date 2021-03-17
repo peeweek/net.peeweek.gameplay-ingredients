@@ -49,6 +49,7 @@ namespace GameplayIngredients.Editor
                 if (GUI.Button(gotoRect, ">"))
                 {
                     Selection.activeObject = property.objectReferenceValue;
+                    PingableEditor.PingObject(Selection.activeObject as MonoBehaviour);
                 }
 
                 if (GUI.Button(pickRect, (property.objectReferenceValue as Callable).Name, EditorStyles.popup))

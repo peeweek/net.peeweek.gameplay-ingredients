@@ -49,5 +49,15 @@ namespace GameplayIngredients.Actions
                     DontDestroyOnLoad(obj);
             }
         }
+
+        public override string GetDefaultName()
+        {
+            if (Prefabs == null || Prefabs.Length == 0)
+                return $"Spawn No Prefabs";
+            else if (Prefabs.Length == 1)
+                return $"Spawn Prefab : {Prefabs[0].name}";
+            else
+                return $"Spawn {Prefabs.Length} Prefabs";
+        }
     }
 }

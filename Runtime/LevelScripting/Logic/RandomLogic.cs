@@ -15,6 +15,11 @@ namespace GameplayIngredients.Logic
             int r = Random.Range(0, RandomCalls.Length);
             Callable.Call(RandomCalls[r], instigator);
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Call One at Random...";
+        }
     }
 }
 

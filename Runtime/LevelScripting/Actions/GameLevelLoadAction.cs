@@ -58,5 +58,24 @@ namespace GameplayIngredients.Actions
             }
             manager.SwitchLevel(index, ShowUI, OnComplete, SaveProgress);
         }
+
+        public override string GetDefaultName()
+        {
+            string label = "";
+            switch (level)
+            {
+                case Target.MainMenu: label = "Main Menu"; break;
+                case Target.First: label = "First Level"; break;
+                case Target.Last: label = "Last Level"; break;
+                case Target.Current: label = "Current Level"; break;
+                case Target.Previous: label = "Previous Level"; break;
+                case Target.Next: label = "Next Level"; break;
+                case Target.SpecifiedLevel:
+                    label = $"{specifiedLevel?.name}";
+                    break;
+                case Target.FromGameSave: label = "From Game Save"; break;
+            }
+            return $"Game Manager Load : {label}";
+        }
     }
 }

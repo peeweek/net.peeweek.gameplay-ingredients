@@ -25,6 +25,11 @@ namespace GameplayIngredients.Actions
                 sceneNames.Add(scene);
             Manager.Get<LevelStreamingManager>().LoadScenes(Action, sceneNames.ToArray(), SceneToActivate, ShowUI, OnLoadComplete);
         }
+
+        public override string GetDefaultName()
+        {
+            return $"Streaming : {Action} {Scenes.Length} scene(s)";
+        }
     }
 }
 

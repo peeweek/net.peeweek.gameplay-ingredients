@@ -9,8 +9,8 @@ namespace GameplayIngredients.Actions
     {
         public AudioMixer AudioMixer;
 
-        public string Parameter;
-        public AnimationCurve Curve;
+        public string Parameter = "Parameter";
+        public AnimationCurve Curve = AnimationCurve.Linear(0,0,1,1);
         public float InterpDuration = 2.0f;
 
         public UnityEvent OnInterpComplete;
@@ -38,6 +38,10 @@ namespace GameplayIngredients.Actions
             yield return new WaitForEndOfFrame();
             onInterpComplete.Invoke();
 
+        }
+        public override string GetDefaultName()
+        {
+            return $"Set Mixer Curve Param:'{Parameter}' ({InterpDuration})s";
         }
     }
 

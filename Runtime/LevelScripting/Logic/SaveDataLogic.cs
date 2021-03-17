@@ -126,7 +126,28 @@ namespace GameplayIngredients.Logic
             return false;
         }
 
+        public override string GetDefaultName()
+        {
+            string value = "";
+            switch (ValueType)
+            {
+                default:
+                case GameSaveManager.ValueType.Bool:
+                    value = BoolTargetValue.ToString();
+                    break;
+                case GameSaveManager.ValueType.Int:
+                    value = IntTargetValue.ToString();
+                    break;
+                case GameSaveManager.ValueType.Float:
+                    value = FloatTargetValue.ToString();
+                    break;
+                case GameSaveManager.ValueType.String:
+                    value = StringTargetValue;
+                    break;
+            }
 
+            return $"Switch on {ValueType} {SaveLocation} Save Data '{Key}' {Test} {value}";
+        }
 
         void WarnNotExist(string name, GameSaveManager.ValueType type, GameSaveManager.Location location)
         {

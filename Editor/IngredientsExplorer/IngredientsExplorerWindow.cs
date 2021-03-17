@@ -29,7 +29,28 @@ namespace GameplayIngredients.Editor
             s_Instance.SelectItem(selected);
         }
 
+        const int PANEL_WIDTH = 400;
+        const int MIN_WIDTH = PANEL_WIDTH+60;
+
+        const string kPref = "GameplayIngredients.IngredientsExplorer.ShowPanel";
+        static bool showPanel
+        {
+            get => EditorPrefs.GetBool(kPref, false);
+            set => EditorPrefs.SetBool(kPref, value);
+        }
+
         public static bool visible = false;
+        public static IngredientsExplorerWindow instance 
+        { 
+            get 
+            { 
+                if (s_Instance == null) 
+                    s_Instance = GetWindow<IngredientsExplorerWindow>(); 
+                return s_Instance; 
+            } 
+        }
+
+        [SerializeField]
         static IngredientsExplorerWindow s_Instance;
 
         private void OnDisable()
@@ -101,10 +122,68 @@ namespace GameplayIngredients.Editor
                     });
                     menu.DropDown(buttonRect);
                 }
+                if(position.width > MIN_WIDTH)
+                    showPanel = GUILayout.Toggle(showPanel, "...", EditorStyles.toolbarButton);
 
             }
-            Rect r = GUILayoutUtility.GetRect(position.width, position.height - tbHeight);
-            m_TreeView.OnGUI(r);
+            using(new GUILayout.HorizontalScope())
+            {
+                Rect r = GUILayoutUtility.GetRect(position.width - PANEL_WIDTH, position.height - tbHeight);
+                m_TreeView.OnGUI(r);
+
+                if (position.width > MIN_WIDTH && showPanel)
+                {
+                    PanelGUI();
+                }
+            }
+        }
+
+        static void SetEditorFor(MonoBehaviour bh)
+        {
+            if (bh == null)
+                s_Editor = null;
+
+            s_Editor = UnityEditor.Editor.CreateEditor(bh);
+
+        }
+
+        [SerializeField]
+        static UnityEditor.Editor s_Editor;
+        [SerializeField]
+        static Vector2 s_panelScroll;
+
+        void PanelGUI()
+        {
+            using(new GUILayout.HorizontalScope())
+            {
+                Rect r = GUILayoutUtility.GetRect(1, 1, GUILayout.Width(1), GUILayout.ExpandHeight(true));
+                EditorGUI.DrawRect(r, Color.black);
+                using(new GUILayout.VerticalScope(GUILayout.Width(PANEL_WIDTH)))
+                {
+                    s_Editor?.DrawHeader();
+
+                    using (new GUILayout.HorizontalScope(GUILayout.ExpandHeight(true)))
+                    {
+                        GUILayout.Space(16);
+                        using (new GUILayout.VerticalScope())
+                        {
+                            s_panelScroll = GUILayout.BeginScrollView(s_panelScroll);
+                            GUILayout.Space(4);
+                            s_Editor?.OnInspectorGUI();
+                            GUILayout.EndScrollView();
+                        }
+                        GUILayout.Space(4);
+
+                        if (s_Editor is PingableEditor)
+                        {
+                            if ((s_Editor as PingableEditor).needRepaint)
+                            {
+                                Repaint();
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         void SelectItem(MonoBehaviour target)
@@ -223,7 +302,6 @@ namespace GameplayIngredients.Editor
                     listRoot.Add(GetNode(item, stack));
                 }
             }
-
         }
 
         CallTreeNode GetNode(MonoBehaviour bhv, Stack<object> stack)
@@ -613,10 +691,24 @@ namespace GameplayIngredients.Editor
                     if(m_Bindings[selectedIds[0]].Target != null)
                     {
                         var node = m_Bindings[selectedIds[0]];
-                        Selection.activeObject = node.Target;
 
-                        if (node.Type == CallTreeNodeType.Rig)
-                            RigEditor.PingObject(node.Target as Rig);
+                        if (!(showPanel && instance.position.width > MIN_WIDTH))
+                        {
+                            Selection.activeObject = node.Target;
+
+                            if (node.Type == CallTreeNodeType.Rig
+                                || node.Type == CallTreeNodeType.Action
+                                || node.Type == CallTreeNodeType.Logic
+                                || node.Type == CallTreeNodeType.Event
+                                || node.Type == CallTreeNodeType.StateMachine
+                                || node.Type == CallTreeNodeType.State
+                                )
+                            {
+                                PingableEditor.PingObject(node.Target);
+                            }
+                        }
+                        else
+                            SetEditorFor(node.Target);
                     }
             }
 

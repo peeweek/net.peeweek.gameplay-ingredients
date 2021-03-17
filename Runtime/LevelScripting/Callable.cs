@@ -6,6 +6,7 @@ namespace GameplayIngredients
 {
     public abstract class Callable : MonoBehaviour, ICallable
     {
+        [CallableName]
         public string Name;
 
         public void Reset()
