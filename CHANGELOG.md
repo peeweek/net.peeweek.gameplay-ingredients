@@ -10,9 +10,9 @@
 #### Fixed
 
 * CheckWindow: Better search for referenced objects in scene
-
 * Fixed Rig Manager Update not executing correctly when collection is modified during its execution.
 * Obsoleted **SwitcherAction** (left over from the old world)
+* Fixed Callable Dropdown that was somehow broken.
 
 ## 2020.2.3
 

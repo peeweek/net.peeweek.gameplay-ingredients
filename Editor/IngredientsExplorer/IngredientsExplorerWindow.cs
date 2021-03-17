@@ -25,8 +25,8 @@ namespace GameplayIngredients.Editor
         internal static void OpenWindow(MonoBehaviour selected)
         {
             OpenWindow();
-            s_Instance.Repaint();
-            s_Instance.SelectItem(selected);
+            instance.Repaint();
+            instance.SelectItem(selected);
         }
 
         const int PANEL_WIDTH = 400;
@@ -82,8 +82,8 @@ namespace GameplayIngredients.Editor
 
         public static void Refresh()
         {
-            s_Instance.ReloadCallHierarchy();
-            s_Instance.Repaint();
+            instance.ReloadCallHierarchy();
+            instance.Repaint();
         }
 
         private void OnGUI()
