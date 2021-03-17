@@ -15,6 +15,7 @@ namespace GameplayIngredients.Editor
             if (setNextObjectValue.ContainsKey(path))
             {
                 property.objectReferenceValue = setNextObjectValue[path];
+                property.serializedObject.ApplyModifiedProperties();
                 GUI.changed = true;
                 setNextObjectValue.Remove(path);
 
