@@ -40,7 +40,7 @@ namespace GameplayIngredients
             return(s_Managers.ContainsKey(typeof(T)));
         }
 
-        static readonly Type[] kAllManagerTypes = GetAllManagerTypes();
+        static readonly Type[] kAllManagerTypes = TypeUtility.GetConcreteTypes<Manager>();
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void AutoCreateAll()
@@ -94,37 +94,6 @@ namespace GameplayIngredients
                 if (GameplayIngredientsSettings.currentSettings.verboseCalls)
                     Debug.Log(string.Format(" -> <{0}> OK", type.Name));
             }
-        }
-
-        static Type[] GetAllManagerTypes()
-        {
-            List<Type> types = new List<Type>();
-            foreach(var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                Type[] assemblyTypes = null;
-
-                try
-                {
-                    assemblyTypes = assembly.GetTypes();
-                }
-                catch
-                {
-                    Debug.LogError($"Could not load types from assembly : {assembly.FullName}");
-                }
-
-                if(assemblyTypes != null)
-                {
-                    foreach (Type t in assemblyTypes)
-                    {
-                        if (typeof(Manager).IsAssignableFrom(t) && !t.IsAbstract)
-                        {
-                            types.Add(t);
-                        }
-                    }
-                }
-
-            }
-            return types.ToArray();
         }
     }
 }
