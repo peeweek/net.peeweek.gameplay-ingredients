@@ -9,8 +9,9 @@ using UnityEngine;
 
 public abstract class IngredientEditor : PingableEditor
 {
-
     protected List<SerializedProperty> baseProperties;
+    protected Dictionary<string, CallableReorderableList> reorderableLists;
+
 
     protected override void OnEnable()
     {
@@ -33,8 +34,22 @@ public abstract class IngredientEditor : PingableEditor
 
             if (property != null)
                 baseProperties.Add(property);
+
+            if (isCallableArray(property))
+            {
+                //Debug.Log($"Found Callable array : {property.name}");
+                if (reorderableLists == null)
+                    reorderableLists = new Dictionary<string, CallableReorderableList>();
+                string key = GetPropertyKeyName(property);
+                reorderableLists[key] = new CallableReorderableList(serializedObject, property);
+            }
         }
     }
+
+    static bool isCallableArray(SerializedProperty property) => property.isArray && property.arrayElementType == "PPtr<$Callable>";
+
+    static string GetPropertyKeyName(SerializedProperty property) => property.serializedObject.targetObject.GetInstanceID() + "." + property.name;
+
 
     protected void DrawBaseProperties(params string[] excludedNames)
     {
@@ -46,7 +61,10 @@ public abstract class IngredientEditor : PingableEditor
             {
                 if (excludedNames.Any(o => o == prop.name))
                     continue;
-                NaughtyEditorGUI.PropertyField_Layout(prop, true);
+                if (isCallableArray(prop))
+                    reorderableLists[GetPropertyKeyName(prop)].DoLayoutList();
+                else
+                    NaughtyEditorGUI.PropertyField_Layout(prop, true);
             }    
         }
 

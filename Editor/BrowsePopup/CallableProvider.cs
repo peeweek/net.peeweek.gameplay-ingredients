@@ -5,43 +5,48 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEditorInternal;
 
 namespace GameplayIngredients.Editor
 {
     public class CallableProvider : IBrowsePopupProvider
     {
-        [InitializeOnLoadMethod]
-        static void Init()
+        public string targetPropertyName;
+
+        static Dictionary<string, Type> s_CallableTypes;
+
+        static AddComponentInfo addNextComponentInfo;
+        struct AddComponentInfo
         {
-            var provider = new CallableProvider();
-            instance = provider;
+            public GameObject gameObject;
+            public Component component;
+            public string propertyName;
+            public Type newComponentType;
         }
 
-        public static CallableProvider instance { get; private set; }
-
-        public static GameObject targetGameObject;
-        public static SerializedProperty targetSerializedProperty;
-
-        static Dictionary<string, Type> s_CallableTypes; 
-
-        public CallableProvider()
+        public CallableProvider(GameObject gameObject, Component component, string propertyName)
         {
-            var types = TypeUtility.GetConcreteTypes<Callable>();
-            s_CallableTypes = new Dictionary<string, Type>();
-            foreach(var type in types)
+            addNextComponentInfo.gameObject = gameObject;
+            addNextComponentInfo.component = component;
+            addNextComponentInfo.propertyName = propertyName;
+
+            if (s_CallableTypes == null)
             {
-                string path = string.Empty;
-                if(typeof(LogicBase).IsAssignableFrom(type))
+                var types = TypeUtility.GetConcreteTypes<Callable>();
+                s_CallableTypes = new Dictionary<string, Type>();
+                foreach (var type in types)
                 {
-                    path += "Logic/";
+                    string path = string.Empty;
+                    if (typeof(LogicBase).IsAssignableFrom(type))
+                    {
+                        path += "Logic/";
+                    }
+                    else if (typeof(ActionBase).IsAssignableFrom(type))
+                    {
+                        path += "Action/";
+                    }
+                    path += ObjectNames.NicifyVariableName(type.Name);
+                    s_CallableTypes[path] = type;
                 }
-                else if(typeof(ActionBase).IsAssignableFrom(type))
-                {
-                    path += "Action/";
-                }
-                path += ObjectNames.NicifyVariableName(type.Name);
-                s_CallableTypes[path] = type;
             }
         }
 
@@ -81,18 +86,23 @@ namespace GameplayIngredients.Editor
                 if (cat != "")
                     i++;
 
-                tree.Add(new CallableElement(i, kvp.Value, () => {
-                    var cmp = targetGameObject?.AddComponent(kvp.Value);
-                    targetSerializedProperty.serializedObject.Update();       
-
-                    targetSerializedProperty.InsertArrayElementAtIndex(targetSerializedProperty.arraySize - 1);
-                    targetSerializedProperty.GetArrayElementAtIndex(targetSerializedProperty.arraySize - 1).objectReferenceValue = cmp;
-
-                    targetSerializedProperty.serializedObject.ApplyModifiedProperties();
-                    }
-                ));
+                tree.Add(new CallableElement(i, kvp.Value, () => 
+                {
+                    addNextComponentInfo.newComponentType = kvp.Value;
+                    EditorApplication.delayCall += AddCallable;
+                } ));
             }
+        }
 
+        static void AddCallable()
+        {
+            addNextComponentInfo.gameObject.AddCallable(
+                addNextComponentInfo.component,
+                addNextComponentInfo.propertyName, 
+                addNextComponentInfo.newComponentType
+                );
+
+            EditorApplication.delayCall -= AddCallable;
         }
 
         class CallableElement : BrowsePopup.Element
