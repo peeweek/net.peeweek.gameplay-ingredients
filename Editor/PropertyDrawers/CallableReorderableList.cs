@@ -55,14 +55,16 @@ namespace GameplayIngredients.Editor
     {
         public static void AddCallable(this GameObject gameObject, Component component, string propertyName, Type t)
         {
-            if (typeof(Callable).IsAssignableFrom(t))
+            var field = component.GetType().GetFields().Where(f => f.Name == propertyName).FirstOrDefault();
+            var val = field.GetValue(component) as Callable[];
+
+            if (t != null && typeof(Callable).IsAssignableFrom(t))
             {
                 var newCmp = gameObject.AddComponent(t);
-                var field = component.GetType().GetFields().Where(f => f.Name == propertyName).FirstOrDefault();
-                var val = field.GetValue(component) as Callable[];
                 field.SetValue(component, val.Append(newCmp as Callable));
             }
-
+            else
+                field.SetValue(component, val.Append(null));
         }
 
         static T[] Append<T>(this T[] array, T item)

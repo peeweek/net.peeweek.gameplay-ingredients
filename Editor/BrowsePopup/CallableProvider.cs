@@ -93,15 +93,21 @@ namespace GameplayIngredients.Editor
                     EditorApplication.delayCall += AddCallable;
                 } ));
             }
+
+            tree.Add(new CallableElement(1, null, () =>
+            {
+                addNextComponentInfo.newComponentType = null;
+                EditorApplication.delayCall += AddCallable;
+            }));
         }
 
         static void AddCallable()
         {
             addNextComponentInfo.gameObject.AddCallable(
-                addNextComponentInfo.component,
-                addNextComponentInfo.propertyName, 
-                addNextComponentInfo.newComponentType
-                );
+               addNextComponentInfo.component,
+               addNextComponentInfo.propertyName,
+               addNextComponentInfo.newComponentType
+               );
 
             EditorApplication.delayCall -= AddCallable;
         }
@@ -114,7 +120,13 @@ namespace GameplayIngredients.Editor
             public CallableElement(int level, Type type, Action spawnCallback = null)
             {
                 this.level = level;
-                this.content = new GUIContent(ObjectNames.NicifyVariableName(type.Name));
+                if (type != null)
+                {
+                    this.content = new GUIContent(ObjectNames.NicifyVariableName(type.Name), Styles.icon);
+                }
+                else
+                    this.content = new GUIContent("Empty", Styles.icon);
+
                 this.type = type;
                 this.spawnCallback = spawnCallback;
             }
@@ -132,6 +144,13 @@ namespace GameplayIngredients.Editor
             else
                 return false;
         }
+
+        static class Styles
+        {
+            public static Texture2D icon = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-callable.png");
+        }
+
+
     }
 
 
