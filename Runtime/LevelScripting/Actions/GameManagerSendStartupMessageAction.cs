@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Game", "GameManager Icon.png")]
     public class GameManagerSendStartupMessageAction : ActionBase
     {
         public enum MessageType

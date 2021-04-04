@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Game Objects", "Actions/ic-action-spawn.png")]
     public class SpawnPrefabAction : ActionBase
     {
         [ReorderableList]

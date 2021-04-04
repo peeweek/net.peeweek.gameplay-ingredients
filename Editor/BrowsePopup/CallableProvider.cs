@@ -54,7 +54,7 @@ namespace GameplayIngredients.Editor
             tree.Add(new BrowsePopup.Group(0, "Add New Callable"));
             HashSet<string> categories = new HashSet<string>();
 
-            foreach (var kvp in s_CallableTypes.OrderBy(o => o.Key))
+            foreach (var kvp in s_CallableTypes.OrderBy(o => o.Key).OrderBy(o => !o.Key.Contains("/")))
             {
                 int i = 0;
 
@@ -125,6 +125,8 @@ namespace GameplayIngredients.Editor
                 
                 if (type != null)
                 {
+                    if (icon == null)
+                        icon = Styles.icon;
                     this.content = new GUIContent(ObjectNames.NicifyVariableName(type.Name), icon);
                 }
                 else

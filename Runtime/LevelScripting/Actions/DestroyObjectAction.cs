@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Game Objects", "Actions/ic-action-trash.png")]
     public class DestroyObjectAction : ActionBase
     {
         [ReorderableList]

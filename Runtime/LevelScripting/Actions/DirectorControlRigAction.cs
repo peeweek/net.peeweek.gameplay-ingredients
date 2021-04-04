@@ -6,6 +6,7 @@ using GameplayIngredients.Rigs;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Sequencing", "Actions/ic-action-director.png")]
     public class DirectorControlRigAction : ActionBase
     {
         [NonNullCheck]

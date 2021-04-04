@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Game", "Actions/ic-action-time.png")]
     public class SetTimeScaleAction : ActionBase
     {
         public float TimeScale = 1.0f;

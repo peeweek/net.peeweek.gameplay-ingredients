@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Rigs", "Rigs/ic-rig-reachposition.png")]
     public class ReachPositionRigSetTargetAction : ActionBase
     {
         [NonNullCheck]

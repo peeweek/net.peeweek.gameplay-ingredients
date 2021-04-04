@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("UI", "Actions/ic-action-ui.png")]
     public class FocusUIAction : ActionBase
     {
         public Selectable UIObjectToFocus;

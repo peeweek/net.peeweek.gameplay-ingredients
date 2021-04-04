@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Screen", "Actions/ic-action-screen.png")]
     public class TakeScreenshotAction : ActionBase
     {
         [Tooltip("Super Sampling multiplier")]

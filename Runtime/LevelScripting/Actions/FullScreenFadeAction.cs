@@ -1,13 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
-
+    [Callable("Screen", "Actions/ic-action-screen.png")]
     public class FullScreenFadeAction : ActionBase
     {
         public FullScreenFadeManager.FadeMode Fading = FullScreenFadeManager.FadeMode.ToBlack;

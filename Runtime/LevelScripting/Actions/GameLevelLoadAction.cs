@@ -4,6 +4,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Game", "GameManager Icon.png")]
     public class GameLevelLoadAction : ActionBase
     {
         public enum Target
