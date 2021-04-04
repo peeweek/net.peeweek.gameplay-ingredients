@@ -213,7 +213,7 @@ namespace GameplayIngredients.Editor
             m_Provider = provider;
             // Has to be done before calling Show / ShowWithMode
             Vector2 pos = GUIUtility.GUIToScreenPoint(position);
-            Rect buttonRect = new Rect(pos.x - DefaultWidth / 2, pos.y + 16, DefaultWidth, 1);
+            Rect buttonRect = new Rect(pos.x - DefaultWidth + 16, pos.y + 16, DefaultWidth, 1);
 
             CreateComponentTree();
 

@@ -33,15 +33,16 @@ public abstract class IngredientEditor : PingableEditor
             var property = serializedObject.FindProperty(info.Name);
 
             if (property != null)
+            {
                 baseProperties.Add(property);
 
-            if (isCallableArray(property))
-            {
-                //Debug.Log($"Found Callable array : {property.name}");
-                if (reorderableLists == null)
-                    reorderableLists = new Dictionary<string, CallableReorderableList>();
-                string key = GetPropertyKeyName(property);
-                reorderableLists[key] = new CallableReorderableList(serializedObject, property);
+                if (isCallableArray(property))
+                {
+                    if (reorderableLists == null)
+                        reorderableLists = new Dictionary<string, CallableReorderableList>();
+                    string key = GetPropertyKeyName(property);
+                    reorderableLists[key] = new CallableReorderableList(serializedObject, property);
+                }
             }
         }
     }

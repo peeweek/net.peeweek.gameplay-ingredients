@@ -28,40 +28,41 @@ namespace GameplayIngredients.Editor
             addNextComponentInfo.gameObject = gameObject;
             addNextComponentInfo.component = component;
             addNextComponentInfo.propertyName = propertyName;
+        }
 
-            if (s_CallableTypes == null)
+        [InitializeOnLoadMethod]
+        static void BuildMenu()
+        {
+            var types = TypeUtility.GetConcreteTypes<Callable>().OrderBy(o => o.Name);
+            s_CallableTypes = new Dictionary<string, Type>();
+            foreach (var type in types)
             {
-                var types = TypeUtility.GetConcreteTypes<Callable>();
-                s_CallableTypes = new Dictionary<string, Type>();
-                foreach (var type in types)
+                string path = string.Empty;
+                if (type.IsSubclassOf(typeof(LogicBase)))
                 {
-                    string path = string.Empty;
-                    if (typeof(LogicBase).IsAssignableFrom(type))
-                    {
-                        path += "Logic/";
-                    }
-                    else if (typeof(ActionBase).IsAssignableFrom(type))
-                    {
-                        path += "Action/";
-                    }
-                    path += ObjectNames.NicifyVariableName(type.Name);
-                    s_CallableTypes[path] = type;
+                    path += "Logic/";
                 }
+                else if (type.IsSubclassOf(typeof(ActionBase)))
+                {
+                    path += "Action/";
+                }
+
+                path += ObjectNames.NicifyVariableName(type.Name);
+                s_CallableTypes[path] = type;
             }
         }
 
         public void CreateComponentTree(List<BrowsePopup.Element> tree)
         {
-            tree.Add(new BrowsePopup.Group(0, "Callables"));
+            tree.Add(new BrowsePopup.Group(0, "Add New Callable"));
             HashSet<string> categories = new HashSet<string>();
 
-            foreach (var kvp in s_CallableTypes)
+            foreach (var kvp in s_CallableTypes.OrderBy(o => o.Key))
             {
                 int i = 0;
 
                 string cat = string.Join("/", kvp.Key.Split('/').Reverse().Skip(1).Reverse());
                 string name = kvp.Key.Split('/').Last();
-
 
                 if (!categories.Contains(cat) && cat != "")
                 {
