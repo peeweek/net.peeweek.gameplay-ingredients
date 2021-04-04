@@ -6,6 +6,7 @@ using UnityEngine;
 namespace GameplayIngredients.Logic
 {
     [HelpURL(Help.URL + "counters")]
+    [Callable("Counters", "Misc/ic-counter.png")]
     public class CounterLogic : LogicBase
     {
         public enum ValueSourceType
@@ -42,10 +43,8 @@ namespace GameplayIngredients.Logic
         [ShowIf("isValueGlobal")]
         public Globals.Scope GlobalScope = Globals.Scope.Global;
 
-        [ReorderableList]
         public Callable[] OnTestSuccess;
 
-        [ReorderableList]
         public Callable[] OnTestFail;
 
         bool isValueProperty() { return ValueSource == ValueSourceType.Property; }

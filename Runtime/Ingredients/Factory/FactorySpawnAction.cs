@@ -5,6 +5,7 @@ using UnityEngine;
 namespace GameplayIngredients.Actions
 {
     [HelpURL(Help.URL + "factory")]
+    [Callable("Factory", "Misc/ic-factory.png")]
     public class FactorySpawnAction : ActionBase
     {
         [NonNullCheck]

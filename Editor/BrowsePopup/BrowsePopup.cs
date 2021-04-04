@@ -38,13 +38,15 @@ namespace GameplayIngredients.Editor
         [Serializable]
         public class Group : Element
         {
+            static Texture folderIcon = EditorGUIUtility.IconContent("Folder Icon").image;
+
             public Vector2 scroll;
             public int selectedIndex = 0;
 
             public Group(int level, string name)
             {
                 this.level = level;
-                content = new GUIContent(name);
+                content = new GUIContent(name, folderIcon);
             }
 
             public bool WantsFocus { get; protected set; }
@@ -87,7 +89,7 @@ namespace GameplayIngredients.Editor
                 componentButton.fixedHeight = 20;
 
                 groupButton = new GUIStyle(componentButton);
-                groupButton.padding.left += 17;
+                groupButton.padding.left += 2;
 
                 previewText.padding.left += 3;
                 previewText.padding.right += 3;

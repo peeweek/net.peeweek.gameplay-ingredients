@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using System.Reflection;
 
 namespace GameplayIngredients.Editor
 {
@@ -37,15 +38,11 @@ namespace GameplayIngredients.Editor
             s_CallableTypes = new Dictionary<string, Type>();
             foreach (var type in types)
             {
+                CallableAttribute attr = type.GetCustomAttribute<CallableAttribute>();
+                
                 string path = string.Empty;
-                if (type.IsSubclassOf(typeof(LogicBase)))
-                {
-                    path += "Logic/";
-                }
-                else if (type.IsSubclassOf(typeof(ActionBase)))
-                {
-                    path += "Action/";
-                }
+                if (attr != null)
+                    path += attr.category + "/";
 
                 path += ObjectNames.NicifyVariableName(type.Name);
                 s_CallableTypes[path] = type;
@@ -87,14 +84,19 @@ namespace GameplayIngredients.Editor
                 if (cat != "")
                     i++;
 
-                tree.Add(new CallableElement(i, kvp.Value, () => 
+                Texture icon = null;
+                CallableAttribute attr = kvp.Value.GetCustomAttribute<CallableAttribute>();
+                if (attr != null)
+                    icon = AssetDatabase.LoadAssetAtPath<Texture2D>($"Packages/net.peeweek.gameplay-ingredients/Icons/{attr.iconPath}");
+
+                tree.Add(new CallableElement(i, kvp.Value, icon, () => 
                 {
                     addNextComponentInfo.newComponentType = kvp.Value;
                     EditorApplication.delayCall += AddCallable;
                 } ));
             }
 
-            tree.Add(new CallableElement(1, null, () =>
+            tree.Add(new CallableElement(1, null, null, () =>
             {
                 addNextComponentInfo.newComponentType = null;
                 EditorApplication.delayCall += AddCallable;
@@ -117,12 +119,13 @@ namespace GameplayIngredients.Editor
             public Type type;
             public Action spawnCallback;
 
-            public CallableElement(int level, Type type, Action spawnCallback = null)
+            public CallableElement(int level, Type type, Texture icon = null, Action spawnCallback = null)
             {
                 this.level = level;
+                
                 if (type != null)
                 {
-                    this.content = new GUIContent(ObjectNames.NicifyVariableName(type.Name), Styles.icon);
+                    this.content = new GUIContent(ObjectNames.NicifyVariableName(type.Name), icon);
                 }
                 else
                     this.content = new GUIContent("Empty", Styles.icon);

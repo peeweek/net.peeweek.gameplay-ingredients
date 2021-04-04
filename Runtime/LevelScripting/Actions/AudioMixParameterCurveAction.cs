@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Audio", "Actions/ic-action-audio.png")]
     public class AudioMixParameterCurveAction : ActionBase
     {
         public AudioMixer AudioMixer;

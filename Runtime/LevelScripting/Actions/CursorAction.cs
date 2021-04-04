@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Input", "Actions/ic-action-mouse.png")]
     public class CursorAction : ActionBase
     {
         public CursorLockMode LockState = CursorLockMode.None;
