@@ -1,5 +1,11 @@
 # Changelog
 
+## 2020.2.5
+
+#### Added
+
+#### Fixed
+
 ## 2020.2.4
 
 #### Added
