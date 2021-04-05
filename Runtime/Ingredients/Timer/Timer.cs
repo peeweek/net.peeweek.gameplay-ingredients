@@ -7,7 +7,7 @@ namespace GameplayIngredients
 {
     [HelpURL(Help.URL + "timers")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-timer.png")]
-    public class Timer : MonoBehaviour
+    public class Timer : GameplayIngredientsBehaviour
     {
         public bool StartOnEnable = false;
 

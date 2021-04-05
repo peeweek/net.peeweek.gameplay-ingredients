@@ -9,7 +9,7 @@ namespace GameplayIngredients
     [HelpURL(Help.URL + "factory")]
     [AddComponentMenu("Gameplay Ingredients/Factory")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-Factory.png")]
-    public class Factory : MonoBehaviour
+    public class Factory : GameplayIngredientsBehaviour
     {
         public enum BlueprintSelectionMode
         {

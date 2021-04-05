@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using NaughtyAttributes;
+using GameplayIngredients.Rigs;
 
 namespace GameplayIngredients
 {
     [HelpURL(Help.URL + "timers")]
-    public class TimerDisplayRig : MonoBehaviour
+    public class TimerDisplayRig : Rig
     {
         [NonNullCheck]
         public Text text;
@@ -21,6 +20,12 @@ namespace GameplayIngredients
         [InfoBox("Use the following wildcards:\n - %h : hours\n - %m : minutes\n - %s : seconds\n - %x : milliseconds", EInfoBoxType.Normal)]
         public string format = "%h:%m:%s:%x";
 
+        public override UpdateMode defaultUpdateMode => UpdateMode.Update;
+
+        public override int defaultPriority => 0;
+
+       
+
         private void OnValidate()
         {
             UpdateText();
@@ -31,7 +36,7 @@ namespace GameplayIngredients
             UpdateText();
         }
 
-        private void Update()
+        public override void UpdateRig(float deltaTime)
         {
             if (timer == null || (text == null && textMesh == null))
                 return;

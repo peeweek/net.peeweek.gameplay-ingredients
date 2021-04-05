@@ -9,7 +9,7 @@ namespace GameplayIngredients
     [AddComponentMenu("Gameplay Ingredients/Counter")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-counter.png")]
 
-    public class Counter : MonoBehaviour
+    public class Counter : GameplayIngredientsBehaviour
     {
         public enum ValueSourceType
         {
