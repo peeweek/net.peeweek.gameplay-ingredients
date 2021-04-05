@@ -1,12 +1,10 @@
 ﻿using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
     [HelpURL(Help.URL + "timers")]
-    [Callable("Timer", "Misc/ic-timer.png")]
+    [Callable("Time", "Misc/ic-timer.png")]
     public class TimerAction : ActionBase
     {
         public enum Action

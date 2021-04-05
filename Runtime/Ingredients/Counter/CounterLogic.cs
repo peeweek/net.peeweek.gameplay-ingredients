@@ -6,7 +6,7 @@ using UnityEngine;
 namespace GameplayIngredients.Logic
 {
     [HelpURL(Help.URL + "counters")]
-    [Callable("Counters", "Misc/ic-counter.png")]
+    [Callable("Data", "Misc/ic-counter.png")]
     public class CounterLogic : LogicBase
     {
         public enum ValueSourceType

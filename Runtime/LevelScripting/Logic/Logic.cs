@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace GameplayIngredients.Logic
 {
-    [Callable("Game", "Logic/ic-generic-logic.png")]
+    [Callable("Logic", "Logic/ic-generic-logic.png")]
     public class Logic : LogicBase
     {
         [ReorderableList]

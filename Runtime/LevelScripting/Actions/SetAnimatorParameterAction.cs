@@ -6,6 +6,7 @@ namespace GameplayIngredients.Actions
 {
     public enum AnimatorParameterType { Bool, Float, Int, Trigger };
 
+    [Callable("Game", "Actions/ic-generic-action.png")]
     public class SetAnimatorParameterAction : ActionBase
     {
         public Animator animator;

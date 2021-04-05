@@ -6,7 +6,7 @@ using NaughtyAttributes;
 namespace GameplayIngredients.Actions
 {
     [HelpURL(Help.URL + "factory")]
-    [Callable("Factory", "Misc/ic-factory.png")]
+    [Callable("Game", "Misc/ic-factory.png")]
     public class FactorySetTargetAction : ActionBase
     {
         [NonNullCheck]
