@@ -4,7 +4,11 @@
 
 #### Added
 
+* Added a Popup to search and add Callables directly from callable lists.
+
 #### Fixed
+
+* Fixed missing icons
 
 ## 2020.2.4
 
