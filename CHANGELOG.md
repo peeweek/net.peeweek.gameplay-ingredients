@@ -5,6 +5,8 @@
 #### Added
 
 * Added a Popup to search and add Callables directly from callable lists.
+* Added custom editors for Managers, Counters, Factories
+* Created a Generic `GameplayIngredientsBehaviour` for Custom Decorated classes.
 
 #### Fixed
 
