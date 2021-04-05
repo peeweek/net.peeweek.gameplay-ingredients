@@ -6,6 +6,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Game", "Misc/ic-scene.png")]
     public class StreamingLevelAction : ActionBase
     {
         [ReorderableList, Scene]

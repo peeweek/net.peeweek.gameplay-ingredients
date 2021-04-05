@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Game", "Actions/ic-action-randomseed.png")]
     public class SetRandomSeedAction : ActionBase
     {
         [Tooltip("Whether to set a new random seed, or a fixed seed")]

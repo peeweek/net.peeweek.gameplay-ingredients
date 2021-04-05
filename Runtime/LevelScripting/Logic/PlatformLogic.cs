@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Application", "Logic/ic-generic-logic.png")]
     public class PlatformLogic : LogicBase
     {
         public enum InclusionMode

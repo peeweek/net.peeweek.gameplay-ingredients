@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Data", "Logic/ic-generic-logic.png")]
     public class SaveDataLogic : LogicBase
     {
         public enum Evaluation

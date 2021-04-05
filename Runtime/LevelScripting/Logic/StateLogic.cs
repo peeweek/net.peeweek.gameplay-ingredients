@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("State Machines", "Logic/ic-generic-logic.png")]
     public class StateLogic : LogicBase
     {
         [NonNullCheck]

@@ -3,6 +3,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Logic", "Logic/ic-generic-logic.png")]
     public class FlipFlopLogic : LogicBase
     {
         public enum State

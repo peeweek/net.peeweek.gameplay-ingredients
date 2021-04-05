@@ -4,6 +4,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Application", "Logic/ic-generic-logic.png")]
     public class EditorOnlyLogic : LogicBase
     {
         public enum Mode

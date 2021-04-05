@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Time", "Logic/ic-generic-logic.png")]
     public class NextFrameLogic : LogicBase
     {
         [ReorderableList]

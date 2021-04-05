@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Data", "Logic/ic-generic-logic.png")]
     public class SaveDataSwitchOnIntLogic : LogicBase
     {
         public GameSaveManager.Location SaveLocation = GameSaveManager.Location.System;

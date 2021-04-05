@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 namespace GameplayIngredients.Logic
 {
+    [Callable("Time", "Logic/ic-generic-logic.png")]
     public class DelayedLogic : LogicBase
     {
         public enum DelayMode { Constant, Random };
