@@ -2,13 +2,30 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 using GameplayIngredients.Actions;
+using System;
+using GameplayIngredients.Events;
 
 namespace GameplayIngredients
 {
     static class HiearchyItems
     {
+        const string kMenu = "GameObject/Gameplay Ingredients/";
+        const string kEventsMenu = kMenu+"Events/";
+        const string kSMMenu = kMenu+ "State Machines/";
+
+        static GameObject CreateGameObject(string name, params Type[] components)
+        {
+            var go = new GameObject(name, components);
+
+            if (Selection.activeGameObject != null)
+                go.transform.parent = Selection.activeGameObject.transform;
+
+            Selection.activeGameObject = go;
+            return go;
+        }
+
         #region STATE MACHINES
-        [MenuItem("GameObject/Gameplay Ingredients/State Machines/State Machine (Empty)", false, 10)]
+        [MenuItem(kSMMenu+"State Machine (Empty)", false, 10)]
         static void CreateEmptyStateMachine()
         {
             var go = new GameObject("New StateMachine");
@@ -18,7 +35,7 @@ namespace GameplayIngredients
                 go.transform.parent = Selection.activeGameObject.transform;
         }
 
-        [MenuItem("GameObject/Gameplay Ingredients/State Machines/State Machine (On\\Off)", false, 10)]
+        [MenuItem(kSMMenu + "State Machine (On|Off)", false, 10)]
         static void CreateTwoStateStateMachine()
         {
             var go = new GameObject("New StateMachine");
@@ -33,7 +50,7 @@ namespace GameplayIngredients
                 go.transform.parent = Selection.activeGameObject.transform;
         }
 
-        [MenuItem("GameObject/Gameplay Ingredients/State Machines/State Machine (On\\Off\\Disabled)", false, 10)]
+        [MenuItem(kSMMenu + "State Machine (On|Off|Disabled)", false, 10)]
         static void CreateThreeStateStateMachine()
         {
             var go = new GameObject("New StateMachine");
@@ -65,116 +82,100 @@ namespace GameplayIngredients
 
         #region TRIGGERS
 
-        [MenuItem("GameObject/Gameplay Ingredients/Events/On Trigger (Box)", false, 10)]
+        [MenuItem(kEventsMenu + "On Trigger (Box)", false, 10)]
         static void CreateTriggerBox()
         {
-            var go = new GameObject();
-            var col = go.AddComponent<BoxCollider>();
+            var go = CreateGameObject("On Trigger (Box)", typeof(BoxCollider), typeof(OnTriggerEvent));
+            var col = go.GetComponent<BoxCollider>();
             col.isTrigger = true;
-            var evt = go.AddComponent<Events.OnTriggerEvent>();
-            go.name = "On Box Trigger";
-
-            if (Selection.activeGameObject != null)
-                go.transform.parent = Selection.activeGameObject.transform;
         }
 
-        [MenuItem("GameObject/Gameplay Ingredients/Events/On Trigger (Sphere)", false, 10)]
+        [MenuItem(kEventsMenu + "On Trigger (Sphere)", false, 10)]
         static void CreateTriggerSphere()
         {
-            var go = new GameObject();
-            var col = go.AddComponent<SphereCollider>();
+            var go = CreateGameObject("On Trigger (Sphere)", typeof(SphereCollider), typeof(OnTriggerEvent));
+            var col = go.GetComponent<SphereCollider>();
             col.isTrigger = true;
-            var evt = go.AddComponent<Events.OnTriggerEvent>();
-            go.name = "On Sphere Trigger";
-
-            if (Selection.activeGameObject != null)
-                go.transform.parent = Selection.activeGameObject.transform;
         }
 
-        [MenuItem("GameObject/Gameplay Ingredients/Events/On Trigger (Capsule)", false, 10)]
+        [MenuItem(kEventsMenu + "On Trigger (Capsule)", false, 10)]
         static void CreateTriggerCapsule()
         {
-            var go = new GameObject();
-            var col = go.AddComponent<CapsuleCollider>();
+            var go = CreateGameObject("On Trigger (Capsule)", typeof(CapsuleCollider), typeof(OnTriggerEvent));
+            var col = go.GetComponent<CapsuleCollider>();
             col.isTrigger = true;
-            var evt = go.AddComponent<Events.OnTriggerEvent>();
-            go.name = "On Capsule Trigger";
+        }
+        [MenuItem(kEventsMenu + "On Collider (Box)", false, 10)]
+        static void CreateColliderBox()
+        {
+            var go = CreateGameObject("On Collider (Box)", typeof(BoxCollider), typeof(OnColliderEvent));
+        }
 
-            if (Selection.activeGameObject != null)
-                go.transform.parent = Selection.activeGameObject.transform;
+        [MenuItem(kEventsMenu + "On Collider (Sphere)", false, 10)]
+        static void CreateColliderSphere()
+        {
+            var go = CreateGameObject("On Collider (Sphere)", typeof(SphereCollider), typeof(OnColliderEvent));
+        }
+
+        [MenuItem(kEventsMenu + "On Collider (Capsule)", false, 10)]
+        static void CreateColliderCapsule()
+        {
+            var go = CreateGameObject("On Collider (Capsule)", typeof(CapsuleCollider), typeof(OnColliderEvent));
         }
         #endregion
 
-        #region LIFECYCLE
+        #region EVENTS
 
-        [MenuItem("GameObject/Gameplay Ingredients/Events/On Awake", false, 10)]
-        static void CreateOnAwake()
-        {
-            var go = new GameObject();
-            var evt = go.AddComponent<Events.OnAwakeEvent>();
-            go.name = "On Awake";
+        [MenuItem(kEventsMenu+"On Awake", false, 30)]
+        static void CreateOnAwake() => CreateGameObject("On Awake", typeof(OnAwakeEvent));
 
-            if (Selection.activeGameObject != null)
-                go.transform.parent = Selection.activeGameObject.transform;
-        }
+        [MenuItem(kEventsMenu + "On Destroyed", false, 31)]
+        static void CreateOnDestroyed() => CreateGameObject("On Destroyed", typeof(OnDestroyEvent));
 
-        [MenuItem("GameObject/Gameplay Ingredients/Events/On Enable", false, 10)]
-        static void CreateOnEnableDisable()
-        {
-            var go = new GameObject();
-            var evt = go.AddComponent<Events.OnEnableDisableEvent>();
-            go.name = "On Enable/Disable";
+        [MenuItem(kEventsMenu + "On Enable~Disable", false, 32)]
+        static void CreateOnEnableDisable() => CreateGameObject("On Enable/Disable", typeof(OnEnableDisableEvent));
 
-            if (Selection.activeGameObject != null)
-                go.transform.parent = Selection.activeGameObject.transform;
-        }
+        [MenuItem(kEventsMenu + "On Start", false, 33)]
+        static void CreateOnStart() => CreateGameObject("On Start", typeof(OnStartEvent));
 
-        [MenuItem("GameObject/Gameplay Ingredients/Events/On Start", false, 10)]
-        static void CreateOnStart()
-        {
-            var go = new GameObject();
-            var evt = go.AddComponent<Events.OnStartEvent>();
-            go.name = "On Start";
+        [MenuItem(kEventsMenu + "On Update", true, 34)]
+        static bool CanCreateOnUpdate() => GameplayIngredientsSettings.currentSettings.allowUpdateCalls;
 
-            if (Selection.activeGameObject != null)
-                go.transform.parent = Selection.activeGameObject.transform;
-        }
+        [MenuItem(kEventsMenu + "On Update", false, 34)]
+        static void CreateOnUpdate() => CreateGameObject("On Update", typeof(OnUpdateEvent));
 
-        [MenuItem("GameObject/Gameplay Ingredients/Events/On Game Manager Start", false, 10)]
-        static void CreateOnGameManagerStart()
-        {
-            var go = new GameObject();
-            var evt = go.AddComponent<Events.OnGameManagerLevelStart>();
-            go.name = "On Game Manager Level Start";
+        [MenuItem(kEventsMenu + "On Game Manager Start", false, 50)]
+        static void CreateOnGameManagerStart() => CreateGameObject("On Level Start", typeof(OnGameManagerLevelStart));
 
-            if (Selection.activeGameObject != null)
-                go.transform.parent = Selection.activeGameObject.transform;
-        }
+        [MenuItem(kEventsMenu + "On Message Received", false, 51)]
+        static void CreateOnMessageReceived() => CreateGameObject("On Message Received", typeof(OnMessageEvent));
 
-        [MenuItem("GameObject/Gameplay Ingredients/Events/On Message Received", false, 10)]
-        static void CreateOnMessageReceived()
-        {
-            var go = new GameObject();
-            var evt = go.AddComponent<Events.OnMessageEvent>();
-            go.name = "On Message Received";
+        [MenuItem(kEventsMenu + "On Button Down", false, 70)]
+        static void CreateOnButtonDownEvent() => CreateGameObject("On Button Down", typeof(OnButtonDownEvent));
 
-            if (Selection.activeGameObject != null)
-                go.transform.parent = Selection.activeGameObject.transform;
-        }
+        [MenuItem(kEventsMenu + "On Key Down", false, 71)]
+        static void CreateOnKewDownEvent() => CreateGameObject("On Key Down", typeof(OnKeyDownEvent));
+
+        [MenuItem(kEventsMenu + "On Mouse Down", false, 72)]
+        static void CreateOnMouseDownEvent() => CreateGameObject("On Mouse Down", typeof(OnMouseDownEvent));
+
+        [MenuItem(kEventsMenu + "On Mouse Hover (Sphere)", false, 73)]
+        static void CreateOnMouseHoverEventSphere() => CreateGameObject("On Mouse Hover", typeof(SphereCollider), typeof(OnMouseHoverEvent));
+
+        [MenuItem(kEventsMenu + "On Mouse Hover (Box)", false, 73)]
+        static void CreateOnMouseHoverEventBox() => CreateGameObject("On Mouse Hover", typeof(BoxCollider), typeof(OnMouseHoverEvent));
+
         #endregion
 
         #region UTILS
         [MenuItem("GameObject/Gameplay Ingredients/Factory", false, 10)]
         static void CreateFactory()
         {
-            var go = new GameObject("Factory");
-            var fact = go.AddComponent<Factory>();
+            var go = CreateGameObject("Factory", typeof(Factory), typeof(FactorySpawnAction));
+            var fact = go.GetComponent<Factory>();
             fact.SpawnTarget = go;
-            var sa = go.AddComponent<FactorySpawnAction>();
+            var sa = go.GetComponent<FactorySpawnAction>();
             sa.factory = fact;
-
-            if (Selection.activeGameObject != null)
-                go.transform.parent = Selection.activeGameObject.transform;
         }
         #endregion
     }
