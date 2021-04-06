@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Game", "Logic/ic-generic-logic.png")]
     public class SetInstigatorFromFactoryLogic : LogicBase
     {
-        [ReorderableList]
         public Callable[] Next;
 
         [NonNullCheck]

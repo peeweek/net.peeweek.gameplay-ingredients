@@ -9,11 +9,9 @@ namespace GameplayIngredients.StateMachines
     {
         public string StateName { get { return gameObject.name; } }
 
-        [ReorderableList]
         public Callable[] OnStateEnter;
-        [ReorderableList]
         public Callable[] OnStateExit;
-        [ReorderableList, ShowIf("AllowUpdateCalls")]
+        [ShowIf("AllowUpdateCalls")]
         public Callable[] OnStateUpdate;
 
         private bool AllowUpdateCalls()

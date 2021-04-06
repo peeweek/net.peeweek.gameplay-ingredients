@@ -5,6 +5,7 @@ using UnityEngine.Playables;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Sequencing", "Actions/ic-action-timeline.png")]
     public class TimelineControlAction : ActionBase
     {
         public enum TimelineControlMode

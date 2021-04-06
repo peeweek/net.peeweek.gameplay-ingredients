@@ -5,7 +5,7 @@ namespace GameplayIngredients.Events
 {
     public class OnUpdateEvent : EventBase
     {
-        [ReorderableList, EnableIf("AllowUpdateCalls")]
+        [EnableIf("AllowUpdateCalls")]
         public Callable[] OnUpdate;
 
         private void OnEnable()

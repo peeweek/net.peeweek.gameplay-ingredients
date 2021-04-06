@@ -7,8 +7,9 @@ using UnityEngine;
 namespace GameplayIngredients
 {
     [HelpURL(Help.URL + "factory")]
+    [AddComponentMenu("Gameplay Ingredients/Factory")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-Factory.png")]
-    public class Factory : MonoBehaviour
+    public class Factory : GameplayIngredientsBehaviour
     {
         public enum BlueprintSelectionMode
         {
@@ -59,9 +60,7 @@ namespace GameplayIngredients
         [Min(1), SerializeField]
         private int MaxInstances = 1;
 
-        [ReorderableList]
         public Callable[] OnSpawn;
-        [ReorderableList]
         public Callable[] OnRespawn;
 
         List<GameObject> m_Instances;

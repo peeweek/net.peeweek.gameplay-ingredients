@@ -10,11 +10,8 @@ namespace GameplayIngredients
     public class GameManager : Manager
     {
         [Header("Events")]
-        [ReorderableList]
         public Callable[] OnGameStart;
-        [ReorderableList]
         public Callable[] OnLevelLoaded;
-        [ReorderableList]
         public Callable[] OnMainMenuLoaded;
 
         [Header("Levels"), NonNullCheck]

@@ -7,10 +7,7 @@ namespace GameplayIngredients.Logic
 {
     public abstract class ConditionalLogic : LogicBase
     {
-        [ReorderableList]
         public Callable[] OnConditionValid;
-
-        [ReorderableList]
         public Callable[] OnConditionInvalid;
 
         public override void Execute(GameObject instigator = null)

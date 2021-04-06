@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Data", "Actions/ic-action-save.png")]
     public class GameSaveLoadSaveAction : ActionBase
     {
         public enum Action

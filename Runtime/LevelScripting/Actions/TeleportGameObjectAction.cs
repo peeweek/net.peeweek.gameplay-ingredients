@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Game Objects", "Actions/ic-action-teleport.png")]
     public class TeleportGameObjectAction : ActionBase
     {
         [ReorderableList]

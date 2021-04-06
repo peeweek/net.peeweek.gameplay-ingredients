@@ -6,9 +6,10 @@ using NaughtyAttributes;
 namespace GameplayIngredients
 {
     [HelpURL(Help.URL + "counters")]
+    [AddComponentMenu("Gameplay Ingredients/Counter")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-counter.png")]
 
-    public class Counter : MonoBehaviour
+    public class Counter : GameplayIngredientsBehaviour
     {
         public enum ValueSourceType
         {
@@ -33,7 +34,6 @@ namespace GameplayIngredients
 
         public int CurrentValue { get; private set; }
 
-        [ReorderableList]
         public Callable[] OnValueChanged;
 
         bool isValueProperty() { return ValueSource == ValueSourceType.Property; }

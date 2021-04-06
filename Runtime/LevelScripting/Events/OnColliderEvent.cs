@@ -6,10 +6,7 @@ namespace GameplayIngredients.Events
     [RequireComponent(typeof(Collider))]
     public class OnColliderEvent : EventBase
     {
-        [ReorderableList]
         public Callable[] onCollisionEnter;
-
-        [ReorderableList]
         public Callable[] onCollisionExit;
 
         public bool OnlyInteractWithTag = false;

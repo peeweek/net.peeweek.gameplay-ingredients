@@ -5,6 +5,7 @@ using UnityEngine;
 namespace GameplayIngredients.Actions
 {
     [HelpURL(Help.URL + "globals")]
+    [Callable("Data", "Misc/ic-globals.png")]
     public class ResetGlobalAction : ActionBase
     {
         public ResetType resetType = ResetType.Locals;

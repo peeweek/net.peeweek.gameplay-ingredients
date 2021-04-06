@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Data", "Logic/ic-generic-logic.png")]
     public class SaveDataSwitchOnIntLogic : LogicBase
     {
         public GameSaveManager.Location SaveLocation = GameSaveManager.Location.System;
@@ -13,7 +14,7 @@ namespace GameplayIngredients.Logic
         [NonNullCheck]
         public Callable[] DefaultCaseToCall;
 
-        [ReorderableList, NonNullCheck]
+        [NonNullCheck]
         public Callable[] CasesToCall;
 
         public override void Execute(GameObject instigator = null)

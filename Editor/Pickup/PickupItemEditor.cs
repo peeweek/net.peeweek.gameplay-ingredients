@@ -8,32 +8,47 @@ using GameplayIngredients.Pickup;
 namespace GameplayIngredients.Editor
 {
     [CustomEditor(typeof(PickupItem))]
-    public class PickupItemEditor : UnityEditor.Editor
+    public class PickupItemEditor : IngredientEditor
     {
         ReorderableList m_RList;
-        SerializedProperty m_OnPickup;
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
             m_RList = new ReorderableList(((PickupItem)serializedObject.targetObject).effects, typeof(PickupEffectBase), false, true, false, false);
-            m_RList.drawElementCallback = DrawElement;
-            m_OnPickup = serializedObject.FindProperty("OnPickup");
+            m_RList.drawHeaderCallback = (r) => GUI.Label(r, "Pickup Effects");
+            m_RList.drawElementCallback = (rect, index, isActive, isFocused) =>
+            {
+                GUI.Label(rect, $"#{index} - {ObjectNames.NicifyVariableName(((PickupItem)serializedObject.targetObject).effects[index]?.GetType().Name)}");
+            };
+            base.OnEnable();
         }
 
-        void DrawElement(Rect rect, int index, bool isActive, bool isFocused)
-        {
-            GUI.Label(rect,string.Format("#{0} - {1}", index+1,  ObjectNames.NicifyVariableName(((PickupItem)serializedObject.targetObject).effects[index].GetType().Name)));
-        }
 
-        public override void OnInspectorGUI()
+        public override void OnInspectorGUI_PingArea()
         {
-            GUILayout.Space(8);
+            serializedObject.Update();
+
+            EditorGUI.BeginChangeCheck();
+
+            DrawBreadCrumb(ObjectNames.NicifyVariableName(serializedObject.targetObject.GetType().Name), color, () =>
+            {
+                GUILayout.Label(ObjectNames.NicifyVariableName(serializedObject.targetObject.GetType().Name), GUILayout.ExpandWidth(true));
+                GUILayout.FlexibleSpace();
+            });
+
+            EditorGUILayout.HelpBox("Add Effects to the Pickup Item by adding Pickup Effect Components to this Game Object", MessageType.Info);
             m_RList.DoLayoutList();
 
-            serializedObject.Update();
-            EditorGUILayout.PropertyField(m_OnPickup,true);
-            serializedObject.ApplyModifiedProperties();
+
+            DrawBaseProperties();
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                serializedObject.ApplyModifiedProperties();
+            }
         }
+
+        static readonly Color color = new Color(1f, .3f, .3f, 1f);
 
     }
 }

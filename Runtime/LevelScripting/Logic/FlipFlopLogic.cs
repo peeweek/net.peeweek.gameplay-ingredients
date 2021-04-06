@@ -3,6 +3,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Logic", "Logic/ic-generic-logic.png")]
     public class FlipFlopLogic : LogicBase
     {
         public enum State
@@ -13,10 +14,7 @@ namespace GameplayIngredients.Logic
 
         public State InitialState = State.Flip;
 
-        [ReorderableList]
         public Callable[] OnFlip;
-
-        [ReorderableList]
         public Callable[] OnFlop;
 
         private State state;

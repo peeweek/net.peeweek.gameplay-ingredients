@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Data", "Logic/ic-generic-logic.png")]
     public class SaveDataLogic : LogicBase
     {
         public enum Evaluation
@@ -37,9 +38,7 @@ namespace GameplayIngredients.Logic
         [ShowIf("isString")]
         public string StringTargetValue;
 
-        [ReorderableList]
         public Callable[] OnTestSuccess;
-        [ReorderableList]
         public Callable[] OnTestFail;
 
         public override void Execute(GameObject instigator = null)

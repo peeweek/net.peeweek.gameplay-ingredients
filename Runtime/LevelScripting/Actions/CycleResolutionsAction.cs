@@ -7,6 +7,7 @@ using UnityEngine.UI;
 namespace GameplayIngredients.Actions
 {
     [Obsolete]
+    [Callable("Screen", "Actions/ic-action-screen.png")]
     public class CycleResolutionsAction : ActionBase
     {
         public Text ButtonLabel;

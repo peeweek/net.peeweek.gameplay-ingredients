@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Data", "Actions/ic-action-save.png")]
     public class GameSaveSetValueAction : ActionBase
     {
         public string Key = "SomeKey";

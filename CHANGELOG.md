@@ -4,7 +4,13 @@
 
 #### Added
 
+* Added a Popup to search and add Callables directly from callable lists.
+* Added custom editors for Managers, Counters, Factories, and Pickup Item
+* Created a Generic `GameplayIngredientsBehaviour` for Custom Decorated classes.
+
 #### Fixed
+
+* Fixed missing icons
 
 ## 2020.2.4
 

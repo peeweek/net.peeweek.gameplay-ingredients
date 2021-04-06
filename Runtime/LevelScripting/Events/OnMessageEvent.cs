@@ -9,7 +9,6 @@ namespace GameplayIngredients.Events
     {
         public string MessageName = "Message";
 
-        [ReorderableList]
         public Callable[] OnMessageRecieved;
 
         void OnEnable()

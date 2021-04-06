@@ -11,7 +11,7 @@ namespace GameplayIngredients.Interactions
     public abstract class Interactive : EventBase
     {
         [Header("Events")]
-        [SerializeField, ReorderableList]
+        [SerializeField]
         protected Callable[] OnInteract;
 
         protected virtual void OnEnable()

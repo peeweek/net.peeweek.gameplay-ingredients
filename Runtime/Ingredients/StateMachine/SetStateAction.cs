@@ -6,6 +6,7 @@ using GameplayIngredients.StateMachines;
 namespace GameplayIngredients.Actions
 {
     [HelpURL(Help.URL + "state-machines")]
+    [Callable("State Machines", "Misc/ic-StateMachine-SetState.png")]
     public class SetStateAction : ActionBase
     {
         [NonNullCheck]

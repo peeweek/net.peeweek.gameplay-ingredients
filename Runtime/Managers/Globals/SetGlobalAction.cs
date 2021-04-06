@@ -1,11 +1,10 @@
 ﻿using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
     [HelpURL(Help.URL + "globals")]
+    [Callable("Data", "Misc/ic-globals.png")]
     public class SetGlobalAction : ActionBase
     {
         public Globals.Scope scope = Globals.Scope.Global;

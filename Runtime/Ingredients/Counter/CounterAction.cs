@@ -6,6 +6,7 @@ using UnityEngine;
 namespace GameplayIngredients.Actions
 {
     [HelpURL(Help.URL + "counters")]
+    [Callable("Data", "Misc/ic-counter.png")]
     public class CounterAction : ActionBase
     {
         public enum CounterOperation

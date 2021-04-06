@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("State Machines", "Logic/ic-generic-logic.png")]
     public class StateLogic : LogicBase
     {
         [NonNullCheck]
@@ -11,9 +12,7 @@ namespace GameplayIngredients.Logic
         [NonNullCheck]
         public State TargetState;
 
-        [ReorderableList]
         public Callable[] IfCurrentState;
-        [ReorderableList]
         public Callable[] IfNotCurrentState;
 
         public override void Execute(GameObject instigator = null)

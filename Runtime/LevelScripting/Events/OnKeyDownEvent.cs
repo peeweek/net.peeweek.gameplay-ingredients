@@ -7,10 +7,7 @@ namespace GameplayIngredients.Events
     {
         public KeyCode Key = KeyCode.F5;
 
-        [ReorderableList]
         public Callable[] OnKeyDown;
-
-        [ReorderableList]
         public Callable[] OnKeyUp;
 
         void Update()

@@ -7,6 +7,7 @@ namespace GameplayIngredients.Actions
     public enum ActionSpace { Local, World };
 
     [ExecuteAlways]
+    [Callable("Game", "Actions/ic-action-rigidbody.png")]
     public class RigidbodyAction : ActionBase
     {
         public bool ApplyOnInstigator = false;

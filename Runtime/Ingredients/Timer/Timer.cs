@@ -7,7 +7,7 @@ namespace GameplayIngredients
 {
     [HelpURL(Help.URL + "timers")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-timer.png")]
-    public class Timer : MonoBehaviour
+    public class Timer : GameplayIngredientsBehaviour
     {
         public bool StartOnEnable = false;
 
@@ -25,11 +25,8 @@ namespace GameplayIngredients
         public uint CurrentMilliseconds  { get { return (uint)((m_TTL % 1.0f) * 1000); } }
 
 
-        [ReorderableList]
         public Callable[] OnTimerFinished;
-        [ReorderableList]
         public Callable[] OnTimerInterrupt;
-        [ReorderableList]
         public Callable[] OnTimerStart;
 
         float m_TTL = 0.0f;

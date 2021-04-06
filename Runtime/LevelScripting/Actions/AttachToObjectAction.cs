@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Game Objects", "Actions/ic-action-attach.png")]
     public class AttachToObjectAction : ActionBase
     {
         public enum Action

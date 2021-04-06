@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Application", "Logic/ic-generic-logic.png")]
     public class PlatformLogic : LogicBase
     {
         public enum InclusionMode
@@ -20,10 +21,8 @@ namespace GameplayIngredients.Logic
 
         public InclusionMode inclusionMode = InclusionMode.IsTarget;
 
-        [ReorderableList, FormerlySerializedAs("Calls")]
+        [FormerlySerializedAs("Calls")]
         public Callable[] OnTestValid;
-
-        [ReorderableList]
         public Callable[] OnTestInvalid;
 
 

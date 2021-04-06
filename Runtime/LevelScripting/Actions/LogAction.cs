@@ -5,6 +5,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
+    [Callable("Application", "Actions/ic-action-log.png")]
     public class LogAction : ActionBase
     {
         const string kHelpText = @"Wildcards:

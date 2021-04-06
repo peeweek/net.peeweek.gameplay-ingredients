@@ -6,10 +6,7 @@ namespace GameplayIngredients.Events
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Events/ic-event-trigger.png")]
     public class OnTriggerEvent : EventBase
     {
-        [ReorderableList]
         public Callable[] onTriggerEnter;
-
-        [ReorderableList]
         public Callable[] onTriggerExit;
 
         public bool OnlyInteractWithTag = true;

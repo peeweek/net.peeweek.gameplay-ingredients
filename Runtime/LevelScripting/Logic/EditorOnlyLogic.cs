@@ -4,6 +4,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Logic
 {
+    [Callable("Application", "Logic/ic-generic-logic.png")]
     public class EditorOnlyLogic : LogicBase
     {
         public enum Mode
@@ -18,7 +19,6 @@ namespace GameplayIngredients.Logic
 
         public Mode ExecutionPath = Mode.PlayerAndEditor;
 
-        [ReorderableList]
         public Callable[] OnExecute;
 
         public override void Execute(GameObject instigator = null)

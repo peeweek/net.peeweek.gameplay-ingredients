@@ -20,7 +20,6 @@ namespace GameplayIngredients.Rigs
         public bool inLocalSpace = false; 
 
         [Header("On Reach Position")]
-        [ReorderableList]
         public Callable[] OnReachPosition;
         public float ReachSnapDistance = 0.01f;
 

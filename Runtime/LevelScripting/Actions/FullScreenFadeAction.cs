@@ -1,20 +1,15 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
-
+    [Callable("Screen", "Actions/ic-action-screen.png")]
     public class FullScreenFadeAction : ActionBase
     {
         public FullScreenFadeManager.FadeMode Fading = FullScreenFadeManager.FadeMode.ToBlack;
         public float Duration = 2.0f;
         public FullScreenFadeManager.FadeTimingMode fadeTimingMode = FullScreenFadeManager.FadeTimingMode.UnscaledGameTime;
 
-        [ReorderableList]
         public Callable[] OnComplete;
 
         public override void Execute(GameObject instigator = null)

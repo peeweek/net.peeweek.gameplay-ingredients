@@ -6,6 +6,7 @@ using UnityEngine;
 namespace GameplayIngredients.Interactions
 {
     [HelpURL(Help.URL + "interactive")]
+    [Callable("Game", "Misc/ic-interaction.png")]
     public class Interaction : ActionBase
     {
         public InteractiveUser InteractiveUser;
