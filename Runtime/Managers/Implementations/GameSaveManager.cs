@@ -22,10 +22,7 @@ namespace GameplayIngredients
         Dictionary<string, System.Object> systemSaveEntries;
         Dictionary<string, System.Object> currentUserSaveEntries;
 
-        [ReorderableList]
         public Callable[] OnLoad;
-
-        [ReorderableList]
         public Callable[] OnSave;
 
         const string kPreferencePrefix = "GameplayIngredients.GameSaveManager.";

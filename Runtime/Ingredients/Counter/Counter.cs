@@ -34,7 +34,6 @@ namespace GameplayIngredients
 
         public int CurrentValue { get; private set; }
 
-        [ReorderableList]
         public Callable[] OnValueChanged;
 
         bool isValueProperty() { return ValueSource == ValueSourceType.Property; }

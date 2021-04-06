@@ -16,7 +16,6 @@ namespace GameplayIngredients.Actions
 
         public bool ShowUI = false;
         
-        [ReorderableList]
         public Callable[] OnLoadComplete;
 
         public override void Execute(GameObject instigator = null)

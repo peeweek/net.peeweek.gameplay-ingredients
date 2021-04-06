@@ -21,10 +21,8 @@ namespace GameplayIngredients.Logic
 
         public InclusionMode inclusionMode = InclusionMode.IsTarget;
 
-        [ReorderableList, FormerlySerializedAs("Calls")]
+        [FormerlySerializedAs("Calls")]
         public Callable[] OnTestValid;
-
-        [ReorderableList]
         public Callable[] OnTestInvalid;
 
 

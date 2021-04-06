@@ -12,9 +12,7 @@ namespace GameplayIngredients.Logic
         [NonNullCheck]
         public State TargetState;
 
-        [ReorderableList]
         public Callable[] IfCurrentState;
-        [ReorderableList]
         public Callable[] IfNotCurrentState;
 
         public override void Execute(GameObject instigator = null)

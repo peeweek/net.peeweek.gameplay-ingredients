@@ -12,9 +12,7 @@ namespace GameplayIngredients.Logic
         public float Delay = 1.0f;
         [ShowIf("DelayIsRandom")]
         public Vector2 DelayRange = Vector2.one;
-        [ReorderableList]
         public Callable[] OnDelayComplete;
-        [ReorderableList]
         public Callable[] OnCanceled;
         IEnumerator m_Coroutine;
         private void OnValidate()

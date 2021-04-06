@@ -8,7 +8,6 @@ namespace GameplayIngredients.Logic
     [Callable("Logic", "Logic/ic-generic-logic.png")]
     public class Logic : LogicBase
     {
-        [ReorderableList]
         public Callable[] Calls;
 
         public override void Execute(GameObject instigator = null)

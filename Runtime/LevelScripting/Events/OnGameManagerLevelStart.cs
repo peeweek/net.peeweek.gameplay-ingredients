@@ -20,7 +20,6 @@ namespace GameplayIngredients.Events
 
         string m_Message;
 
-        [ReorderableList]
         public Callable[] OnMessageRecieved;
 
         void OnEnable()

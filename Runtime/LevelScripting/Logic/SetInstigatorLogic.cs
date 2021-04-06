@@ -8,7 +8,6 @@ namespace GameplayIngredients.Logic
     [Callable("Game", "Logic/ic-generic-logic.png")]
     public class SetInstigatorLogic : LogicBase
     {
-        [ReorderableList]
         public Callable[] Next;
 
         public GameObject NewInstigator;

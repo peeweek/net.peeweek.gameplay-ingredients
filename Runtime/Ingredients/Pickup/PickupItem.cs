@@ -11,7 +11,6 @@ namespace GameplayIngredients.Pickup
     {
         public PickupEffectBase[] effects { get { return GetComponents<PickupEffectBase>();  } }
 
-        [ReorderableList]
         public Callable[] OnPickup;
 
         private void OnTriggerEnter(Collider other)

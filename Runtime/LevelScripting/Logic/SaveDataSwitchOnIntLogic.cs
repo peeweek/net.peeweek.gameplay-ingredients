@@ -14,7 +14,7 @@ namespace GameplayIngredients.Logic
         [NonNullCheck]
         public Callable[] DefaultCaseToCall;
 
-        [ReorderableList, NonNullCheck]
+        [NonNullCheck]
         public Callable[] CasesToCall;
 
         public override void Execute(GameObject instigator = null)

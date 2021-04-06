@@ -60,9 +60,7 @@ namespace GameplayIngredients
         [Min(1), SerializeField]
         private int MaxInstances = 1;
 
-        [ReorderableList]
         public Callable[] OnSpawn;
-        [ReorderableList]
         public Callable[] OnRespawn;
 
         List<GameObject> m_Instances;

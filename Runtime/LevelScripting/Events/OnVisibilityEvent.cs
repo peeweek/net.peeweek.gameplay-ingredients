@@ -6,9 +6,7 @@ namespace GameplayIngredients.Events
     [RequireComponent(typeof(Renderer))]
     public class OnVisibilityEvent : EventBase
     {
-        [ReorderableList]
         public Callable[] OnVisible;
-        [ReorderableList]
         public Callable[] OnInvisible;
 
         private void OnBecameVisible()

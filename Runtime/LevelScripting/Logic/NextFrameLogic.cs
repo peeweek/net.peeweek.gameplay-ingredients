@@ -8,7 +8,6 @@ namespace GameplayIngredients.Logic
     [Callable("Time", "Logic/ic-generic-logic.png")]
     public class NextFrameLogic : LogicBase
     {
-        [ReorderableList]
         public Callable[] OnNextFrame;
         IEnumerator m_Coroutine;
 

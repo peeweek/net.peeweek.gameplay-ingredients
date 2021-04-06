@@ -30,7 +30,6 @@ namespace GameplayIngredients.Actions
 
         public bool SaveProgress = false;
 
-        [ReorderableList]
         public Callable[] OnComplete;
 
         private bool isSpecified() { return level == Target.SpecifiedLevel; }

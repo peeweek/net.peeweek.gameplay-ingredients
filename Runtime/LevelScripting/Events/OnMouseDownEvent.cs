@@ -6,7 +6,6 @@ namespace GameplayIngredients.Events
     [RequireComponent(typeof(Collider))]
     public class OnMouseDownEvent : EventBase
     {
-        [ReorderableList]
         public Callable[] MouseDown;
 
         private void OnMouseDown()

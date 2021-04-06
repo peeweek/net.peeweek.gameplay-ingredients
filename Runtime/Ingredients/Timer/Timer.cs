@@ -25,11 +25,8 @@ namespace GameplayIngredients
         public uint CurrentMilliseconds  { get { return (uint)((m_TTL % 1.0f) * 1000); } }
 
 
-        [ReorderableList]
         public Callable[] OnTimerFinished;
-        [ReorderableList]
         public Callable[] OnTimerInterrupt;
-        [ReorderableList]
         public Callable[] OnTimerStart;
 
         float m_TTL = 0.0f;

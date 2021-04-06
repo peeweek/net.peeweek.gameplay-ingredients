@@ -19,7 +19,6 @@ namespace GameplayIngredients.Logic
 
         public Mode ExecutionPath = Mode.PlayerAndEditor;
 
-        [ReorderableList]
         public Callable[] OnExecute;
 
         public override void Execute(GameObject instigator = null)

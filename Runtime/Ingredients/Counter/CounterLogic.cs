@@ -44,7 +44,6 @@ namespace GameplayIngredients.Logic
         public Globals.Scope GlobalScope = Globals.Scope.Global;
 
         public Callable[] OnTestSuccess;
-
         public Callable[] OnTestFail;
 
         bool isValueProperty() { return ValueSource == ValueSourceType.Property; }

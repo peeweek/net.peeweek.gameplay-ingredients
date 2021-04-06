@@ -61,9 +61,7 @@ namespace GameplayIngredients.Logic
         bool isGlobal() { return compareTo == CompareTo.OtherGlobalVariable && isCompareToOther(); }
         bool isCompareToOther() { return evaluation != Evaluation.Exists; }
 
-        [ReorderableList]
         public Callable[] OnTestSuccess;
-        [ReorderableList]
         public Callable[] OnTestFail;
 
         public override void Execute(GameObject instigator = null)

@@ -14,10 +14,7 @@ namespace GameplayIngredients.Logic
 
         public State InitialState = State.Flip;
 
-        [ReorderableList]
         public Callable[] OnFlip;
-
-        [ReorderableList]
         public Callable[] OnFlop;
 
         private State state;

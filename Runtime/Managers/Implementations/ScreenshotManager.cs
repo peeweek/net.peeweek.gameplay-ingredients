@@ -17,10 +17,7 @@ namespace GameplayIngredients
         public string Prefix = "Screenshot";
 
         [Header("Actions")]
-        [ReorderableList]
         public Callable[] OnBeforeScreenshot;
-
-        [ReorderableList]
         public Callable[] OnAfterScreenshot;
 
         public void Update()

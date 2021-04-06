@@ -7,10 +7,7 @@ namespace GameplayIngredients.Events
     {
         public string Button = "Fire1";
 
-        [ReorderableList]
         public Callable[] OnButtonDown;
-
-        [ReorderableList]
         public Callable[] OnButtonUp;
 
         void Update()

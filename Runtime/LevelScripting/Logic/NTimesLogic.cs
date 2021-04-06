@@ -8,7 +8,6 @@ namespace GameplayIngredients.Logic
     [Callable("Logic", "Logic/ic-generic-logic.png")]
     public class NTimesLogic : LogicBase
     {
-        [ReorderableList]
         public Callable[] Calls;
         [Min(1), SerializeField]
         protected int Count = 1;

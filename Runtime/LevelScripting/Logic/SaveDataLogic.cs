@@ -38,9 +38,7 @@ namespace GameplayIngredients.Logic
         [ShowIf("isString")]
         public string StringTargetValue;
 
-        [ReorderableList]
         public Callable[] OnTestSuccess;
-        [ReorderableList]
         public Callable[] OnTestFail;
 
         public override void Execute(GameObject instigator = null)
