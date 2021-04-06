@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using GameplayIngredients.Actions;
 
 namespace GameplayIngredients
 {
@@ -60,49 +61,51 @@ namespace GameplayIngredients
             return state;
         }
 
-
         #endregion
 
         #region TRIGGERS
 
-        [MenuItem("GameObject/Gameplay Ingredients/Events/Trigger (Box)", false, 10)]
+        [MenuItem("GameObject/Gameplay Ingredients/Events/On Trigger (Box)", false, 10)]
         static void CreateTriggerBox()
         {
             var go = new GameObject();
             var col = go.AddComponent<BoxCollider>();
             col.isTrigger = true;
             var evt = go.AddComponent<Events.OnTriggerEvent>();
-            go.name = "Box Trigger";
+            go.name = "On Box Trigger";
 
             if (Selection.activeGameObject != null)
                 go.transform.parent = Selection.activeGameObject.transform;
         }
 
-        [MenuItem("GameObject/Gameplay Ingredients/Events/Trigger (Sphere)", false, 10)]
+        [MenuItem("GameObject/Gameplay Ingredients/Events/On Trigger (Sphere)", false, 10)]
         static void CreateTriggerSphere()
         {
             var go = new GameObject();
             var col = go.AddComponent<SphereCollider>();
             col.isTrigger = true;
             var evt = go.AddComponent<Events.OnTriggerEvent>();
-            go.name = "Sphere Trigger";
+            go.name = "On Sphere Trigger";
 
             if (Selection.activeGameObject != null)
                 go.transform.parent = Selection.activeGameObject.transform;
         }
 
-        [MenuItem("GameObject/Gameplay Ingredients/Events/Trigger (Capsule)", false, 10)]
+        [MenuItem("GameObject/Gameplay Ingredients/Events/On Trigger (Capsule)", false, 10)]
         static void CreateTriggerCapsule()
         {
             var go = new GameObject();
             var col = go.AddComponent<CapsuleCollider>();
             col.isTrigger = true;
             var evt = go.AddComponent<Events.OnTriggerEvent>();
-            go.name = "Capsule Trigger";
+            go.name = "On Capsule Trigger";
 
             if (Selection.activeGameObject != null)
                 go.transform.parent = Selection.activeGameObject.transform;
         }
+        #endregion
+
+        #region LIFECYCLE
 
         [MenuItem("GameObject/Gameplay Ingredients/Events/On Awake", false, 10)]
         static void CreateOnAwake()
@@ -136,8 +139,44 @@ namespace GameplayIngredients
             if (Selection.activeGameObject != null)
                 go.transform.parent = Selection.activeGameObject.transform;
         }
+
+        [MenuItem("GameObject/Gameplay Ingredients/Events/On Game Manager Start", false, 10)]
+        static void CreateOnGameManagerStart()
+        {
+            var go = new GameObject();
+            var evt = go.AddComponent<Events.OnGameManagerLevelStart>();
+            go.name = "On Game Manager Level Start";
+
+            if (Selection.activeGameObject != null)
+                go.transform.parent = Selection.activeGameObject.transform;
+        }
+
+        [MenuItem("GameObject/Gameplay Ingredients/Events/On Message Received", false, 10)]
+        static void CreateOnMessageReceived()
+        {
+            var go = new GameObject();
+            var evt = go.AddComponent<Events.OnMessageEvent>();
+            go.name = "On Message Received";
+
+            if (Selection.activeGameObject != null)
+                go.transform.parent = Selection.activeGameObject.transform;
+        }
         #endregion
 
+        #region UTILS
+        [MenuItem("GameObject/Gameplay Ingredients/Factory", false, 10)]
+        static void CreateFactory()
+        {
+            var go = new GameObject("Factory");
+            var fact = go.AddComponent<Factory>();
+            fact.SpawnTarget = go;
+            var sa = go.AddComponent<FactorySpawnAction>();
+            sa.factory = fact;
+
+            if (Selection.activeGameObject != null)
+                go.transform.parent = Selection.activeGameObject.transform;
+        }
+        #endregion
     }
 }
 

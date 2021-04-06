@@ -49,7 +49,7 @@ namespace GameplayIngredients.Comments.Editor
             GUILayout.Space(16);
         }
 
-        [MenuItem("GameObject/Comment", false, 10)]
+        [MenuItem("GameObject/Gameplay Ingredients/Comment", false, 10)]
         public static void CreateComment()
         {
             var go = new GameObject("Comment", typeof(SceneComment));
