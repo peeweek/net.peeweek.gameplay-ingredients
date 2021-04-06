@@ -1,15 +1,21 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class IgnoredCheckResults : MonoBehaviour
+namespace GameplayIngredients
 {
-    [System.Serializable]
-    public struct IgnoredCheckResult
+    public class IgnoredCheckResults : MonoBehaviour
     {
-        public string check;
-        public GameObject gameObject;
-    }
+        [AddComponentMenu(ComponentMenu.basePath + "Ignored Check Results")]
+        [System.Serializable]
+        public struct IgnoredCheckResult
+        {
+            public string check;
+            public GameObject gameObject;
+        }
 
-    public List<IgnoredCheckResult> ignoredCheckResults;
-    
+        public List<IgnoredCheckResult> ignoredCheckResults;
+
+    }
 }
+
+

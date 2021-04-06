@@ -9,9 +9,9 @@ namespace GameplayIngredients
 {
     static class HiearchyItems
     {
-        const string kMenu = "GameObject/Gameplay Ingredients/";
-        const string kEventsMenu = kMenu+"Events/";
-        const string kSMMenu = kMenu+ "State Machines/";
+        const string kHierarchyMenu = "GameObject/Gameplay Ingredients/";
+        const string kEventsMenu = kHierarchyMenu+"Events/";
+        const string kSMMenu = kHierarchyMenu+ "State Machines/";
 
         static GameObject CreateGameObject(string name, params Type[] components)
         {

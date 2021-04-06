@@ -2,6 +2,7 @@
 
 namespace GameplayIngredients.Comments
 {
+    [AddComponentMenu(ComponentMenu.basePath + "Comment")]
     public class SceneComment : MonoBehaviour
     {
 #if UNITY_EDITOR
