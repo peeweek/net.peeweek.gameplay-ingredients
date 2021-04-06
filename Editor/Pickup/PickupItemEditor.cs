@@ -16,6 +16,10 @@ namespace GameplayIngredients.Editor
         {
             m_RList = new ReorderableList(((PickupItem)serializedObject.targetObject).effects, typeof(PickupEffectBase), false, true, false, false);
             m_RList.drawHeaderCallback = (r) => GUI.Label(r, "Pickup Effects");
+            m_RList.drawElementCallback = (rect, index, isActive, isFocused) =>
+            {
+                GUI.Label(rect, $"#{index} - {ObjectNames.NicifyVariableName(((PickupItem)serializedObject.targetObject).effects[index]?.GetType().Name)}");
+            };
             base.OnEnable();
         }
 
