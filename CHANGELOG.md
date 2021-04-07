@@ -7,6 +7,8 @@
 * Added a Popup to search and add Callables directly from callable lists.
 * Added custom editors for Managers, Counters, Factories, and Pickup Item
 * Created a Generic `GameplayIngredientsBehaviour` for Custom Decorated classes.
+* Added Hierarchy / Game Object Menu items with pre-constructed configurations
+* Sorted Scripts into Component Menu with `AddComponentMenu` attributes
 
 #### Fixed
 
