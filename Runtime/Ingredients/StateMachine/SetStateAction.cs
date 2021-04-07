@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using GameplayIngredients.StateMachines;
 
 namespace GameplayIngredients.Actions
 {
     [HelpURL(Help.URL + "state-machines")]
+    [AddComponentMenu(ComponentMenu.stateMachinePath + "Set State Action")]
     [Callable("State Machines", "Misc/ic-StateMachine-SetState.png")]
     public class SetStateAction : ActionBase
     {

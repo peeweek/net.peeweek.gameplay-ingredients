@@ -3,6 +3,7 @@ using UnityEngine.Audio;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Audio Mix Snapshot Action")]
     [Callable("Audio", "Actions/ic-action-audio.png")]
     public class AudioMixSnapshotAction : ActionBase
     {

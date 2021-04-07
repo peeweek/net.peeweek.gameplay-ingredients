@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Controllers
 {
+    [AddComponentMenu(ComponentMenu.controllerPath + "Simple Player Input")]
     public class SimplePlayerInput : PlayerInput
     {
         [Header("Movement")]

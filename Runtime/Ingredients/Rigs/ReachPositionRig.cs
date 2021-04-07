@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Rigs
 {
+    [AddComponentMenu(ComponentMenu.rigsPath + "Reach Position Rig")]
     public class ReachPositionRig : Rig
     {
         public override int defaultPriority => 0;

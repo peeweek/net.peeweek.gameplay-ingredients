@@ -1,8 +1,8 @@
-using NaughtyAttributes;
 using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Key Down Event")]
     public class OnKeyDownEvent : EventBase
     {
         public KeyCode Key = KeyCode.F5;

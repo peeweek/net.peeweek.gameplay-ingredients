@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Set Global Action")]
     [HelpURL(Help.URL + "globals")]
     [Callable("Data", "Misc/ic-globals.png")]
     public class SetGlobalAction : ActionBase

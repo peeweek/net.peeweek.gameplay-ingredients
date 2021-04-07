@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Reach Position Rig : Set Target Action")]
     [Callable("Game", "Rigs/ic-rig-reachposition.png")]
     public class ReachPositionRigSetTargetAction : ActionBase
     {

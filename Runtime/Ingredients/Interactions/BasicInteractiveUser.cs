@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Interactions
 {
+    [AddComponentMenu(ComponentMenu.interactivePath + "Basic Interactive User")]
     public class BasicInteractiveUser : InteractiveUser
     {
         public Camera Camera;

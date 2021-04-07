@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Rigs
 {
+    [AddComponentMenu(ComponentMenu.rigsPath + "LookAt Rig")]
     public class LookAtRig : Rig
     {
         public override int defaultPriority => 0;

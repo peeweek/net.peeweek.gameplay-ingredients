@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Controllers
 {
     [Obsolete("KeyboardGamepadPlayerInput is obsolete and will be removed in a later version. Please Use SimplePlayerInput instead.")]
+    [AddComponentMenu(ComponentMenu.controllerPath + "Keyboard | Gamepad Player Input (Obsolete)")]
     public class KeyboardGamepadPlayerInput : PlayerInput
     {
         public bool useKeyboardAndMouse { get; set; } = true;

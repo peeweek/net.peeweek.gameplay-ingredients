@@ -1,10 +1,10 @@
 using NaughtyAttributes;
 using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Rigs
 {
+    [AddComponentMenu(ComponentMenu.rigsPath + "Follow Path Rig")]
     public class FollowPathRig : Rig
     {
         public override int defaultPriority => 0;

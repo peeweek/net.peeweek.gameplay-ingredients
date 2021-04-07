@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Timeline Control Action")]
     [Callable("Sequencing", "Actions/ic-action-timeline.png")]
     public class TimelineControlAction : ActionBase
     {

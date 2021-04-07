@@ -3,6 +3,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Audio Play Clip Action")]
     [Callable("Audio", "Actions/ic-action-audio.png")]
     public class AudioPlayClipAction : ActionBase
     {

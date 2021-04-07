@@ -1,7 +1,5 @@
-using NaughtyAttributes;
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace GameplayIngredients.Logic
 {

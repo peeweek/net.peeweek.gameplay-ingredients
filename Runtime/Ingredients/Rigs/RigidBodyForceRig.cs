@@ -1,10 +1,9 @@
 ﻿using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Rigs
 {
+    [AddComponentMenu(ComponentMenu.rigsPath + "RigidBody Force Rig")]
     [RequireComponent(typeof(Rigidbody))]
     public class RigidBodyForceRig : Rig
     {

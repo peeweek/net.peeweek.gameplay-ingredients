@@ -1,12 +1,11 @@
 using NaughtyAttributes;
-using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 namespace GameplayIngredients.Logic
 {
+    [AddComponentMenu(ComponentMenu.logicPath + "Platform Logic")]
     [Callable("Application", "Logic/ic-generic-logic.png")]
     public class PlatformLogic : LogicBase
     {

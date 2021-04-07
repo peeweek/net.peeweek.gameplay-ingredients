@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using NaughtyAttributes;
 
 namespace GameplayIngredients
 {
     [HelpURL(Help.URL + "counters")]
-    [AddComponentMenu("Gameplay Ingredients/Counter")]
+    [AddComponentMenu(ComponentMenu.counterPath + "Counter")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-counter.png")]
 
     public class Counter : GameplayIngredientsBehaviour

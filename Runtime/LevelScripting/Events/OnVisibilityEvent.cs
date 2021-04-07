@@ -1,8 +1,8 @@
-﻿using NaughtyAttributes;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Visibility Event")]
     [RequireComponent(typeof(Renderer))]
     public class OnVisibilityEvent : EventBase
     {

@@ -1,10 +1,9 @@
 using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Teleport GameObject Action")]
     [Callable("Game Objects", "Actions/ic-action-teleport.png")]
     public class TeleportGameObjectAction : ActionBase
     {

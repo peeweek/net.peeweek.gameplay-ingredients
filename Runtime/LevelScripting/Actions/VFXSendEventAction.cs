@@ -3,6 +3,7 @@ using UnityEngine.VFX;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "VFX Send Event Action")]
     [Callable("Game", "Misc/ic-vfx.png")]
     public class VFXSendEventAction : ActionBase
     {

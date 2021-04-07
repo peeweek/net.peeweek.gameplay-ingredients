@@ -1,10 +1,8 @@
-using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Pickup
 {
+    [AddComponentMenu(ComponentMenu.pickupPath + "Pickup Item")]
     [HelpURL(Help.URL + "pickup")]
     [RequireComponent(typeof(Collider))]
     public class PickupItem : MonoBehaviour

@@ -8,7 +8,7 @@ namespace GameplayIngredients.Editor
     [CustomEditor(typeof(Folder))]
     public class FolderEditor : UnityEditor.Editor
     {
-        [MenuItem("GameObject/Folder", false, 10)]
+        [MenuItem("GameObject/Gameplay Ingredients/Folder", false, 10)]
         static void CreateFolder()
         {
             var go = new GameObject("Folder", typeof(Folder));

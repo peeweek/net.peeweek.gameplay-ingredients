@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 namespace GameplayIngredients.Logic
 {
+    [AddComponentMenu(ComponentMenu.logicPath + "N Times Logic")]
     [Callable("Logic", "Logic/ic-generic-logic.png")]
     public class NTimesLogic : LogicBase
     {

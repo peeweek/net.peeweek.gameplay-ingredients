@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Cycle Resolutions Action (Obsolete)")]
     [Obsolete]
     [Callable("Screen", "Actions/ic-action-screen.png")]
     public class CycleResolutionsAction : ActionBase

@@ -2,10 +2,10 @@ using NaughtyAttributes;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Text;
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.managersPath + "Game Save Manager")]
     [ManagerDefaultPrefab("GameSaveManager")]
     public class GameSaveManager : Manager
     {

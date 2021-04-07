@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Toggle UI Action")]
     [Callable("UI", "Actions/ic-action-ui.png")]
     public class ToggleUIAction : ActionBase
     {

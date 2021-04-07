@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
     [HelpURL(Help.URL + "factory")]
+    [AddComponentMenu(ComponentMenu.factoryPath + "Factory Spawn Action")]
     [Callable("Game", "Misc/ic-factory.png")]
     public class FactorySpawnAction : ActionBase
     {

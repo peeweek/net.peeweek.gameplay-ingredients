@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.managersPath + "Game Manager")]
     [ManagerDefaultPrefab("GameManager")]
     public class GameManager : Manager
     {

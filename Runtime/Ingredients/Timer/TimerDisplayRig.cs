@@ -5,6 +5,7 @@ using GameplayIngredients.Rigs;
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.timerPath + "Timer Display Rig")]
     [HelpURL(Help.URL + "timers")]
     public class TimerDisplayRig : Rig
     {

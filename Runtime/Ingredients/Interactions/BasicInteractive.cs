@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Interactions
 {
+    [AddComponentMenu(ComponentMenu.interactivePath + "Basic Interactive")]
     public class BasicInteractive : Interactive
     {
         [Header("Settings")]

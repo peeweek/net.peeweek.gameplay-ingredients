@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Application Exit Action")]
     [Callable("Application","Actions/ic-action-exit.png")]
     public class ApplicationExitAction : ActionBase
     {

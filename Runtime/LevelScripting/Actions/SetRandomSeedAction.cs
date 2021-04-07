@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Set Random Seed Action")]
     [Callable("Game", "Actions/ic-action-randomseed.png")]
     public class SetRandomSeedAction : ActionBase
     {

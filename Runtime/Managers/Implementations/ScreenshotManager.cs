@@ -1,10 +1,8 @@
-using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.managersPath + "Screenshot Manager")]
     [ManagerDefaultPrefab("ScreenshotManager")]
     public class ScreenshotManager : Manager
     {

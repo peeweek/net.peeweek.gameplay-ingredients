@@ -7,7 +7,7 @@ using UnityEngine;
 namespace GameplayIngredients
 {
     [HelpURL(Help.URL + "factory")]
-    [AddComponentMenu("Gameplay Ingredients/Factory")]
+    [AddComponentMenu(ComponentMenu.factoryPath + "Factory")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-Factory.png")]
     public class Factory : GameplayIngredientsBehaviour
     {

@@ -1,10 +1,9 @@
 using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Attach To Object Action")]
     [Callable("Game Objects", "Actions/ic-action-attach.png")]
     public class AttachToObjectAction : ActionBase
     {

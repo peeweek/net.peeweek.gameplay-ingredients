@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
 using GameplayIngredients.Rigs;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Director Control Rig Action")]
     [Callable("Sequencing", "Actions/ic-action-director.png")]
     public class DirectorControlRigAction : ActionBase
     {

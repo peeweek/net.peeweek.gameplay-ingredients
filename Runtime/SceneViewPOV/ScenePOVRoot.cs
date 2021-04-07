@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.miscPath + "Scene POV Root (Do not use directly)")]
     public class ScenePOVRoot : MonoBehaviour
     {
         public Scene Scene

@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Audio Mix Parameter Action")]
     [Callable("Audio", "Actions/ic-action-audio.png")]
     public class AudioMixParameterAction : ActionBase
     {

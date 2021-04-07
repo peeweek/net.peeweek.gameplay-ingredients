@@ -1,10 +1,8 @@
-using NaughtyAttributes;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace GameplayIngredients.Logic
 {
+    [AddComponentMenu(ComponentMenu.logicPath + "Random Logic")]
     [Callable("Logic", "Logic/ic-generic-logic.png")]
     public class RandomLogic : LogicBase
     {

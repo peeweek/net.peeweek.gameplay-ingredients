@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Spawn Prefab Action")]
     [Callable("Game Objects", "Actions/ic-action-spawn.png")]
     public class SpawnPrefabAction : ActionBase
     {

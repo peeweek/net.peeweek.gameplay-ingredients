@@ -1,10 +1,8 @@
-﻿using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.timerPath + "Timer")]
     [HelpURL(Help.URL + "timers")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-timer.png")]
     public class Timer : GameplayIngredientsBehaviour

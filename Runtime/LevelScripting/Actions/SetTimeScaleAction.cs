@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Set Time Scale Action")]
     [Callable("Time", "Actions/ic-action-time.png")]
     public class SetTimeScaleAction : ActionBase
     {

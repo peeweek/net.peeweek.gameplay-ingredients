@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Managers
 {
+    [AddComponentMenu(ComponentMenu.managersPath + "Single Update Manager")]
     [NonExcludeableManager]
     public class SingleUpdateManager : Manager
     {

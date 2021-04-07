@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Reset Global Action")]
     [HelpURL(Help.URL + "globals")]
     [Callable("Data", "Misc/ic-globals.png")]
     public class ResetGlobalAction : ActionBase

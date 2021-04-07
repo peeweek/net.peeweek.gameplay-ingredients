@@ -1,11 +1,10 @@
 ﻿using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
     [HelpURL(Help.URL + "counters")]
+    [AddComponentMenu(ComponentMenu.counterPath + "Counter Logic")]
     [Callable("Data", "Misc/ic-counter.png")]
     public class CounterLogic : LogicBase
     {

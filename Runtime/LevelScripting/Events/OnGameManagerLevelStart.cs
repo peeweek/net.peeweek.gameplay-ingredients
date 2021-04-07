@@ -1,10 +1,8 @@
-using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Game Manager Level Start")]
     public class OnGameManagerLevelStart : EventBase
     {
         public enum GameManagerLevelType

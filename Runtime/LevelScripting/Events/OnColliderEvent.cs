@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Collider Event")]
     [RequireComponent(typeof(Collider))]
     public class OnColliderEvent : EventBase
     {

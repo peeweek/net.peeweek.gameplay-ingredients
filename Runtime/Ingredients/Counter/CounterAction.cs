@@ -1,11 +1,10 @@
 ﻿using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
     [HelpURL(Help.URL + "counters")]
+    [AddComponentMenu(ComponentMenu.counterPath + "Counter Action")]
     [Callable("Data", "Misc/ic-counter.png")]
     public class CounterAction : ActionBase
     {
