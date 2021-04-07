@@ -168,7 +168,7 @@ namespace GameplayIngredients
         #endregion
 
         #region UTILS
-        [MenuItem("GameObject/Gameplay Ingredients/Factory", false, 10)]
+        [MenuItem(kHierarchyMenu + "Factory", false, 10)]
         static void CreateFactory()
         {
             var go = CreateGameObject("Factory", typeof(Factory), typeof(FactorySpawnAction));
@@ -177,6 +177,31 @@ namespace GameplayIngredients
             var sa = go.GetComponent<FactorySpawnAction>();
             sa.factory = fact;
         }
+
+        [MenuItem(kHierarchyMenu + "Counter", false, 10)]
+        static void CreateCounter()
+        {
+            var go = CreateGameObject("Counter", typeof(Counter), typeof(CounterAction));
+            var ca = go.GetComponent<CounterAction>();
+            ca.Counters = new Counter[] { go.GetComponent<Counter>() };
+        }
+
+        [MenuItem(kHierarchyMenu + "Timer", false, 10)]
+        static void CreateTimer()
+        {
+            var go = CreateGameObject("Timer", typeof(Timer), typeof(TimerAction));
+            var ca = go.GetComponent<TimerAction>();
+            ca.timer = go.GetComponent<Timer>();
+        }
+
+        [MenuItem(kHierarchyMenu + "Pickup Item (Sphere)", false, 10)]
+        static void CreatePickup()
+        {
+            var go = CreateGameObject("Pickup", typeof(SphereCollider), typeof(Pickup.PickupItem));
+            go.GetComponent<SphereCollider>().isTrigger = true;
+        }
+
+
         #endregion
     }
 }
