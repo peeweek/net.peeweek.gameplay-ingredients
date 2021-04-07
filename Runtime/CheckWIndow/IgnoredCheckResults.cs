@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.miscPath + "Ignored Check Results (Do not use directly)")]
     public class IgnoredCheckResults : MonoBehaviour
     {
-        [AddComponentMenu(ComponentMenu.basePath + "Ignored Check Results")]
         [System.Serializable]
         public struct IgnoredCheckResult
         {

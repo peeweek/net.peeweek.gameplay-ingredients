@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace GameplayIngredients.LevelStreaming
 {
+    [AddComponentMenu(ComponentMenu.managersPath + "Level Streaming Manager")]
     [ManagerDefaultPrefab("LevelStreamingManager")]
     public class LevelStreamingManager : Manager
     {

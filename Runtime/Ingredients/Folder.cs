@@ -2,6 +2,7 @@
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.basePath + "Folder")]
     [ExecuteAlways]
     public class Folder : MonoBehaviour
     {

@@ -1,11 +1,10 @@
 using GameplayIngredients.Actions;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Interactions
 {
     [HelpURL(Help.URL + "interactive")]
+    [AddComponentMenu(ComponentMenu.interactivePath + "Interaction")]
     [Callable("Game", "Misc/ic-interaction.png")]
     public class Interaction : ActionBase
     {

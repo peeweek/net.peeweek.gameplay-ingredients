@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Game Save : Load Save Action")]
     [Callable("Data", "Actions/ic-action-save.png")]
     public class GameSaveLoadSaveAction : ActionBase
     {

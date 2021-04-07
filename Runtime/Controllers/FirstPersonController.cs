@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Controllers
 {
+    [AddComponentMenu(ComponentMenu.controllerPath + "First Person Controller")]
     [RequireComponent(typeof(CharacterController))]
-    public class FirstPersonController : MonoBehaviour
+    public class FirstPersonController : GameplayIngredientsBehaviour
     {
         public bool Paused = false;
 

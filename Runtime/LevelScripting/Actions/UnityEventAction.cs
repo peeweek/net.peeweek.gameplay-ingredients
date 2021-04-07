@@ -3,6 +3,7 @@ using UnityEngine.Events;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Unity Event Action")]
     [Callable("Game", "Actions/ic-action-event.png")]
     public class UnityEventAction : ActionBase
     {

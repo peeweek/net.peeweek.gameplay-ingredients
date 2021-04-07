@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.managersPath + "Random Manager")]
     [ManagerDefaultPrefab("RandomManager")]
     public class RandomManager : Manager
     {

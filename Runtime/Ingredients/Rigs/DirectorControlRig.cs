@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using NaughtyAttributes;
-using UnityEngine.PlayerLoop;
 
 namespace GameplayIngredients.Rigs
 {
+    [AddComponentMenu(ComponentMenu.rigsPath + "Director Control Rig")]
     public class DirectorControlRig : Rig
     {
         public override int defaultPriority => 0;

@@ -1,4 +1,3 @@
-using GameplayIngredients.Actions;
 using UnityEngine;
 using UnityEngine.VFX;
 using NaughtyAttributes;
@@ -6,6 +5,7 @@ using UnityEngine.Serialization;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "VFX Set Property Action")]
     [Callable("Game", "Misc/ic-vfx.png")]
     public class VFXSetPropertyAction : ActionBase
     {

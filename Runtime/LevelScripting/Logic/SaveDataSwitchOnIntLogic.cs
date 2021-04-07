@@ -1,10 +1,8 @@
-using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [AddComponentMenu(ComponentMenu.logicPath + "Save Data Switch On Int Logic")]
     [Callable("Data", "Logic/ic-generic-logic.png")]
     public class SaveDataSwitchOnIntLogic : LogicBase
     {

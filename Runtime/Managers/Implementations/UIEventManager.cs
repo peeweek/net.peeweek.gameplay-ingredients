@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.managersPath + "UI Event Manager")]
     [RequireComponent(typeof(EventSystem))]
     [RequireComponent(typeof(StandaloneInputModule))]
     [ManagerDefaultPrefab("UIEventManager")]

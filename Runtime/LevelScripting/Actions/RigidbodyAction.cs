@@ -6,6 +6,7 @@ namespace GameplayIngredients.Actions
     public enum RigidbodyActionType { Force, Torque, ExplosionForce, Sleep };
     public enum ActionSpace { Local, World };
 
+    [AddComponentMenu(ComponentMenu.actionsPath + "Rigidbody Action")]
     [ExecuteAlways]
     [Callable("Game", "Actions/ic-action-rigidbody.png")]
     public class RigidbodyAction : ActionBase

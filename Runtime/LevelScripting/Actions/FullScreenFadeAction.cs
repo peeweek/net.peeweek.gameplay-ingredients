@@ -3,6 +3,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Full Screen Fade Action")]
     [Callable("Screen", "Actions/ic-action-screen.png")]
     public class FullScreenFadeAction : ActionBase
     {

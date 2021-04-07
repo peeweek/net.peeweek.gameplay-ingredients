@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.timerPath + "Timer Action")]
     [HelpURL(Help.URL + "timers")]
     [Callable("Time", "Misc/ic-timer.png")]
     public class TimerAction : ActionBase

@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Cursor Action")]
     [Callable("Screen", "Actions/ic-action-mouse.png")]
     public class CursorAction : ActionBase
     {

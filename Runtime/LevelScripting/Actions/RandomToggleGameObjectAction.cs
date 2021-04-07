@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Random Toggle GameObject Action")]
     [Callable("Game Objects", "Actions/ic-action-list.png")]
     public class RandomToggleGameObjectAction : ActionBase
     {

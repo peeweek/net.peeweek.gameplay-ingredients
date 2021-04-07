@@ -1,9 +1,8 @@
 using UnityEngine;
-using UnityEngine.Events;
-using NaughtyAttributes;
 
 namespace GameplayIngredients.Logic
 {
+    [AddComponentMenu(ComponentMenu.logicPath + "Editor Only Logic")]
     [Callable("Application", "Logic/ic-generic-logic.png")]
     public class EditorOnlyLogic : LogicBase
     {

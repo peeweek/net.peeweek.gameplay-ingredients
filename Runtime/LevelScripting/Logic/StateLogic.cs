@@ -1,9 +1,9 @@
 using GameplayIngredients.StateMachines;
-using NaughtyAttributes;
 using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [AddComponentMenu(ComponentMenu.stateMachinePath + "State Logic")]
     [Callable("State Machines", "Logic/ic-generic-logic.png")]
     public class StateLogic : LogicBase
     {

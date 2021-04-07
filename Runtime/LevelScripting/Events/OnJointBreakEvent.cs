@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Joint Break Event")]
     [RequireComponent(typeof(Joint))]
     public class OnJointBreakEvent : EventBase
     {

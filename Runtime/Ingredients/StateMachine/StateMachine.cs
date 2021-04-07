@@ -1,6 +1,5 @@
 using NaughtyAttributes;
 using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 using GameplayIngredients.Actions;
 using GameplayIngredients.Managers;
@@ -8,6 +7,7 @@ using GameplayIngredients.Managers;
 namespace GameplayIngredients.StateMachines
 {
     [HelpURL(Help.URL + "state-machines")]
+    [AddComponentMenu(ComponentMenu.stateMachinePath + "State Machine")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-StateMachine.png")]
     public class StateMachine : MonoBehaviour
     {

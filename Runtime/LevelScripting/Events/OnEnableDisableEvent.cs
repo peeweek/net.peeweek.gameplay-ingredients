@@ -1,8 +1,8 @@
-using NaughtyAttributes;
-using UnityEngine.Events;
+using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Enable|Disable Event")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Events/ic-event-enable-disable.png")]
     public class OnEnableDisableEvent : EventBase
     {

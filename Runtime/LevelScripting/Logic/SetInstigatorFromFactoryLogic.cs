@@ -1,10 +1,8 @@
-using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [AddComponentMenu(ComponentMenu.factoryPath + "Set Instigator From Factory Logic")]
     [Callable("Game", "Logic/ic-generic-logic.png")]
     public class SetInstigatorFromFactoryLogic : LogicBase
     {

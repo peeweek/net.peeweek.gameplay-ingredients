@@ -2,10 +2,10 @@ using System.Collections;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.managersPath + "Full Screen Fade Manager")]
     [ManagerDefaultPrefab("FullScreenFadeManager")]
     public class FullScreenFadeManager : Manager
     {

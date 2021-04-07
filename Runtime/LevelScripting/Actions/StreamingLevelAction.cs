@@ -6,6 +6,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Streaming Level Action")]
     [Callable("Game", "Misc/ic-scene.png")]
     public class StreamingLevelAction : ActionBase
     {

@@ -1,10 +1,9 @@
 using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Game Save : Set Value Action")]
     [Callable("Data", "Actions/ic-action-save.png")]
     public class GameSaveSetValueAction : ActionBase
     {

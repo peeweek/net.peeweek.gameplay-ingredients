@@ -4,6 +4,7 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Game Level Load Action")]
     [Callable("Game", "GameManager Icon.png")]
     public class GameLevelLoadAction : ActionBase
     {

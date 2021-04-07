@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Logic
 {
+    [AddComponentMenu(ComponentMenu.logicPath + "Global Logic")]
     [HelpURL(Help.URL + "globals")]
     [Callable("Data", "Logic/ic-generic-logic.png")]
     public class GlobalLogic : LogicBase

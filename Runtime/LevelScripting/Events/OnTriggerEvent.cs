@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Trigger Event")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Events/ic-event-trigger.png")]
     public class OnTriggerEvent : EventBase
     {

@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Rigs
 { 
+    [AddComponentMenu(ComponentMenu.rigsPath + "Rotation Rig")]
     public class RotationRig : Rig
     {
         public override int defaultPriority => 0;

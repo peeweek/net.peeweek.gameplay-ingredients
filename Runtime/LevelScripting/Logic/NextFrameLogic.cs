@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 namespace GameplayIngredients.Logic
 {
+    [AddComponentMenu(ComponentMenu.logicPath + "Next Frame Logic")]
     [Callable("Time", "Logic/ic-generic-logic.png")]
     public class NextFrameLogic : LogicBase
     {

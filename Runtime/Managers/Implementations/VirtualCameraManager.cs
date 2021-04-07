@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
 namespace GameplayIngredients
 {
+    [AddComponentMenu(ComponentMenu.managersPath + "Virtual Camera Manager")]
     [RequireComponent(typeof(Camera))]
     [RequireComponent(typeof(CinemachineBrain))]
     [ManagerDefaultPrefab("VirtualCameraManager")]

@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Game Manager : Send Startup Message Action")]
     [Callable("Game", "GameManager Icon.png")]
     public class GameManagerSendStartupMessageAction : ActionBase
     {

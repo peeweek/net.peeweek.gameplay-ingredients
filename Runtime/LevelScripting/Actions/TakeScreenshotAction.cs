@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "Take Screenshot Action")]
     [Callable("Screen", "Actions/ic-action-screen.png")]
     public class TakeScreenshotAction : ActionBase
     {

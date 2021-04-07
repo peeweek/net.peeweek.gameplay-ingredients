@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameplayIngredients.Actions
 {
+    [AddComponentMenu(ComponentMenu.actionsPath + "SwitcherAction (Obsolete)")]
     [Obsolete]
     public class SwitcherAction : MonoBehaviour
     {
