@@ -7,7 +7,7 @@ using GameplayIngredients.Events;
 
 namespace GameplayIngredients
 {
-    static class HiearchyItems
+    static class HierarchyItems
     {
         const string kHierarchyMenu = "GameObject/Gameplay Ingredients/";
         const string kEventsMenu = kHierarchyMenu+"Events/";
