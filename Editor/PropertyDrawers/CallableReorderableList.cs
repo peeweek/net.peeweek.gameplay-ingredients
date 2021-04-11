@@ -41,7 +41,28 @@ namespace GameplayIngredients.Editor
                         Object[] droppedObjects = DragAndDrop.objectReferences;
                         foreach (Object obj in droppedObjects)
                         {
-                            if (obj != null && obj is Callable)
+                            if(obj != null && obj is GameObject)
+                            {
+                                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                                if (currentEvent.type == EventType.DragPerform)
+                                {
+                                    GenericMenu m = new GenericMenu();
+                                    var callables = (obj as GameObject).GetComponents<Callable>();
+                                    foreach(var c in callables)
+                                    {
+                                        m.AddItem(new GUIContent($"{c.Name} ({c.GetType().Name})"), false, () => {
+                                            list.serializedProperty.serializedObject.Update();
+                                            list.serializedProperty.arraySize++;
+                                            int arrayEnd = list.serializedProperty.arraySize - 1;
+                                            list.serializedProperty.GetArrayElementAtIndex(arrayEnd).objectReferenceValue = c;
+                                            list.serializedProperty.serializedObject.ApplyModifiedProperties();
+                                        });
+                                    }
+                                    m.ShowAsContext();
+                                    acceptAtLeastOne = true;
+                                }
+                            }
+                            else if (obj != null && obj is Callable)
                             {
                                 DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
                                 if (currentEvent.type == EventType.DragPerform)
@@ -108,7 +129,7 @@ namespace GameplayIngredients.Editor
 
             if (t != null && typeof(Callable).IsAssignableFrom(t))
             {
-                var newCmp = gameObject.AddComponent(t);
+                var newCmp = Undo.AddComponent(gameObject, t);
                 field.SetValue(component, val.Append(newCmp as Callable));
             }
             else
