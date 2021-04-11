@@ -2,6 +2,10 @@
 
 ## 2020.2.6
 
+#### Added
+
+* Added 2D On Collider/Trigger Events : `OnCollider2DEvent` / `OnTrigger2DEvent`
+
 ## 2020.2.5
 
 #### Added
