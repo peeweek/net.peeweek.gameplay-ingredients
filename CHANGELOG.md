@@ -2,6 +2,10 @@
 
 ## 2020.2.6
 
+#### Added
+
+* Handle Drop in Callable Reorderable Lists
+
 ## 2020.2.5
 
 #### Added
