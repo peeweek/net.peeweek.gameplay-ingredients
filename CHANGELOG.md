@@ -8,7 +8,8 @@
 
 #### Fixed
 
-* Fixed Callable Reorderable List Undo.
+* Fixed Callable Reorderable List Undo
+* Fixed Out of sync Ingredients explorer Window : now Syncs upon Selection Change.
 
 ## 2020.2.5
 

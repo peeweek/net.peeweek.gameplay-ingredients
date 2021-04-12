@@ -57,6 +57,9 @@ namespace GameplayIngredients.Editor
         {
             visible = false;
             s_Instance = null;
+            EditorSceneManager.sceneOpened -= Reload;
+            EditorSceneSetup.onSetupLoaded -= ReloadSetup;
+            Selection.selectionChanged -= Refresh;
         }
 
         private void OnEnable()
@@ -67,6 +70,8 @@ namespace GameplayIngredients.Editor
             ReloadCallHierarchy();
             EditorSceneManager.sceneOpened += Reload;
             EditorSceneSetup.onSetupLoaded += ReloadSetup;
+            Selection.selectionChanged += Refresh;
+
             visible = true;
         }
 
@@ -195,6 +200,7 @@ namespace GameplayIngredients.Editor
         Dictionary<string, List<CallTreeNode>> nodeRoots;
 
         List<MonoBehaviour> erroneous;
+
 
         void ReloadCallHierarchy()
         {
