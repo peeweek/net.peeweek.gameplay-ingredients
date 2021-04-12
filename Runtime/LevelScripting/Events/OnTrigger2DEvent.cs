@@ -1,3 +1,4 @@
+#if MODULE_PHYSICS2D
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -39,3 +40,4 @@ namespace GameplayIngredients.Events
         }
     }
 }
+#endif
