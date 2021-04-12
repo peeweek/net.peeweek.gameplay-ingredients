@@ -11,6 +11,7 @@
 
 * Fixed Callable Reorderable List Undo
 * Fixed Out of sync Ingredients explorer Window : now Syncs upon Selection Change.
+* Handle Presence of Optional Modules
 
 ## 2020.2.5
 
