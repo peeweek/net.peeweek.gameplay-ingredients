@@ -5,6 +5,12 @@
 #### Added
 
 * Added 2D On Collider/Trigger Events : `OnCollider2DEvent` / `OnTrigger2DEvent`
+* Handle Drop in Callable Reorderable Lists : Dropped Callables components are added to the list. Dropped Game Objects will prompt a menu to select which callable to add.
+
+#### Fixed
+
+* Fixed Callable Reorderable List Undo
+* Fixed Out of sync Ingredients explorer Window : now Syncs upon Selection Change.
 
 ## 2020.2.5
 

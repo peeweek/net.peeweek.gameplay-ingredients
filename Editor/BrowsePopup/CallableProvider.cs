@@ -105,6 +105,7 @@ namespace GameplayIngredients.Editor
 
         static void AddCallable()
         {
+            Undo.RecordObject(addNextComponentInfo.gameObject, "Add Callable");
             addNextComponentInfo.gameObject.AddCallable(
                addNextComponentInfo.component,
                addNextComponentInfo.propertyName,
