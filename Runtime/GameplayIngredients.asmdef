@@ -19,6 +19,11 @@
             "name": "com.unity.modules.physics2d",
             "expression": "1.0.0",
             "define": "MODULE_PHYSICS2D"
+        },
+        {
+            "name": "com.unity.modules.screencapture",
+            "expression": "1.0.0",
+            "define": "MODULE_SCREENCAPTURE"
         }
     ],
     "noEngineReferences": false
