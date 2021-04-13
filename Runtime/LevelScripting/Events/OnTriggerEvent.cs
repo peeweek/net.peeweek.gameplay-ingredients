@@ -5,6 +5,7 @@ namespace GameplayIngredients.Events
 {
     [AddComponentMenu(ComponentMenu.eventsPath + "On Trigger Event")]
     [AdvancedHierarchyIcon("Packages/net.peeweek.gameplay-ingredients/Icons/Events/ic-event-trigger.png")]
+    [RequireComponent(typeof(Collider))]
     public class OnTriggerEvent : EventBase
     {
         public Callable[] onTriggerEnter;

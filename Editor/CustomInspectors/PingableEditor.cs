@@ -1,5 +1,6 @@
 using NaughtyAttributes.Editor;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace GameplayIngredients.Editor
     {
         public bool needRepaint { get => m_pingValue > 0; }
         float m_pingValue;
+        WarnDisabledModuleAttribute m_RequiredModule;
+
         static MonoBehaviour m_NextToPing;
 
         static Dictionary<MonoBehaviour, PingableEditor> trackedEditors;
@@ -22,6 +25,8 @@ namespace GameplayIngredients.Editor
 
             if (!trackedEditors.ContainsKey(serializedObject.targetObject as MonoBehaviour))
                 trackedEditors.Add(serializedObject.targetObject as MonoBehaviour, this);
+
+            m_RequiredModule = serializedObject.targetObject.GetType().GetCustomAttribute<WarnDisabledModuleAttribute>();
         }
 
         protected override void OnDisable()
@@ -42,6 +47,13 @@ namespace GameplayIngredients.Editor
 
         public override void OnInspectorGUI()
         {
+            if(m_RequiredModule != null)
+            {
+                EditorGUILayout.HelpBox($"This Script Requires the {m_RequiredModule.module} module : It will not execute until you enable the module in the Package Manager.", MessageType.Warning);
+                EditorGUILayout.Space();
+            }
+            EditorGUI.BeginDisabledGroup(m_RequiredModule != null);
+
             Rect r = EditorGUILayout.BeginVertical();
             UpdatePing(r);
 
@@ -51,6 +63,8 @@ namespace GameplayIngredients.Editor
 
             if (needRepaint)
                 Repaint();
+
+            EditorGUI.EndDisabledGroup();
         }
 
         public static void PingObject(MonoBehaviour r)

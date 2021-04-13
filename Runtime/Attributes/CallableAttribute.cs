@@ -1,13 +1,18 @@
 using System;
 
-[AttributeUsage(AttributeTargets.Class)]
-public class CallableAttribute : Attribute 
+namespace GameplayIngredients
 {
-    public string category;
-    public string iconPath;
-    public CallableAttribute(string category = "", string iconName = "")
+    [AttributeUsage(AttributeTargets.Class)]
+    public class CallableAttribute : Attribute
     {
-        this.category = category;
-        this.iconPath = iconName;
+        public string category;
+        public string iconPath;
+        public CallableAttribute(string category = "", string iconName = "")
+        {
+            this.category = category;
+            this.iconPath = iconName;
+        }
     }
 }
+
+

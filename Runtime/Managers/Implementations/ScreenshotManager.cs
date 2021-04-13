@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace GameplayIngredients
 {
+#if !MODULE_SCREENCAPTURE
+    [WarnDisabledModule("Screen Capture")]
+#endif
     [AddComponentMenu(ComponentMenu.managersPath + "Screenshot Manager")]
     [ManagerDefaultPrefab("ScreenshotManager")]
     public class ScreenshotManager : Manager
@@ -22,12 +25,16 @@ namespace GameplayIngredients
         {
             if (Input.GetKeyDown(ScreenshotKeyCode))
             {
+#if MODULE_SCREENCAPTURE
                 var now = System.DateTime.Now;
                 Callable.Call(OnBeforeScreenshot);
                 string path = $"{Application.dataPath}/../{Prefix}-{now.Year}{now.Month}{now.Day}-{now.Hour}{now.Minute}{now.Second}{now.Millisecond}.png";
                 Debug.Log($"Capturing Screenshot (Supersampled to {SuperSize}x) to the file : {path}");
                 ScreenCapture.CaptureScreenshot(path, SuperSize);
                 Callable.Call(OnAfterScreenshot);
+#else
+                Debug.Log("Screenshot Manager Cannot Take Screenshot : Unity Module Screen Capture is Disabled.");
+#endif
             }
         }
     }
