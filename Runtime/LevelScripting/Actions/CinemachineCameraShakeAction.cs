@@ -110,9 +110,11 @@ namespace GameplayIngredients.Actions
                         impulseSource.GenerateImpulse(impulse);
                     }
                     break;
-            }
-                
+            } 
         }
+
+        public override string GetDefaultName() => $"CM CameraShake at {impulseLocation}";
+
     }
 
 }

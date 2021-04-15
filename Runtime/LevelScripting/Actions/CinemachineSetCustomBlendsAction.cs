@@ -32,7 +32,9 @@ namespace GameplayIngredients.Actions
                 }
             }
         }
-    }
 
+        public override string GetDefaultName() => $"{action} CM Custom Blends : {settings}";
+
+    }
 }
 

@@ -34,6 +34,9 @@ namespace GameplayIngredients.Actions
 
             noise.m_NoiseProfile = settings;
         }
+
+        public override string GetDefaultName() => $"CM Set Noise ({settings.name}) for {(useLiveCamera? "Live Camera" : targetCamera?.gameObject.name)}";
+
     }
 
 }
