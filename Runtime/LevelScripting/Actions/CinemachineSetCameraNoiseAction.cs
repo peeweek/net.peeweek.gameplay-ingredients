@@ -12,6 +12,7 @@ namespace GameplayIngredients.Actions
         [SerializeField, HideIf("useLiveCamera")]
         CinemachineVirtualCamera targetCamera;
 
+        [SerializeField]
         NoiseSettings settings;
 
         public override void Execute(GameObject instigator = null)
@@ -29,7 +30,7 @@ namespace GameplayIngredients.Actions
             var noise = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 
             if(noise == null && settings != null)
-                cam.AddCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+                noise = cam.AddCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 
             noise.m_NoiseProfile = settings;
         }
