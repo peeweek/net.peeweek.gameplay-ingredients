@@ -10,21 +10,28 @@ namespace GameplayIngredients.Actions
         [SerializeField]
         bool useLiveCamera;
         [SerializeField, HideIf("useLiveCamera")]
-        CinemachineVirtualCameraBase targetCamera;
+        CinemachineVirtualCamera targetCamera;
+
+        NoiseSettings settings;
 
         public override void Execute(GameObject instigator = null)
         {
-            CinemachineVirtualCameraBase cam = useLiveCamera ?
-                Manager.Get<VirtualCameraManager>().GetComponent<CinemachineBrain>().ActiveVirtualCamera as CinemachineVirtualCameraBase
+            CinemachineVirtualCamera cam = useLiveCamera ?
+                Manager.Get<VirtualCameraManager>().GetComponent<CinemachineBrain>().ActiveVirtualCamera as CinemachineVirtualCamera
                 : targetCamera;
 
             if(cam == null)
             {
-                Debug.Log("CinemachineSetCameraNoiseAction : Cannot find a suitable Camera to set noise");
+                Debug.Log("CinemachineSetCameraNoiseAction : Cannot find a suitable CinemachineVirtualCamera to set Noise to");
                 return;
             }
 
+            var noise = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 
+            if(noise == null && settings != null)
+                cam.AddCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+            noise.m_NoiseProfile = settings;
         }
     }
 
