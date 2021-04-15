@@ -7,6 +7,7 @@
 * Added Cinemachine Actions: 
   * `CinemachineSetCameraNoiseAction`  : Defines or remove noise for a Virtual Camera
   * `CinemachineSetCustomBlendsAction` : Defines custom blends for the Cinemachine Brain of the Virtual Camera Manager
+  * `CinemachineCameraShakeAction` : Trigger camera shakes for Cinemachine Impulse Sources
 
 ## 2020.2.6
 

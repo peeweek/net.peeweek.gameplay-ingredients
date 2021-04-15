@@ -4,28 +4,31 @@ using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions
 {
-    [RequireComponent(typeof(CinemachineImpulseSource))]
     [Callable("Cinemachine", "Misc/ic-cinemachine.png")]
     public class CinemachineCameraShakeAction : ActionBase
     {
         public enum ImpulseLocation
         {
-            SelfTransform,
-            RemoteTransform,
+            Self,
+            ImpulseSource,
+            OtherTransform,
             InstigatorPosition
         }
 
         [InfoBox("Remember to add Cinemachine Impulse listeners extensions on Virtual Cameras you want to recieve these camera shakes.")]
+        [NonNullCheck]
+        public CinemachineImpulseSource impulseSource;
+        [Header("Position")]
         [Tooltip("Which transform to use for the source of the camera shake")]
-        public ImpulseLocation impulseLocation = ImpulseLocation.SelfTransform;
+        public ImpulseLocation impulseLocation = ImpulseLocation.Self;
         [ShowIf("useRemoteTransform")]
-        [Tooltip("The Remote transform to use to generate impulses")]
-        public Transform remoteImpulseLocation;
-        bool useRemoteTransform => impulseLocation == ImpulseLocation.RemoteTransform;
+        [Tooltip("The alternate transform to use to generate impulses")]
+        public Transform otherTransform;
+        bool useRemoteTransform => impulseLocation == ImpulseLocation.OtherTransform;
 
         [Header("Impulse")]
         [Tooltip("Whether the Impulse Vector will be computed in local space (or world space)")]
-        public bool LocalSpace = true;
+        public bool localSpace = true;
         [Tooltip("The Impulse Vector to Use")]
         public Vector3 baseImpulse = Vector3.up;
         [Tooltip("Whether to apply randomness as well")]
@@ -40,17 +43,12 @@ namespace GameplayIngredients.Actions
         [ShowIf(EConditionOperator.And, "randomImpulse", "normalize")]
         public Vector2 postNormalizeRemap = Vector2.one;
 
-
-        CinemachineImpulseSource m_ImpulseSource;
-
-
         public override void Execute(GameObject instigator = null)
         {
-            if(m_ImpulseSource == null)
+            if(impulseSource == null)
             {
-                m_ImpulseSource = GetComponent<CinemachineImpulseSource>();
-                if (m_ImpulseSource == null)
-                    m_ImpulseSource = gameObject.AddComponent<CinemachineImpulseSource>();
+                Debug.LogWarning($"CinemachineCameraShakeAction : No Impulse source was provided");
+                return;
             }
 
             Vector3 impulse = baseImpulse;
@@ -67,42 +65,49 @@ namespace GameplayIngredients.Actions
             switch (impulseLocation)
             {
                 default:
-                case ImpulseLocation.SelfTransform:
-                    if (LocalSpace)
+                case ImpulseLocation.Self:
+                    if (localSpace)
                         impulse = transform.localToWorldMatrix.MultiplyVector(impulse);
 
-                    m_ImpulseSource.GenerateImpulse(impulse);
+                    impulseSource.GenerateImpulseAt(transform.position, impulse);
                     break;
-                case ImpulseLocation.RemoteTransform:
-                    if(remoteImpulseLocation != null)
-                    {
-                        if (LocalSpace)
-                            impulse = remoteImpulseLocation.localToWorldMatrix.MultiplyVector(impulse);
+                case ImpulseLocation.ImpulseSource:
+                    if (localSpace)
+                        impulse = impulseSource.transform.localToWorldMatrix.MultiplyVector(impulse);
 
-                        m_ImpulseSource.GenerateImpulseAt(remoteImpulseLocation.position, impulse);
+                    impulseSource.GenerateImpulseAt(impulseSource.transform.position, impulse);
+
+                    break;
+                case ImpulseLocation.OtherTransform:
+                    if(otherTransform != null)
+                    {
+                        if (localSpace)
+                            impulse = otherTransform.localToWorldMatrix.MultiplyVector(impulse);
+
+                        impulseSource.GenerateImpulseAt(otherTransform.position, impulse);
                     }
                     else
                     {
                         Debug.LogWarning("CinemachineCameraShakeAction : No RemoteTransform found for setting position, using self transform instead");
-                        if (LocalSpace)
+                        if (localSpace)
                             impulse = transform.localToWorldMatrix.MultiplyVector(impulse);
-                        m_ImpulseSource.GenerateImpulse(impulse);
+                        impulseSource.GenerateImpulse(impulse);
                     }
                     break;
                 case ImpulseLocation.InstigatorPosition:
                     if(instigator != null)
                     {
-                        if (LocalSpace)
+                        if (localSpace)
                             impulse = instigator.transform.localToWorldMatrix.MultiplyVector(impulse);
 
-                        m_ImpulseSource.GenerateImpulseAt(instigator.transform.position, impulse);
+                        impulseSource.GenerateImpulseAt(instigator.transform.position, impulse);
                     }
                     else
                     {
                         Debug.LogWarning("CinemachineCameraShakeAction : No Instigator found for setting position, using self transform instead");
-                        if (LocalSpace)
+                        if (localSpace)
                             impulse = transform.localToWorldMatrix.MultiplyVector(impulse);
-                        m_ImpulseSource.GenerateImpulse(impulse);
+                        impulseSource.GenerateImpulse(impulse);
                     }
                     break;
             }
