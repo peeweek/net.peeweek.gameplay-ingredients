@@ -54,21 +54,28 @@ namespace GameplayIngredients
 
             foreach(var type in kAllManagerTypes)
             {
-                if(exclusionList != null && exclusionList.ToList().Contains(type.Name))
+                // Check for any Do Not Create Attribute
+                var doNotCreateAttr = type.GetCustomAttribute<DoNotCreateManagerAttribute>();
+                if (doNotCreateAttr != null)
+                    continue;
+
+                // Check for entries in exclusion List
+                if (exclusionList != null && exclusionList.ToList().Contains(type.Name))
                 {
                     Debug.LogWarning($"Manager : {type.Name} is in GameplayIngredientSettings.excludedeManagers List: ignoring Creation");
                     continue;
                 }
-                var attrib = type.GetCustomAttribute<ManagerDefaultPrefabAttribute>(); 
+
+                var prefabAttr = type.GetCustomAttribute<ManagerDefaultPrefabAttribute>(); 
                 GameObject gameObject;
 
-                if(attrib != null)
+                if(prefabAttr != null)
                 {
-                    var prefab = Resources.Load<GameObject>(attrib.prefab);
+                    var prefab = Resources.Load<GameObject>(prefabAttr.prefab);
 
                     if(prefab == null) // Try loading the "Default_" prefixed version of the prefab
                     {
-                        prefab = Resources.Load<GameObject>("Default_"+attrib.prefab);
+                        prefab = Resources.Load<GameObject>("Default_"+prefabAttr.prefab);
                     }
 
                     if(prefab != null)
@@ -77,7 +84,7 @@ namespace GameplayIngredients
                     }
                     else
                     {
-                        Debug.LogError($"Could not instantiate default prefab for {type.ToString()} : No prefab '{attrib.prefab}' found in resources folders. Ignoring...");
+                        Debug.LogError($"Could not instantiate default prefab for {type.ToString()} : No prefab '{prefabAttr.prefab}' found in resources folders. Ignoring...");
                         continue;
                     }
                 }

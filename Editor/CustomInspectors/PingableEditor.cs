@@ -49,7 +49,7 @@ namespace GameplayIngredients.Editor
         {
             if(m_RequiredModule != null)
             {
-                EditorGUILayout.HelpBox($"This Script Requires the {m_RequiredModule.module} module : It will not execute until you enable the module in the Package Manager.", MessageType.Warning);
+                EditorGUILayout.HelpBox($"This Script Requires the {m_RequiredModule.module} module : It will not execute until you enable the module in the {m_RequiredModule.fixLocation}.", MessageType.Warning);
                 EditorGUILayout.Space();
             }
             EditorGUI.BeginDisabledGroup(m_RequiredModule != null);

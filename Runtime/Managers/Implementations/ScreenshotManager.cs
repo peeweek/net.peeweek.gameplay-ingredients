@@ -10,7 +10,9 @@ namespace GameplayIngredients
     public class ScreenshotManager : Manager
     {
         [Header("Capture")]
+#if ENABLE_LEGACY_INPUT_MANAGER
         public KeyCode ScreenshotKeyCode = KeyCode.F11;
+#endif
         [Range(1, 5)]
         public int SuperSize = 1;
 
@@ -23,7 +25,13 @@ namespace GameplayIngredients
 
         public void Update()
         {
+#if ENABLE_LEGACY_INPUT_MANAGER
             if (Input.GetKeyDown(ScreenshotKeyCode))
+#elif ENABLE_INPUT_SYSTEM
+            if (true)
+#else
+            if(false)
+#endif
             {
 #if MODULE_SCREENCAPTURE
                 var now = System.DateTime.Now;

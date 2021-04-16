@@ -5,6 +5,7 @@ using NaughtyAttributes;
 namespace GameplayIngredients.Actions
 {
     [Callable("Cinemachine", "Misc/ic-cinemachine.png")]
+    [AddComponentMenu(ComponentMenu.cinemachinePath + "Cinemachine Camera Shake Action")]
     public class CinemachineCameraShakeAction : ActionBase
     {
         public enum ImpulseLocation
