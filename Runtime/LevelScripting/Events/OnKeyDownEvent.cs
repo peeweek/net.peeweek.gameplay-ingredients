@@ -13,7 +13,7 @@ namespace GameplayIngredients.Events
         public Callable[] OnKeyDown;
         public Callable[] OnKeyUp;
 
-#if !ENABLE_LEGACY_INPUT_MANAGER
+#if ENABLE_LEGACY_INPUT_MANAGER
         void Update()
         {
 
