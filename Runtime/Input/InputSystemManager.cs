@@ -186,8 +186,46 @@ namespace GameplayIngredients.Managers
                     throw new System.NotImplementedException();
             }
         }
+        [System.Serializable]
+        public struct RegisteredInputAction
+        {
+            public InputActionAsset asset;
+            public string actionPath;
+
+            public InputAction action => GetAtPath(this.asset, this.actionPath);
+
+            public static InputAction GetAtPath(InputActionAsset asset, string path)
+            {
+                if (asset == null)
+                    return null;
+
+                if (string.IsNullOrEmpty(path))
+                    return null;
+
+                string[] split = path.Split('/');
+
+                foreach(var map in asset.actionMaps)
+                {
+                    if (!map.name.Equals(split[0]))
+                        continue;
+
+                    foreach(var action in map.actions)
+                    {
+                        if (action.name.Equals(split[1]))
+                            return action;
+                    }
+                }
+                return null;
+
+            }
+        }
+
 #endif
     }
+
+
+
+
     public enum Device
     {
         Gamepad,
@@ -211,6 +249,8 @@ namespace GameplayIngredients.Managers
         LeftThumbStick, RightThumbStick,
         Start, Select,
     }
+
+
 }
 
 

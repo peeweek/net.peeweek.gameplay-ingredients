@@ -5,7 +5,7 @@ namespace GameplayIngredients.Events
 #if !ENABLE_LEGACY_INPUT_MANAGER
     [WarnDisabledModule("Legacy Input Manager","Player Settings")]
 #endif
-    [AddComponentMenu(ComponentMenu.eventsPath + "On Key Down Event (Legacy Input System)")]
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Key Down Event (Legacy Input)")]
     public class OnKeyDownEvent : EventBase
     {
         public KeyCode Key = KeyCode.F5;

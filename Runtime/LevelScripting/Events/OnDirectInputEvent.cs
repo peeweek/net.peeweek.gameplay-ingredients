@@ -11,7 +11,8 @@ namespace GameplayIngredients.Events
 #if !ENABLE_INPUT_SYSTEM
     [WarnDisabledModule("New Input System")]
 #endif
-    public class OnInputSystemDirectInputEvent : EventBase
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Direct Input Event (New Input System)")]
+    public class OnDirectInputEvent : EventBase
     {
         [SerializeField]
         Device device = Device.Keyboard;
