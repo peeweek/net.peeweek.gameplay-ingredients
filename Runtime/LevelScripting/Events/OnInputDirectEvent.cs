@@ -14,6 +14,7 @@ namespace GameplayIngredients.Events
     [AddComponentMenu(ComponentMenu.eventsPath + "On Input Direct Event (New Input System)")]
     public class OnInputDirectEvent : EventBase
     {
+#if ENABLE_INPUT_SYSTEM
         [SerializeField]
         Device device = Device.Keyboard;
         [SerializeField, ShowIf("IsMouse")]
@@ -23,15 +24,17 @@ namespace GameplayIngredients.Events
         [SerializeField, ShowIf("IsKeyboard")]
         Key keyboardKey = Key.Space;
 
-        public Callable[] onPressed;
-        public Callable[] onReleased;
-
         bool IsMouse() => device == Device.Mouse;
         bool IsGamepad() => device == Device.Gamepad;
         bool IsKeyboard() => device == Device.Keyboard;
+#endif
+        public Callable[] onPressed;
+        public Callable[] onReleased;
 
-        ButtonControl button;
+
+
 #if ENABLE_INPUT_SYSTEM
+        ButtonControl button;
 
         private void OnEnable()
         {

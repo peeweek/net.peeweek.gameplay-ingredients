@@ -4,8 +4,8 @@ using UnityEngine.EventSystems;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
-using UnityEngine.UI;
 #endif
+using UnityEngine.UI;
 
 namespace GameplayIngredients
 {
