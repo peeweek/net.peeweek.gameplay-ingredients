@@ -68,6 +68,13 @@ namespace GameplayIngredients.Editor
             GetWindow<WelcomeScreen>(true, "Gameplay Ingredients");
         }
 
+        [MenuItem("Window/Gameplay Ingredients/Setup Wizard", priority = MenuItems.kWindowMenuPriority)]
+        static void ShowWizard()
+        {
+            var window = GetWindow<WelcomeScreen>(true, "Gameplay Ingredients");
+            window.wizardMode = WizardMode.FirstTimeSetup;
+        }
+
         private void OnEnable()
         {
             this.position = new Rect((Screen.width / 2.0f) - WindowWidth / 2, (Screen.height / 2.0f) - WindowHeight / 2, WindowWidth, WindowHeight);
