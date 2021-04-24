@@ -11,8 +11,8 @@ namespace GameplayIngredients.Events
 #if !ENABLE_INPUT_SYSTEM
     [WarnDisabledModule("New Input System")]
 #endif
-    [AddComponentMenu(ComponentMenu.eventsPath + "On Direct Input Event (New Input System)")]
-    public class OnDirectInputEvent : EventBase
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Input Direct Event (New Input System)")]
+    public class OnInputDirectEvent : EventBase
     {
         [SerializeField]
         Device device = Device.Keyboard;
@@ -60,11 +60,11 @@ namespace GameplayIngredients.Events
             switch (d)
             {
                 case Device.Gamepad:
-                    return InputSystemManager.GetButton(gamepadButton);
+                    return InputSystemUtility.GetButton(gamepadButton);
                 case Device.Keyboard:
-                    return InputSystemManager.GetButton(keyboardKey);
+                    return InputSystemUtility.GetButton(keyboardKey);
                 case Device.Mouse:
-                    return InputSystemManager.GetButton(mouseButton);
+                    return InputSystemUtility.GetButton(mouseButton);
                 default:
                     throw new System.NotImplementedException();
             }

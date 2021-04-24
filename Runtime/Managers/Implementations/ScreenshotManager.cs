@@ -35,7 +35,7 @@ namespace GameplayIngredients
 #if ENABLE_LEGACY_INPUT_MANAGER
             if (Input.GetKeyDown(ScreenshotKeyCode))
 #elif ENABLE_INPUT_SYSTEM
-            if (InputSystemManager.GetButton(ScreenshotKey).wasPressedThisFrame)
+            if (InputSystemUtility.GetButton(ScreenshotKey).wasPressedThisFrame)
 #else
             if(false)
 #endif

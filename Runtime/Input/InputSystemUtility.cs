@@ -3,33 +3,11 @@ using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
-#endif
 
-namespace GameplayIngredients.Managers
+namespace GameplayIngredients
 {
-#if !ENABLE_INPUT_SYSTEM
-    [DoNotCreateManager]
-    [WarnDisabledModule("New Input System","Player Settings")]
-#endif
-    [AddComponentMenu(ComponentMenu.managersPath + "Input System Manager (New Input System)")]
-    [ManagerDefaultPrefab("InputSystemManager")]
-    public class InputSystemManager : Manager
+    public static class InputSystemUtility
     {
-
-#if ENABLE_INPUT_SYSTEM
-        public InputActionDefinition[] inputActions { get => m_InputActions; }
-
-        [SerializeField]
-        InputActionDefinition[] m_InputActions;
-
-        [Serializable]
-        public struct InputActionDefinition
-        {
-            public InputActionAsset inputActionAsset;
-            public bool createUIActions;
-
-        }
-
         public static ButtonControl GetButton(MouseButton b)
         {
             Mouse m = Mouse.current;
@@ -65,7 +43,6 @@ namespace GameplayIngredients.Managers
                     throw new System.NotImplementedException();
             }
         }
-
         public static ButtonControl GetButton(Key k)
         {
             Keyboard kb = Keyboard.current;
@@ -186,45 +163,9 @@ namespace GameplayIngredients.Managers
                     throw new System.NotImplementedException();
             }
         }
-        [System.Serializable]
-        public struct RegisteredInputAction
-        {
-            public InputActionAsset asset;
-            public string actionPath;
-
-            public InputAction action => GetAtPath(this.asset, this.actionPath);
-
-            public static InputAction GetAtPath(InputActionAsset asset, string path)
-            {
-                if (asset == null)
-                    return null;
-
-                if (string.IsNullOrEmpty(path))
-                    return null;
-
-                string[] split = path.Split('/');
-
-                foreach(var map in asset.actionMaps)
-                {
-                    if (!map.name.Equals(split[0]))
-                        continue;
-
-                    foreach(var action in map.actions)
-                    {
-                        if (action.name.Equals(split[1]))
-                            return action;
-                    }
-                }
-                return null;
-
-            }
-        }
 
 #endif
     }
-
-
-
 
     public enum Device
     {
@@ -249,7 +190,6 @@ namespace GameplayIngredients.Managers
         LeftThumbStick, RightThumbStick,
         Start, Select,
     }
-
 
 }
 
