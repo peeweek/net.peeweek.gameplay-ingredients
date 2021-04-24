@@ -50,5 +50,23 @@ namespace GameplayIngredients
             if(selectable != null)
                 selectable.Select();
         }
+
+        internal static GameObject CreateManagerObject()
+        {
+            var go = new GameObject("UIEventManager");
+            var es = go.AddComponent<EventSystem>();
+            var uiem = go.AddComponent<UIEventManager>();
+            uiem.m_EventSystem = es;
+#if ENABLE_LEGACY_INPUT_MANAGER
+            if(!go.TryGetComponent(out StandaloneInputModule sm))
+                sm = go.AddComponent<StandaloneInputModule>();
+#endif
+
+#if ENABLE_INPUT_SYSTEM
+            if (!go.TryGetComponent(out InputSystemUIInputModule ism))
+                ism = go.AddComponent<InputSystemUIInputModule>();
+#endif
+            return go;
+        }
     }
 }
