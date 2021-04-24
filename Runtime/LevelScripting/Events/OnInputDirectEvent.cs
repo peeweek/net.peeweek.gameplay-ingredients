@@ -69,7 +69,6 @@ namespace GameplayIngredients.Events
                     throw new System.NotImplementedException();
             }
         }
-
 #endif
 
 
