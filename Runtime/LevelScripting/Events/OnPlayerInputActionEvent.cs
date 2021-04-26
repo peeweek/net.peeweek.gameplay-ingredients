@@ -8,11 +8,14 @@ namespace GameplayIngredients.Events
 #if !ENABLE_INPUT_SYSTEM
     [WarnDisabledModule("New Input System")]
 #endif
-    [AddComponentMenu(ComponentMenu.eventsPath + "On Input Action Event (New Input System)")]
-    public class OnInputActionEvent : EventBase
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Player Input Action Event (New Input System)")]
+    public class OnPlayerInputActionEvent : EventBase
     {
 #if ENABLE_INPUT_SYSTEM
         [SerializeField]
+        public PlayerInput playerInput;
+
+        [SerializeField, PlayerInputAction("playerInput")]
         InputAction inputAction;
 
         public Callable[] onButtonDown;
