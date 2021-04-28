@@ -19,11 +19,11 @@ namespace GameplayIngredients.Events
 
         private void OnEnable()
         {
-            inputAction.performed += InputAction_performed;
+            InputActionManager.Request(inputAction, InputAction_performed);
         }
         private void OnDisable()
         {
-            inputAction.performed -= InputAction_performed;
+            InputActionManager.Release(inputAction, InputAction_performed);
         }
 
         private void InputAction_performed(InputAction.CallbackContext obj)
