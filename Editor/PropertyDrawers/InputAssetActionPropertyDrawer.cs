@@ -9,7 +9,7 @@ using GameplayIngredients.Events;
 namespace GameplayIngredients.Editor
 {
     [CustomPropertyDrawer(typeof(InputAssetAction))]
-    public class InputActionReferencePropertyDrawer : PropertyDrawer
+    public class InputAssetActionPropertyDrawer: PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
