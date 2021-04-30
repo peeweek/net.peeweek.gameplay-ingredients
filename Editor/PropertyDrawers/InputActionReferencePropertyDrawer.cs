@@ -8,7 +8,7 @@ using GameplayIngredients.Events;
 
 namespace GameplayIngredients.Editor
 {
-    [CustomPropertyDrawer(typeof(InputAssetActionAttribute))]
+    [CustomPropertyDrawer(typeof(InputAssetAction))]
     public class InputActionReferencePropertyDrawer : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

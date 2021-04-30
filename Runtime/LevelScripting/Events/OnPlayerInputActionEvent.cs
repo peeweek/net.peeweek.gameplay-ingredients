@@ -8,16 +8,16 @@ namespace GameplayIngredients.Events
 {
 #if ENABLE_INPUT_SYSTEM
     [Serializable]
-    public struct InputAssetAction
+    public struct PlayerInputAction
     {
-        public InputActionAsset asset;
+        public PlayerInput playerInput;
         public string path;
 
         public InputAction action
         {
             get
             {
-                if (asset == null)
+                if (playerInput == null)
                     return null;
                 else
                 {
@@ -26,21 +26,21 @@ namespace GameplayIngredients.Events
                         string[] split = path.Split(pathSeparator);
                         if(split.Length != 2)
                         {
-                            Debug.LogWarning($"Invalid Path '{path}'", asset);
+                            Debug.LogWarning($"Invalid Path '{path}'", playerInput);
                             return null;
                         }
-                        int mapIdx = asset.actionMaps.IndexOf(o => o.name == split[0]);
+                        int mapIdx = playerInput.actions.actionMaps.IndexOf(o => o.name == split[0]);
                         
                         if(mapIdx == -1) // not found
                         {
-                            Debug.LogWarning($"Could not find action map '{split[0]}' in asset {asset.name}", asset);
+                            Debug.LogWarning($"Could not find action map '{split[0]}' in asset {playerInput.name}", playerInput);
                             return null;
                         }
-                        var map = asset.actionMaps[mapIdx];
+                        var map = playerInput.actions.actionMaps[mapIdx];
                         int actionIdx = map.actions.IndexOf(o => o.name == split[1]);
                         if(actionIdx == -1) // not found
                         {
-                            Debug.LogWarning($"Could not find action '{split[1]}' of map '{map.name}' in asset {asset.name}", asset);
+                            Debug.LogWarning($"Could not find action '{split[1]}' of map '{map.name}' in asset {playerInput.name}", playerInput);
                             return null;
                         }
                         m_CachedInputAction = map.actions[actionIdx];
@@ -61,11 +61,11 @@ namespace GameplayIngredients.Events
     [WarnDisabledModule("New Input System")]
 #endif
     [AddComponentMenu(ComponentMenu.eventsPath + "On Input Asset Action Event (New Input System)")]
-    public class OnInputAssetActionEvent : EventBase
+    public class OnPlayerInputActionEvent : EventBase
     {
 #if ENABLE_INPUT_SYSTEM
         [SerializeField]
-        InputAssetAction inputAction;
+        PlayerInputAction inputAction;
 
         [Header("Action")]
         public Callable[] onButtonDown;
