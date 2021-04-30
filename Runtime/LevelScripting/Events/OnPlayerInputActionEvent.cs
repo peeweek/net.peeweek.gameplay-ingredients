@@ -60,7 +60,7 @@ namespace GameplayIngredients.Events
 #if !ENABLE_INPUT_SYSTEM
     [WarnDisabledModule("New Input System")]
 #endif
-    [AddComponentMenu(ComponentMenu.eventsPath + "On Input Asset Action Event (New Input System)")]
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Player Input Action Event (New Input System)")]
     public class OnPlayerInputActionEvent : EventBase
     {
 #if ENABLE_INPUT_SYSTEM

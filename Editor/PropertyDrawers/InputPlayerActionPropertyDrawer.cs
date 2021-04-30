@@ -8,8 +8,8 @@ using GameplayIngredients.Events;
 
 namespace GameplayIngredients.Editor
 {
-    [CustomPropertyDrawer(typeof(InputAssetAction))]
-    public class InputAssetActionPropertyDrawer: PropertyDrawer
+    [CustomPropertyDrawer(typeof(PlayerInputAction))]
+    public class InputPlayerActionPropertyDrawer: PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -18,11 +18,11 @@ namespace GameplayIngredients.Editor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            var asset = property.FindPropertyRelative("asset");
+            var asset = property.FindPropertyRelative("playerInput");
             var path = property.FindPropertyRelative("path");
 
             position.height = EditorGUIUtility.singleLineHeight;
-            EditorGUI.PropertyField(position, asset, new GUIContent("Input Action Asset"));
+            EditorGUI.PropertyField(position, asset, new GUIContent("Player Input"));
             EditorGUI.indentLevel++;
             position.y += EditorGUIUtility.singleLineHeight + 2;
             
@@ -34,7 +34,7 @@ namespace GameplayIngredients.Editor
                 if (selected >= 0)
                     path.stringValue = paths[selected];
                 else
-                    path.stringValue = string.Empty; 
+                    path.stringValue = string.Empty;
             }
             EditorGUI.indentLevel--;
         }
@@ -58,18 +58,6 @@ namespace GameplayIngredients.Editor
             }
 
             return paths.ToArray();
-        }
-    }
-    public static class Extensions
-    {
-        public static int IndexOf(this string[] array, string value)
-        {
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] == value)
-                    return i;
-            }
-            return -1;
         }
     }
 }
