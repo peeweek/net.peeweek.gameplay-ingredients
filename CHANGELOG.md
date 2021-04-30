@@ -4,6 +4,20 @@
 
 #### Added
 
+* Added `WarnDisabledModuleAttribute` for GameplayIngredientsBehaviors that need to be disabled (encapsulate into #ifdefs )
+* Added New Input System support:
+  * Handles presence/absence of both systems (legacy/new) in Screenshot Manager, UIEventManager
+  * Added a page in the Wizard to create a default UIEventManager based on wanted Input System
+  * Added static `InputActionManager` that enables/disables InputActions based on their use in Events
+  * Added static `InputSystemUtility to return Controls based on keys/buttons`
+  * Added `InputSystemLogic` for Input System that checks which system is enabled.
+  * Added Events for Input System
+    * `OnInputActionEvent` defines InputActions directly on component
+    * `OnInputAssetActionEvent` defines InputActions based on Assets
+    * `OnInputDirectEvent` polls state without InputActions
+    * `OnPlayerInputAction` gets input from a `PlayerInput` 
+  * Reworked PlayerInput for FirstPersonController using both Input Systems
+
 * Added Cinemachine Actions: 
   * `CinemachineSetCameraNoiseAction`  : Defines or remove noise for a Virtual Camera
   * `CinemachineSetCustomBlendsAction` : Defines custom blends for the Cinemachine Brain of the Virtual Camera Manager
