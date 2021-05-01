@@ -51,7 +51,7 @@ namespace GameplayIngredients.Controllers
 
 
 #if ENABLE_LEGACY_INPUT_MANAGER
-    [ContextMenu("Initialize Values (Legacy Input)")]
+        [ContextMenu("Initialize Values (Legacy Input)")]
         void InitializeValuesLegacy()
         {
             MovementHorizontalAxis = "Horizontal";
@@ -59,24 +59,30 @@ namespace GameplayIngredients.Controllers
             LookHorizontalAxis = "Mouse X";
             LookVerticalAxis = "Mouse Y";
             JumpButton = "Jump";
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+#endif
         }
 #endif
 #if ENABLE_INPUT_SYSTEM
         [ContextMenu("Initialize Values (Input System Package)")]
         void InitializeValuesNIS()
         {
-            move = new InputAction("Left Stick", InputActionType.Value, "<Gamepad>/Left Stick");
+            move = new InputAction("Left Stick", InputActionType.Value, "<Gamepad>/leftStick");
             move.AddCompositeBinding("2DVector")
                 .With("Up", "<Keyboard>/w")
                 .With("Down", "<Keyboard>/s")
                 .With("Left", "<Keyboard>/a")
                 .With("Right", "<Keyboard>/d");
 
-            look = new InputAction("Right Stick", InputActionType.Value, "<Gamepad>/Right Stick");
+            look = new InputAction("Right Stick", InputActionType.Value, "<Gamepad>/rightStick");
             look.AddBinding("<Pointer>/Delta")
                 .WithProcessor("ScaleVector2(x=0.1,y=0.1)");
-            jump = new InputAction("Jump", InputActionType.Button, "<Gamepad>/Button South");
+            jump = new InputAction("Jump", InputActionType.Button, "<Gamepad>/buttonSouth");
             jump.AddBinding("<Keyboard>/space");
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+#endif
         }
 #endif
         public override void UpdateInput()
