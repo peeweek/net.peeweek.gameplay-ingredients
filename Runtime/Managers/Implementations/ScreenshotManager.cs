@@ -1,5 +1,8 @@
+using GameplayIngredients.Managers;
 using UnityEngine;
-
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 namespace GameplayIngredients
 {
 #if !MODULE_SCREENCAPTURE
@@ -10,7 +13,13 @@ namespace GameplayIngredients
     public class ScreenshotManager : Manager
     {
         [Header("Capture")]
+#if ENABLE_LEGACY_INPUT_MANAGER
         public KeyCode ScreenshotKeyCode = KeyCode.F11;
+#endif
+#if ENABLE_INPUT_SYSTEM
+        public Key ScreenshotKey = Key.F11;
+#endif
+
         [Range(1, 5)]
         public int SuperSize = 1;
 
@@ -23,7 +32,13 @@ namespace GameplayIngredients
 
         public void Update()
         {
+#if ENABLE_LEGACY_INPUT_MANAGER
             if (Input.GetKeyDown(ScreenshotKeyCode))
+#elif ENABLE_INPUT_SYSTEM
+            if (InputSystemUtility.GetButton(ScreenshotKey).wasPressedThisFrame)
+#else
+            if(false)
+#endif
             {
 #if MODULE_SCREENCAPTURE
                 var now = System.DateTime.Now;

@@ -39,7 +39,11 @@ namespace GameplayIngredients.Editor
 
         public Action[] pages = new Action[]
         {
-            WelcomePage, SettingAssetPage, UnpackPackagePage
+            WelcomePage, SettingAssetPage,
+#if ENABLE_INPUT_SYSTEM
+            InputSystemPage,
+#endif
+            UnpackPackagePage
         };
 
         static void WelcomePage()
@@ -47,8 +51,27 @@ namespace GameplayIngredients.Editor
             GUILayout.Label("Welcome to Gameplay Ingredients !", Styles.title);
             GUILayout.Space(12);
             GUILayout.Label(@"This wizard will help you set up your project so you can use and customize scripts.", Styles.body);
-
         }
+
+        static void InputSystemPage()
+        {
+            GUILayout.Label("Input System package detected", Styles.title);
+            GUILayout.Space(12);
+            GUILayout.Label(@"It seems that you have the Input System configured for your project. In order to make it work with the UI Event Manager, we can create a configured prefab for you.", Styles.body);
+            GUILayout.Space(12);
+            if (GUILayout.Button("Create/Replace", GUILayout.Width(180), GUILayout.Height(32)))
+            {
+                if(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/UIEventManager.prefab") == null 
+                    || EditorUtility.DisplayDialog("Prefab already present", "UIEventManager already exists, overwrite?", "Yes", "No"))
+                {
+                    var go = UIEventManager.CreateManagerObject();
+                    var prefab = PrefabUtility.SaveAsPrefabAsset(go, "Assets/Resources/UIEventManager.prefab");
+                    DestroyImmediate(go);
+                    Selection.activeObject = prefab;
+                }
+            }
+        }
+
 
         public const string kSettingsAssetPath = "Assets/Resources/GameplayIngredientsSettings.asset";
 

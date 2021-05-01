@@ -2,7 +2,10 @@ using UnityEngine;
 
 namespace GameplayIngredients.Events
 {
-    [AddComponentMenu(ComponentMenu.eventsPath + "On Button Down Event")]
+#if !ENABLE_LEGACY_INPUT_MANAGER
+    [WarnDisabledModule("Legacy Input Manager","Player Settings")]
+#endif
+    [AddComponentMenu(ComponentMenu.eventsPath + "On Button Down Event (Legacy Input)")]
     public class OnButtonDownEvent : EventBase
     {
         public string Button = "Fire1";
@@ -10,6 +13,7 @@ namespace GameplayIngredients.Events
         public Callable[] OnButtonDown;
         public Callable[] OnButtonUp;
 
+#if !ENABLE_LEGACY_INPUT_MANAGER
         void Update()
         {
             if (Input.GetButtonDown(Button))
@@ -18,6 +22,7 @@ namespace GameplayIngredients.Events
             if (Input.GetButtonUp(Button))
                 Callable.Call(OnButtonUp, gameObject);
         }
+#endif
     }
 }
 

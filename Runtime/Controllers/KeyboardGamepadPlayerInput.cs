@@ -42,6 +42,7 @@ namespace GameplayIngredients.Controllers
 
         public override void UpdateInput()
         {
+#if ENABLE_LEGACY_INPUT_MANAGER
             if(useGamepad || useKeyboardAndMouse)
             {
                 m_Movement = new Vector2(Input.GetAxisRaw(MovementHorizontalAxis), Input.GetAxisRaw(MovementVerticalAxis));
@@ -62,6 +63,9 @@ namespace GameplayIngredients.Controllers
                 m_Look += new Vector2(Input.GetAxisRaw(MouseHorizontalAxis), Input.GetAxisRaw(MouseVerticalAxis));
 
             m_Jump = GetButtonState(JumpButton);
+#else
+            Debug.LogWarning("KeyboardGamepadPlayerInput is only compatible with legacy input");
+#endif
         }
     }
 }

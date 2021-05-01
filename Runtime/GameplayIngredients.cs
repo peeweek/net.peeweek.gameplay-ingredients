@@ -6,6 +6,7 @@ namespace GameplayIngredients
     {
         public const string basePath = "Gameplay Ingredients/";
         public const string actionsPath = basePath + "Actions/";
+        public const string cinemachinePath = basePath + "Cinemachine/";
         public const string controllerPath = basePath + "Controllers/";
         public const string counterPath = basePath + "Counters/";
         public const string eventsPath = basePath + "Events/";

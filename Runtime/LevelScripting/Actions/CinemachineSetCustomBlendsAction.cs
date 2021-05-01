@@ -4,6 +4,7 @@ using Cinemachine;
 namespace GameplayIngredients.Actions
 {
     [Callable("Cinemachine", "Misc/ic-cinemachine.png")]
+    [AddComponentMenu(ComponentMenu.cinemachinePath + "Cinemachine Set Custom Blends Action")]
     public class CinemachineSetCustomBlendsAction : ActionBase
     {
         public enum Action
