@@ -19,11 +19,10 @@
     "Editor",
     "Streaming"
   ],
-  "hideInEditor": false
-},
-{
-	"author" : {
-		"name" : "PeeWeeK.NET",
-		"url" : "https://github.com/peeweek/"
-	}
+  "hideInEditor": false,
+  "author" : 
+  {
+    "name" : "PeeWeeK.NET",
+    "url" : "https://github.com/peeweek/"
+  }
 }
