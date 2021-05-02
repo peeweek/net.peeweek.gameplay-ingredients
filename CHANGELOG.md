@@ -4,6 +4,7 @@
 
 #### Added
 
+* Added `OnVFXOutputEvent` that triggers upon a visual effect output event
 * Added `WarnDisabledModuleAttribute` for GameplayIngredientsBehaviors that need to be disabled (encapsulate into #ifdefs )
 * Added New Input System support:
   * Handles presence/absence of both systems (legacy/new) in Screenshot Manager, UIEventManager
@@ -17,11 +18,14 @@
     * `OnInputDirectEvent` polls state without InputActions
     * `OnPlayerInputAction` gets input from a `PlayerInput` 
   * Reworked PlayerInput for FirstPersonController using both Input Systems
-
 * Added Cinemachine Actions: 
   * `CinemachineSetCameraNoiseAction`  : Defines or remove noise for a Virtual Camera
   * `CinemachineSetCustomBlendsAction` : Defines custom blends for the Cinemachine Brain of the Virtual Camera Manager
   * `CinemachineCameraShakeAction` : Trigger camera shakes for Cinemachine Impulse Sources
+
+#### Fixed
+
+* Fixed Callable add Menu that did not set correctly non-public callable lists.
 
 ## 2020.2.6
 
