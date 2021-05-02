@@ -1,12 +1,17 @@
 using UnityEngine;
+#if PACKAGE_VFXGRAPH
 using UnityEngine.VFX;
+#endif
 using NaughtyAttributes;
 using UnityEngine.Serialization;
 
 namespace GameplayIngredients.Actions
 {
-    [AddComponentMenu(ComponentMenu.actionsPath + "VFX Set Property Action")]
-    [Callable("Game", "Misc/ic-vfx.png")]
+#if !PACKAGE_VFXGRAPH
+    [WarnDisabledModule("Visual Effect Graph")]
+#endif
+    [AddComponentMenu(ComponentMenu.vfxPath + "VFX Set Property Action")]
+    [Callable("Visual Effects", "Misc/ic-vfx.png")]
     public class VFXSetPropertyAction : ActionBase
     {
         public enum DataType
@@ -21,8 +26,9 @@ namespace GameplayIngredients.Actions
             UInt,
             Int
         }
-
+#if PACKAGE_VFXGRAPH
         public VisualEffect visualEffect;
+#endif
 
         [FormerlySerializedAs("parameter")]
         public string property = "Property";
@@ -54,7 +60,8 @@ namespace GameplayIngredients.Actions
         {
             int id = Shader.PropertyToID(property);
 
-            if(HasParameter(id))
+#if PACKAGE_VFXGRAPH
+            if (HasProperty(id))
             {
                 if (!Override)
                     visualEffect.ResetOverride(id);
@@ -74,9 +81,12 @@ namespace GameplayIngredients.Actions
                     }
                 }
             }
+#else
+            Debug.LogWarning("VFXSetPropertyAction could not attach to VFX as VFX Graph package is not installed, if you're running HDRP or URP, please install it using package manager.");
+#endif
         }
 
-        bool HasParameter(int id)
+        bool HasProperty(int id)
         {
             switch(dataType)
             {

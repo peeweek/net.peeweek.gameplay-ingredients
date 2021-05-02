@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 using System.Linq;
+using System.Reflection;
 
 namespace GameplayIngredients.Editor
 {
@@ -124,7 +125,7 @@ namespace GameplayIngredients.Editor
     {
         public static void AddCallable(this GameObject gameObject, Component component, string propertyName, System.Type t)
         {
-            var field = component.GetType().GetFields().Where(f => f.Name == propertyName).FirstOrDefault();
+            var field = component.GetType().GetFields(BindingFlags.Public| BindingFlags.Instance | BindingFlags.NonPublic).Where(f => f.Name == propertyName).FirstOrDefault();
             var val = field.GetValue(component) as Callable[];
 
             if (t != null && typeof(Callable).IsAssignableFrom(t))

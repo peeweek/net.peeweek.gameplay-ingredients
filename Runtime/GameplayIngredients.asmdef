@@ -25,6 +25,11 @@
             "name": "com.unity.modules.screencapture",
             "expression": "1.0.0",
             "define": "MODULE_SCREENCAPTURE"
+        },
+        {
+            "name": "com.unity.visualeffectgraph",
+            "expression": "10.0.0",
+            "define": "PACKAGE_VFXGRAPH"
         }
     ],
     "noEngineReferences": false

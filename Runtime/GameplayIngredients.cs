@@ -19,6 +19,7 @@ namespace GameplayIngredients
         public const string rigsPath = basePath + "Rigs/";
         public const string timerPath = basePath + "Timers/";
         public const string stateMachinePath = basePath + "State Machines/";
+        public const string vfxPath = basePath + "VFX/";
     }
 
 
