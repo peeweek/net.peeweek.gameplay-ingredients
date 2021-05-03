@@ -85,7 +85,7 @@ namespace GameplayIngredients.Actions
             Debug.LogWarning("VFXSetPropertyAction could not attach to VFX as VFX Graph package is not installed, if you're running HDRP or URP, please install it using package manager.");
 #endif
         }
-
+#if PACKAGE_VFXGRAPH
         bool HasProperty(int id)
         {
             switch(dataType)
@@ -136,6 +136,7 @@ namespace GameplayIngredients.Actions
         bool isTexture3D()  { return dataType == DataType.Texture3D;  }
         bool isUInt()       { return dataType == DataType.UInt;       }
         bool isInt()        { return dataType == DataType.Int;        }
+#endif
     }
 }
 

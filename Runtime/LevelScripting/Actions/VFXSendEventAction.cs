@@ -28,11 +28,13 @@ namespace GameplayIngredients.Actions
             Debug.LogWarning("VFXSendEventAction could not attach to VFX as VFX Graph package is not installed, if you're running HDRP or URP, please install it using package manager.");
 #endif
         }
+#if PACKAGE_VFXGRAPH
 
         public override string GetDefaultName()
         {
             return $"Send VFX Event '{eventName}' to {visualEffect?.gameObject.name}";
         }
+#endif
     }
 
 }
