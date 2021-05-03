@@ -54,7 +54,7 @@ You can check that the package was imported by looking at the project window, un
 
 Gameplay Ingredients comes at latest version with the following compatibility:
 
-**Unity 2020.2 +** : choose the tag  `2020.2.7` 
+**Unity 2020.2 +** : choose the tag  : [![openupm](https://img.shields.io/npm/v/net.peeweek.gameplay-ingredients?label=openupm&registry_uri=https://package.openupm.com)
 
 #### Older Versions
 

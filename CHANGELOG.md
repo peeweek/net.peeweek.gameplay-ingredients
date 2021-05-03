@@ -1,5 +1,11 @@
 # Changelog
 
+## 2020.2.8
+
+#### Fixed
+
+* CRITICAL : Fixed compilation errors when VFX Graph not present
+
 ## 2020.2.7
 
 #### Added
