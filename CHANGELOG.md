@@ -5,6 +5,7 @@
 #### Fixed
 
 * CRITICAL : Fixed compilation errors when VFX Graph not present
+* Removed HDRP Additional Camera data from `Default_VirtualCameraManager` to prevent warnings on builds when using URP/BiRP
 
 ## 2020.2.7
 
