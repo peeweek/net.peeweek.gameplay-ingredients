@@ -4,11 +4,25 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using GameplayIngredients.Comments.Editor;
+using UnityEditor.Overlays;
+using UnityEngine.UIElements;
 
 namespace GameplayIngredients.Editor
 {
     public static class SceneViewToolbar
     {
+#if UNITY_2021_2_OR_NEWER
+
+        [Overlay(typeof(SceneView), "Toolbar", true)]
+        public class IngredientsToolbarOverlay : Overlay
+        {
+            public override VisualElement CreatePanelContent()
+            {
+                return new Label("Toto");
+            }
+        }
+
+#else
         public delegate void SceneViewToolbarDelegate(SceneView sceneView);
 
         public static event SceneViewToolbarDelegate OnSceneViewToolbarGUI;
@@ -16,7 +30,9 @@ namespace GameplayIngredients.Editor
         [InitializeOnLoadMethod]
         static void Initialize()
         {
-           SceneView.duringSceneGui += OnSceneGUI;
+
+            SceneView.duringSceneGui += OnSceneGUI;
+
         }
 
         private static void OnSceneGUI(SceneView sceneView)
@@ -320,6 +336,7 @@ namespace GameplayIngredients.Editor
                 toolbar = new GUIStyle(EditorStyles.inspectorFullWidthMargins);                
             }
         }
+#endif
     }
 }
 
