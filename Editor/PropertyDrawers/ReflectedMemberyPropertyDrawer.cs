@@ -52,7 +52,7 @@ namespace GameplayIngredients.Editor
             float width = EditorGUIUtility.currentViewWidth;
 
             var filterType = typeof(object);
-            var p = property.serializedObject.targetObject.GetType().GetMember(property.name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.GetField).First();
+            var p = property.serializedObject.targetObject.GetType().GetMember(property.name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.GetField | BindingFlags.FlattenHierarchy).First();
             var attr = p.GetCustomAttribute<ReflectedMemberAttribute>();
 
             if (attr != null) // If using a ReflectedMemberAttribute for filtering type
