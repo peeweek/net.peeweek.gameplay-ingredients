@@ -11,22 +11,38 @@ namespace GameplayIngredients.Rigs
         bool useStoredValueAsBase = true;
         [SerializeField, DisableIf("useStoredValueAsBase")]
         float baseValue = 1.0f;
-
+        
         [Header("Animation")]
-        public float frequency = 1.0f;
-        public float amplitude = 1.0f;
+        [SerializeReference, HandlerType(typeof(float))]
+        public FloatAnimationHandler animationHandler = new FloatContinuousAnimationHandler();
+
 
         public override Type animatedType => typeof(float);
 
         private void Awake()
         {
             if (useStoredValueAsBase)
-                baseValue = (float)property.GetValue();
+                baseValue = (float)property.GetValue();    
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            animationHandler?.OnStart(baseValue);
         }
 
         protected override object UpdateAndGetValue(float deltaTime)
         {
-            return Mathf.Sin(Time.time * frequency * Mathf.PI) * amplitude + baseValue;
+            if (animationHandler != null)
+            {
+                return animationHandler.OnUpdate(deltaTime);
+            }
+            else
+            {
+                Debug.LogWarning("Float Animation Rig has no Animation Handler", this);
+                return baseValue;
+            }
+
         }
     }
 }

@@ -35,8 +35,17 @@ namespace GameplayIngredients.Editor
             }
         }
 
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return EditorGUIUtility.singleLineHeight + 8;
+        }
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            GUI.Box(position, GUIContent.none, EditorStyles.helpBox);
+
+            position = new RectOffset(4, 4, 4, 4).Remove(position);
+
             SerializedProperty obj = property.FindPropertyRelative("m_TargetObject");
             SerializedProperty propName = property.FindPropertyRelative("m_MemberName");
 
@@ -44,7 +53,6 @@ namespace GameplayIngredients.Editor
 
             var filterType = typeof(object);
             var p = property.serializedObject.targetObject.GetType().GetMember(property.name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.GetField).First();
-
             var attr = p.GetCustomAttribute<ReflectedMemberAttribute>();
 
             if (attr != null) // If using a ReflectedMemberAttribute for filtering type
