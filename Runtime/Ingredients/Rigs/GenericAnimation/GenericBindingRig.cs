@@ -9,9 +9,16 @@ namespace GameplayIngredients.Rigs
     public class GenericBindingRig : Rig
     {
         public enum BindingType
-        {
+        {   
+            Bool,
+            Int,
+            UInt,
             Float,
-            Vector3
+            Vector2,
+            Vector3,
+            Vector4,
+            Quaternion,
+            Color
         }
         [SerializeField]
         BindingType bindingType = BindingType.Float;
@@ -29,10 +36,24 @@ namespace GameplayIngredients.Rigs
             {
                 switch (bindingType)
                 {
+                    case BindingType.Bool:
+                        return typeof(bool);
+                    case BindingType.Int:
+                        return typeof(int);
+                    case BindingType.UInt:
+                        return typeof(uint);
                     case BindingType.Float:
                         return typeof(float);
+                    case BindingType.Vector2:
+                        return typeof(Vector2);
                     case BindingType.Vector3:
                         return typeof(Vector3);
+                    case BindingType.Vector4:
+                        return typeof(Vector4);
+                    case BindingType.Quaternion:
+                        return typeof(Quaternion);
+                    case BindingType.Color:
+                        return typeof(Color);
                     default:
                         throw new NotImplementedException();
                 }
