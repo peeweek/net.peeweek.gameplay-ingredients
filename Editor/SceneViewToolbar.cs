@@ -5,6 +5,7 @@ using UnityEditor;
 using System;
 using GameplayIngredients.Comments.Editor;
 using UnityEditor.Overlays;
+using UnityEditor.Toolbars;
 using UnityEngine.UIElements;
 
 namespace GameplayIngredients.Editor
@@ -13,15 +14,204 @@ namespace GameplayIngredients.Editor
     {
 #if UNITY_2021_2_OR_NEWER
 
-        [Overlay(typeof(SceneView), "Toolbar", true)]
-        public class IngredientsToolbarOverlay : Overlay
+        [Overlay(typeof(SceneView), "Gameplay Ingredients", true)]
+        public class IngredientsToolbarOverlay : ToolbarOverlay
         {
-            public override VisualElement CreatePanelContent()
+            const string prefix = "IngredientsToolbarOverlay.";
+            public IngredientsToolbarOverlay() : base(PlayFromHereButton.id, LinkGameViewButton.id, PointOfViewButton.id, CommentsButton.id, CheckResolveButton.id) { }
+
+            protected override Layout supportedLayouts => Layout.HorizontalToolbar | Layout.VerticalToolbar;
+
+            #region PLAY FROM HERE
+            [EditorToolbarElement(id)]
+            public class PlayFromHereButton : EditorToolbarButton, IAccessContainerWindow
             {
-                return new Label("Toto");
+                public const string id = prefix + "PlayFromHereButton";
+                public EditorWindow containerWindow { get; set; }
+
+                public PlayFromHereButton() : base()
+                {
+                    this.SetEnabled(PlayFromHere.IsReady);
+                    icon = EditorApplication.isPlaying ? Contents.playFromHere_Stop : Contents.playFromHere;
+                    tooltip = "Play from Here";
+                    clicked += OnClick;
+                    EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
+                }
+
+                private void EditorApplication_playModeStateChanged(PlayModeStateChange obj)
+                {
+                    if (obj == PlayModeStateChange.EnteredPlayMode)
+                        icon = Contents.playFromHere_Stop;
+                    else if (obj == PlayModeStateChange.EnteredEditMode)
+                        icon = Contents.playFromHere;
+                }
+
+                public void OnClick()
+                {
+                    if (!EditorApplication.isPlaying)
+                        PlayFromHere.Play(containerWindow as SceneView);
+                    else
+                        EditorApplication.isPlaying = false;
+                }
+            }
+            #endregion
+
+            #region LINK GAME VIEW
+            [EditorToolbarElement(id)]
+            public class LinkGameViewButton : EditorToolbarDropdownToggle, IAccessContainerWindow
+            {
+                public override bool value { 
+                    get => base.value;
+                    set 
+                    { 
+                        base.value = value;
+                        OnValueChanged(value);
+                    }
+                }
+
+                public const string id = prefix + "LinkGameViewButton";
+
+                public EditorWindow containerWindow { get; set; }
+
+                static List<LinkGameViewButton> buttons = new List<LinkGameViewButton>();
+
+                public LinkGameViewButton()
+                {
+                    icon = Contents.linkGameView;
+                    tooltip = "Link Game View";
+                    dropdownClicked += OnClick;
+
+                    buttons.Add(this);
+                }
+
+                ~LinkGameViewButton()
+                {
+                    if (LinkGameView.LockedSceneView == containerWindow as SceneView)
+                    {
+                        LinkGameView.LockedSceneView = null;
+                        LinkGameView.Active = false;
+                    }
+                    buttons.Remove(this);
+                }
+
+                public void OnClick()
+                {
+
+                }
+
+                void OnValueChanged(bool newValue)
+                {
+                    LinkGameView.Active = newValue;
+
+                    if (newValue)
+                        LinkGameView.LockedSceneView = containerWindow as SceneView;
+                    else
+                        LinkGameView.LockedSceneView = null;
+
+                    foreach(var button in buttons)
+                    {
+                        if(button.containerWindow != containerWindow)
+                        {
+                            button.SetValueWithoutNotify(false);
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region POINT OF VIEW
+            [EditorToolbarElement(id)]
+            public class PointOfViewButton : EditorToolbarDropdown, IAccessContainerWindow
+            {
+                public const string id = prefix + "PointOfViewButton";
+
+                public EditorWindow containerWindow { get; set; }
+
+                public PointOfViewButton()
+                {
+                    icon = Contents.pointOfView;
+                    tooltip = "Point of View";
+                    clicked += OnClick;
+                }
+
+                public void OnClick()
+                {
+
+                }
+            }
+            #endregion
+
+            #region COMMENTS
+            [EditorToolbarElement(id)]
+            public class CommentsButton : EditorToolbarButton, IAccessContainerWindow
+            {
+                public const string id = prefix + "CommentsButton";
+
+                public EditorWindow containerWindow { get; set; }
+
+                public CommentsButton()
+                {
+                    icon = Contents.commentsWindow;
+                    tooltip = "Open Comments Window";
+                    clicked += OnClick;
+                }
+
+                public void OnClick()
+                {
+                    CommentsWindow.Open();
+                }
+            }
+            #endregion
+
+            #region CHECK/RESOLVE
+            [EditorToolbarElement(id)]
+            public class CheckResolveButton : EditorToolbarButton, IAccessContainerWindow
+            {
+                public const string id = prefix + "CheckResolveButton";
+
+                public EditorWindow containerWindow { get; set; }
+
+                public CheckResolveButton()
+                {
+                    icon = Contents.checkWindow;
+                    tooltip = "Open Check/Resolve Window";
+                    clicked += OnClick;
+                }
+
+                public void OnClick()
+                {
+                    CheckWindow.OpenWindow();
+                }
+            }
+            #endregion
+
+            static class Contents
+            {
+                public static Texture2D playFromHere;
+                public static Texture2D playFromHere_Stop;
+
+                public static Texture2D pointOfView;
+
+                public static Texture2D linkGameView;
+
+                public static Texture2D checkWindow;
+                public static Texture2D commentsWindow;
+
+                static Contents()
+                {
+                    playFromHere = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/SceneViewToolbar/PlayFromHere.png") as Texture2D;
+                    playFromHere_Stop = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/SceneViewToolbar/PlayFromHere_Stop.png") as Texture2D;
+
+                    pointOfView = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/SceneViewToolbar/POV.png") as Texture2D;
+
+                    linkGameView = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/GUI/Camera16x16.png") as Texture2D;
+
+                    checkWindow = EditorGUIUtility.IconContent("Valid").image as Texture2D;
+
+                    commentsWindow = EditorGUIUtility.IconContent("console.infoicon.inactive.sml").image as Texture2D;
+                }
             }
         }
-
 #else
         public delegate void SceneViewToolbarDelegate(SceneView sceneView);
 
