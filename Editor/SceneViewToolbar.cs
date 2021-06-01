@@ -81,6 +81,9 @@ namespace GameplayIngredients.Editor
                     tooltip = "Link Game View";
                     dropdownClicked += OnClick;
 
+                    if (LinkGameView.Active && LinkGameView.LockedSceneView == null)
+                        LinkGameView.Active = false;
+
                     buttons.Add(this);
                 }
 
