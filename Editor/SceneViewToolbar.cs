@@ -77,7 +77,7 @@ namespace GameplayIngredients.Editor
 
                 public LinkGameViewButton()
                 {
-                    icon = Contents.linkGameView;
+                    
                     tooltip = "Link Game View";
                     dropdownClicked += OnClick;
 
@@ -85,6 +85,8 @@ namespace GameplayIngredients.Editor
                         LinkGameView.Active = false;
 
                     buttons.Add(this);
+
+                    UpdateIcon();
                 }
 
                 ~LinkGameViewButton()
@@ -97,8 +99,32 @@ namespace GameplayIngredients.Editor
                     buttons.Remove(this);
                 }
 
+                public void UpdateIcon()
+                {
+                    if(LinkGameView.CinemachineActive)
+                        icon = Contents.linkGameViewCM;
+                    else
+                    {
+                        icon = LinkGameView.LockedSceneView == containerWindow as SceneView ? Contents.linkGameViewActive : Contents.linkGameView;
+                    }
+                }
+
                 public void OnClick()
                 {
+                    var m = new GenericMenu();
+                    m.AddItem(new GUIContent("Link Camera"), LinkGameView.LockedSceneView == containerWindow as SceneView, 
+                        () => {
+                                LinkGameView.CinemachineActive = false;
+                                value = true;
+                                UpdateIcon();
+                        });
+                    m.AddItem(new GUIContent("Cinemachine Preview"), LinkGameView.CinemachineActive, 
+                        () => {
+                                LinkGameView.CinemachineActive = true;
+                                value = true;
+                                UpdateIcon();
+                        });
+                    m.DropDown(worldBound);
 
                 }
 
@@ -106,17 +132,27 @@ namespace GameplayIngredients.Editor
                 {
                     LinkGameView.Active = newValue;
 
-                    if (newValue)
+                    if(LinkGameView.CinemachineActive && newValue == false)
+                        LinkGameView.CinemachineActive = false;
+                    else if(newValue && !LinkGameView.CinemachineActive)
                         LinkGameView.LockedSceneView = containerWindow as SceneView;
                     else
                         LinkGameView.LockedSceneView = null;
 
-                    foreach(var button in buttons)
+                    UpdateIcon();
+
+                    foreach (var button in buttons)
                     {
-                        if(button.containerWindow != containerWindow)
+                        if(LinkGameView.CinemachineActive)
+                        {
+                            button.SetValueWithoutNotify(true);
+                            
+                        }
+                        else if(button.containerWindow != containerWindow)
                         {
                             button.SetValueWithoutNotify(false);
                         }
+                        button.UpdateIcon();
                     }
                 }
             }
@@ -196,6 +232,8 @@ namespace GameplayIngredients.Editor
                 public static Texture2D pointOfView;
 
                 public static Texture2D linkGameView;
+                public static Texture2D linkGameViewActive;
+                public static Texture2D linkGameViewCM;
 
                 public static Texture2D checkWindow;
                 public static Texture2D commentsWindow;
@@ -204,14 +242,13 @@ namespace GameplayIngredients.Editor
                 {
                     playFromHere = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/SceneViewToolbar/PlayFromHere.png") as Texture2D;
                     playFromHere_Stop = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/SceneViewToolbar/PlayFromHere_Stop.png") as Texture2D;
-
                     pointOfView = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/SceneViewToolbar/POV.png") as Texture2D;
+                    linkGameView = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/SceneViewToolbar/Camera.png") as Texture2D;
 
-                    linkGameView = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/GUI/Camera16x16.png") as Texture2D;
-
-                    checkWindow = EditorGUIUtility.IconContent("Valid").image as Texture2D;
-
-                    commentsWindow = EditorGUIUtility.IconContent("console.infoicon.inactive.sml").image as Texture2D;
+                    linkGameViewActive = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/SceneViewToolbar/CameraActive.png") as Texture2D;
+                    linkGameViewCM = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/SceneViewToolbar/CameraCM.png") as Texture2D;
+                    checkWindow = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/SceneViewToolbar/CheckResolve.png") as Texture2D;
+                    commentsWindow = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/SceneViewToolbar/Comments.png") as Texture2D;
                 }
             }
         }

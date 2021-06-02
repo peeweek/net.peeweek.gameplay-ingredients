@@ -244,6 +244,7 @@ namespace GameplayIngredients.Editor
             }
 
             brain.enabled = value;
+            brain.ManualUpdate();
         }
 
     }
