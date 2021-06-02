@@ -77,12 +77,10 @@ namespace GameplayIngredients.Editor
 
                 public LinkGameViewButton()
                 {
-                    
                     tooltip = "Link Game View";
                     dropdownClicked += OnClick;
 
-                    if (LinkGameView.Active && LinkGameView.LockedSceneView == null)
-                        LinkGameView.Active = false;
+                    SetValueWithoutNotify(LinkGameView.Active && LinkGameView.LockedSceneView == containerWindow as SceneView);
 
                     buttons.Add(this);
 
@@ -105,7 +103,7 @@ namespace GameplayIngredients.Editor
                         icon = Contents.linkGameViewCM;
                     else
                     {
-                        icon = LinkGameView.LockedSceneView == containerWindow as SceneView ? Contents.linkGameViewActive : Contents.linkGameView;
+                        icon = (LinkGameView.Active && LinkGameView.LockedSceneView == containerWindow as SceneView) ? Contents.linkGameViewActive : Contents.linkGameView;
                     }
                 }
 
