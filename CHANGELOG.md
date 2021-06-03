@@ -2,7 +2,9 @@
 
 ## 2020.2.9
 
+#### Added
 
+* **Unity 2021.2**: Changed the **SceneViewToolbar** to use the new Overlays. Requires 2021.2.0a18 or newer, older versions still use the classic toolbar
 
 ## 2020.2.8
 
