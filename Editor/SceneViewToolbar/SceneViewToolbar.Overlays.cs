@@ -19,13 +19,14 @@ namespace GameplayIngredients.Editor
         {
             const string prefix = "IngredientsToolbarOverlay.";
             public IngredientsToolbarOverlay() : base(
-                PlayFromHereButton.id, 
-                LinkGameViewButton.id, 
-                PointOfViewButton.id, 
-                CommentsButton.id, 
+                PlayFromHereButton.id,
+                LinkGameViewButton.id,
+                PointOfViewButton.id,
+                CommentsButton.id,
                 CheckResolveButton.id,
                 IngredientExplorerButton.id
-                ) { }
+                )
+            { }
 
             protected override Layout supportedLayouts => Layout.HorizontalToolbar | Layout.VerticalToolbar;
 
@@ -119,13 +120,15 @@ namespace GameplayIngredients.Editor
                 {
                     var m = new GenericMenu();
                     m.AddItem(new GUIContent("Link Camera"), LinkGameView.LockedSceneView == containerWindow as SceneView,
-                        () => {
+                        () =>
+                        {
                             LinkGameView.CinemachineActive = false;
                             value = true;
                             UpdateIcon();
                         });
                     m.AddItem(new GUIContent("Cinemachine Preview"), LinkGameView.CinemachineActive,
-                        () => {
+                        () =>
+                        {
                             LinkGameView.CinemachineActive = true;
                             value = true;
                             UpdateIcon();
@@ -252,7 +255,6 @@ namespace GameplayIngredients.Editor
             }
             #endregion
 
-
             static class Contents
             {
                 public static Texture2D playFromHere;
@@ -282,6 +284,27 @@ namespace GameplayIngredients.Editor
                     ingredientsExplorer = EditorGUIUtility.Load("Packages/net.peeweek.gameplay-ingredients/Icons/Misc/ic-callable.png") as Texture2D;
                 }
             }
+        }
+
+        [Overlay(typeof(SceneView), "Custom (Gameplay Ingredients)", true)]
+        public class IngredientsCustomToolbarOverlay : Overlay, IAccessContainerWindow
+        {
+            EditorWindow IAccessContainerWindow.containerWindow { get; set; }
+            SceneView sceneView => containerWindow as SceneView;
+
+            protected override Layout supportedLayouts => Layout.HorizontalToolbar;
+
+            public override VisualElement CreatePanelContent()
+            {
+                return new IMGUIContainer(() =>
+                {
+                    using(new GUILayout.HorizontalScope(EditorStyles.toolbar))
+                    {
+                        SceneViewToolbar.OnSceneViewToolbarGUI?.Invoke(sceneView);
+                    }
+                });
+            }
+
         }
     }
 }

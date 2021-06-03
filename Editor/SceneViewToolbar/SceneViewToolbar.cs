@@ -10,9 +10,6 @@ namespace GameplayIngredients.Editor
     {
 
 #if !UNITY_2021_2_OR_NEWER
-        public delegate void SceneViewToolbarDelegate(SceneView sceneView);
-
-        public static event SceneViewToolbarDelegate OnSceneViewToolbarGUI;
 
         [InitializeOnLoadMethod]
         static void Initialize()
