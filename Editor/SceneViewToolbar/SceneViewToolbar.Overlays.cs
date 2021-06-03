@@ -1,3 +1,4 @@
+#if UNITY_2021_2_OR_NEWER
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,6 @@ namespace GameplayIngredients.Editor
 {
     public static partial class SceneViewToolbar
     {
-#if UNITY_2021_2_OR_NEWER
 
         [Overlay(typeof(SceneView), "Gameplay Ingredients", true)]
         public class IngredientsToolbarOverlay : ToolbarOverlay
@@ -283,6 +283,6 @@ namespace GameplayIngredients.Editor
                 }
             }
         }
-#endif
     }
 }
+#endif

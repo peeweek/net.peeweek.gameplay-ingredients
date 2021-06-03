@@ -1,12 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
 using GameplayIngredients.Comments.Editor;
-using UnityEditor.Overlays;
-using UnityEditor.Toolbars;
-using UnityEngine.UIElements;
 
 namespace GameplayIngredients.Editor
 {
