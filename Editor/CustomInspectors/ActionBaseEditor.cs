@@ -25,7 +25,8 @@ namespace GameplayIngredients.Editor
 
             DrawBreadCrumb("Action", color, () =>
             {
-                NaughtyEditorGUI.PropertyField_Layout(m_Name, true);
+                using (new GUILayout.VerticalScope(GUILayout.ExpandWidth(true)))
+                    NaughtyEditorGUI.PropertyField_Layout(m_Name, true);
                 OpenIngredientsExplorerButton(serializedObject.targetObject as ActionBase);
             });
 
