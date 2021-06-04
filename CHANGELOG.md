@@ -2,7 +2,9 @@
 
 ## 2020.2.9
 
+#### Fixed
 
+* Revised Iconography, Breadcrumb UI
 
 ## 2020.2.8
 
