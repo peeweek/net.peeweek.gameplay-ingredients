@@ -1,7 +1,7 @@
 {
   "name": "net.peeweek.gameplay-ingredients",
   "displayName": "Gameplay Ingredients",
-  "version": "2020.2.8",
+  "version": "2020.2.9",
   "category": "Gameplay",
   "unity": "2020.2",
   "description": "Gameplay ingredients - A Collection of scripts for the editor and runtime to set-up gameplay actions and logic in your games.",
