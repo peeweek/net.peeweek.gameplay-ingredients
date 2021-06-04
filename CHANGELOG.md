@@ -2,7 +2,9 @@
 
 ## 2020.2.9
 
+#### Added
 
+* Generic Animation Rigs
 
 ## 2020.2.8
 
