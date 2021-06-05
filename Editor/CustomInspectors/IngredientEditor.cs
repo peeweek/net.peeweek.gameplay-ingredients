@@ -77,15 +77,17 @@ public abstract class IngredientEditor : PingableEditor
         using (new GUILayout.HorizontalScope(Styles.breadCrumbBar))
         {
             Color c = GUI.backgroundColor;
-            color *= 0.6f;
-            color.a = 1;
-            GUI.backgroundColor = color;
-            GUILayout.Label(label, Styles.breadCrumb);
+
+            float bg = EditorGUIUtility.isProSkin ? .3f : .9f;
+            GUI.backgroundColor = new Color(bg, bg, bg, 1);
+            Rect r = GUILayoutUtility.GetRect(8,8, 22,22, GUILayout.Width(8));
+            EditorGUI.DrawRect(r, color);
+            GUILayout.Label(label, Styles.breadCrumb, GUILayout.MinWidth(28));
+
             GUI.backgroundColor = c;
 
             if (content != null)
-                using(new GUILayout.HorizontalScope(GUILayout.ExpandWidth(true)))
-                   content.Invoke();
+                content.Invoke();
             else
                 GUILayout.FlexibleSpace();
         }
@@ -146,7 +148,7 @@ public abstract class IngredientEditor : PingableEditor
             breadCrumb.margin = new RectOffset();
 
             breadCrumb.onNormal.background = bc;
-            breadCrumb.onNormal.textColor = Color.white;
+            breadCrumb.onNormal.textColor = EditorGUIUtility.isProSkin? Color.white : Color.black;
             breadCrumb.onHover = breadCrumb.onNormal;
             breadCrumb.onActive = breadCrumb.onNormal;
             breadCrumb.onFocused = breadCrumb.onNormal;

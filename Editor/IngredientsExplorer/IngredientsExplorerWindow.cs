@@ -128,7 +128,7 @@ namespace GameplayIngredients.Editor
                     menu.DropDown(buttonRect);
                 }
                 if(position.width > MIN_WIDTH)
-                    showPanel = GUILayout.Toggle(showPanel, "...", EditorStyles.toolbarButton);
+                    showPanel = GUILayout.Toggle(showPanel, EditorGUIUtility.IconContent("UnityEditor.InspectorWindow"), EditorStyles.toolbarButton);
 
             }
             using(new GUILayout.HorizontalScope())
