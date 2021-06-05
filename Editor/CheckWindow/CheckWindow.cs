@@ -15,7 +15,7 @@ namespace GameplayIngredients.Editor
     public class CheckWindow : EditorWindow
     {
         [MenuItem("Window/Gameplay Ingredients/Check and Resolve", priority = MenuItems.kWindowMenuPriority+30)]
-        static void OpenWindow()
+        public static void OpenWindow()
         {
             GetWindow<CheckWindow>(false);
         }

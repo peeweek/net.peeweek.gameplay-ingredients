@@ -41,8 +41,8 @@ namespace GameplayIngredients.Editor
 
             DrawBreadCrumb("Rig", color, () =>
             {
-                GUILayout.Label(ObjectNames.NicifyVariableName(serializedObject.targetObject.GetType().Name), GUILayout.ExpandWidth(true));
-
+                GUILayout.Label(ObjectNames.NicifyVariableName(serializedObject.targetObject.GetType().Name));
+                GUILayout.FlexibleSpace();
                 OpenIngredientsExplorerButton(serializedObject.targetObject as Rig);
             });
 
