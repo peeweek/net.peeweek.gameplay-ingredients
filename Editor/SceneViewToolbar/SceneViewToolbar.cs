@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -7,16 +6,17 @@ using GameplayIngredients.Comments.Editor;
 
 namespace GameplayIngredients.Editor
 {
-    public static class SceneViewToolbar
+    public static partial class SceneViewToolbar
     {
-        public delegate void SceneViewToolbarDelegate(SceneView sceneView);
 
-        public static event SceneViewToolbarDelegate OnSceneViewToolbarGUI;
+#if !UNITY_2021_2_OR_NEWER
 
         [InitializeOnLoadMethod]
         static void Initialize()
         {
-           SceneView.duringSceneGui += OnSceneGUI;
+
+            SceneView.duringSceneGui += OnSceneGUI;
+
         }
 
         private static void OnSceneGUI(SceneView sceneView)
@@ -320,6 +320,7 @@ namespace GameplayIngredients.Editor
                 toolbar = new GUIStyle(EditorStyles.inspectorFullWidthMargins);                
             }
         }
+#endif
     }
 }
 
