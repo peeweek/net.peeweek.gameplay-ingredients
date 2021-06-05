@@ -30,6 +30,6 @@ namespace GameplayIngredients.Editor
             }
         }
 
-        static readonly Color color = new Color(.1f, .5f, 1f, 1f);
+        static readonly Color color = new Color(.2f, .5f, .9f, 1f);
     }
 }

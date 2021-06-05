@@ -25,7 +25,8 @@ namespace GameplayIngredients.Editor
 
             DrawBreadCrumb("Action", color, () =>
             {
-                NaughtyEditorGUI.PropertyField_Layout(m_Name, true);
+                using (new GUILayout.VerticalScope(GUILayout.ExpandWidth(true)))
+                    NaughtyEditorGUI.PropertyField_Layout(m_Name, true);
                 OpenIngredientsExplorerButton(serializedObject.targetObject as ActionBase);
             });
 
@@ -37,6 +38,6 @@ namespace GameplayIngredients.Editor
             }
         }
 
-        static readonly Color color = new Color(1f, .1f, .5f, 1f);
+        static readonly Color color = new Color(.8f, .25f, .35f, 1f);
     }
 }
