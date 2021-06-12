@@ -98,7 +98,7 @@ namespace GameplayIngredients.Rigs
             {
                 if(dict.ContainsKey(priority))
                 {
-                    foreach (var rig in dict[priority].ToArray())
+                    foreach (var rig in dict[priority])
                     {
                         rig.UpdateRig(deltaTime);
                     }
