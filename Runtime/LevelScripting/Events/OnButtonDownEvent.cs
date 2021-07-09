@@ -13,7 +13,7 @@ namespace GameplayIngredients.Events
         public Callable[] OnButtonDown;
         public Callable[] OnButtonUp;
 
-#if !ENABLE_LEGACY_INPUT_MANAGER
+#if ENABLE_LEGACY_INPUT_MANAGER
         void Update()
         {
             if (Input.GetButtonDown(Button))

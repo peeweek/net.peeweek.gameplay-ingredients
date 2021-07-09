@@ -2,9 +2,9 @@
 
 ## 2020.2.10
 
-#### Added
-
 #### Fixed
+
+* Fixed OnButtonDownEvent incorrect ifdef
 
 ## 2020.2.9
 
