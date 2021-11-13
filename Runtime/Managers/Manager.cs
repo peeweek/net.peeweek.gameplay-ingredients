@@ -5,7 +5,6 @@ using System;
 using System.Reflection;
 using GameplayIngredients.Utils;
 using UnityEditor;
-using UnityEngine.SceneManagement;
 
 namespace GameplayIngredients
 {
@@ -43,7 +42,7 @@ namespace GameplayIngredients
             return(s_Managers.ContainsKey(typeof(T)));
         }
 
-        static readonly Type[] kAllManagerTypes = TypeUtility.GetConcreteTypes<Manager>();
+        static readonly Type[] kAllManagerTypes = TypeUtility.GetConcreteTypes<Manager>();   
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void AutoCreateAll()
@@ -56,10 +55,24 @@ namespace GameplayIngredients
             var inclusionList = GameplayIngredientsSettings.currentSettings.includedManagers;
             var exclusionList = GameplayIngredientsSettings.currentSettings.excludedManagers;
 
-            if(GameplayIngredientsSettings.currentSettings.verboseCalls)
-                Debug.Log("Initializing all Managers...");
+            // If we have an inclusion list create an ordered list of Types
+            List<Type> managerTypes = new List<Type>(); 
+            if (inclusionList != null && inclusionList.Length > 0)
+            {
+                foreach (var inclusion in inclusionList)
+                {
+                    foreach (var type in kAllManagerTypes)
+                    {
+                        if (type.Name.Equals(inclusion)) managerTypes.Add(type);
+                    }
+                }
+            }
+            else
+            {
+                managerTypes = kAllManagerTypes.ToList();
+            }
 
-            foreach(var type in kAllManagerTypes)
+            foreach(var type in managerTypes)
             {
                 // Check for any Do Not Create Attribute
                 var doNotCreateAttr = type.GetCustomAttribute<DoNotCreateManagerAttribute>();
@@ -76,16 +89,6 @@ namespace GameplayIngredients
                     continue;
                 }
                 
-                // Check for entries in inclusion List
-                if (inclusionList != null && inclusionList.Length > 0 && !inclusionList.ToList().Contains(type.Name))
-                {
-                    if (GameplayIngredientsSettings.currentSettings.verboseCalls)
-                    {
-                        Debug.LogWarning($"GameplayIngredientSettings.includeManagers is not empty and manager : {type.Name} is not in the list: ignoring Creation");
-                    }
-                    continue;
-                }
-
                 var prefabAttr = type.GetCustomAttribute<ManagerDefaultPrefabAttribute>(); 
                 GameObject gameObject;
 

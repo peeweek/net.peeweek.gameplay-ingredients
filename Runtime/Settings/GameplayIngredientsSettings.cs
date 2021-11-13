@@ -3,7 +3,6 @@ using GameplayIngredients.Utils;
 using UnityEngine;
 using NaughtyAttributes;
 using UnityEditor;
-using UnityEngine.SceneManagement;
 
 namespace GameplayIngredients
 {
