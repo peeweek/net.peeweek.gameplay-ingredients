@@ -22,7 +22,7 @@ namespace GameplayIngredients.Editor
                 GUILayout.FlexibleSpace();
             });
 
-            if(GameplayIngredientsSettings.currentSettings.excludedeManagers.Contains(serializedObject.targetObject.GetType().Name))
+            if(GameplayIngredientsSettings.currentSettings.excludedManagers.Contains(serializedObject.targetObject.GetType().Name))
             {
                 EditorGUILayout.HelpBox("This manager is currently excluded, please check the Manager Exclusion list in your GameplayIngredientsSettings asset located in Assets/Resources", MessageType.Warning);
             }

@@ -47,7 +47,7 @@ namespace GameplayIngredients
         {
             s_Managers.Clear();
 
-            var exclusionList = GameplayIngredientsSettings.currentSettings.excludedeManagers;
+            var exclusionList = GameplayIngredientsSettings.currentSettings.excludedManagers;
 
             if(GameplayIngredientsSettings.currentSettings.verboseCalls)
                 Debug.Log("Initializing all Managers...");
@@ -62,7 +62,7 @@ namespace GameplayIngredients
                 // Check for entries in exclusion List
                 if (exclusionList != null && exclusionList.ToList().Contains(type.Name))
                 {
-                    Debug.LogWarning($"Manager : {type.Name} is in GameplayIngredientSettings.excludedeManagers List: ignoring Creation");
+                    Debug.LogWarning($"Manager : {type.Name} is in GameplayIngredientSettings.excludedManagers List: ignoring Creation");
                     continue;
                 }
 

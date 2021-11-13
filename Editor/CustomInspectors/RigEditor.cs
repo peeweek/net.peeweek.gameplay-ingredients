@@ -26,7 +26,7 @@ namespace GameplayIngredients.Editor
         {
             serializedObject.Update();
 
-            bool excludedRigManager = GameplayIngredientsSettings.currentSettings.excludedeManagers.Any(s => s == "RigManager");
+            bool excludedRigManager = GameplayIngredientsSettings.currentSettings.excludedManagers.Any(s => s == "RigManager");
 
             if (excludedRigManager)
             {

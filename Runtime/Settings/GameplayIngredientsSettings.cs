@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
@@ -8,7 +6,7 @@ namespace GameplayIngredients
     [HelpURL(Help.URL + "settings")]
     public class GameplayIngredientsSettings : ScriptableObject
     {
-        public string[] excludedeManagers { get { return m_ExcludedManagers; } }
+        public string[] excludedManagers { get { return m_ExcludedManagers; } }
         public bool verboseCalls { get { return m_VerboseCalls; } }
         public bool allowUpdateCalls { get { return m_AllowUpdateCalls; } }
 
