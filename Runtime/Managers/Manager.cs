@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Reflection;
+using GameplayIngredients.Utils;
+using UnityEditor;
+using UnityEngine.SceneManagement;
 
 namespace GameplayIngredients
 {
@@ -47,6 +50,10 @@ namespace GameplayIngredients
         {
             s_Managers.Clear();
 
+            // Get the current scene Resources/ path
+            string sceneAssetPath = PathUtils.GetCurrentSceneResourcesPath();
+
+            var inclusionList = GameplayIngredientsSettings.currentSettings.includedManagers;
             var exclusionList = GameplayIngredientsSettings.currentSettings.excludedManagers;
 
             if(GameplayIngredientsSettings.currentSettings.verboseCalls)
@@ -58,11 +65,24 @@ namespace GameplayIngredients
                 var doNotCreateAttr = type.GetCustomAttribute<DoNotCreateManagerAttribute>();
                 if (doNotCreateAttr != null)
                     continue;
-
+                
                 // Check for entries in exclusion List
                 if (exclusionList != null && exclusionList.ToList().Contains(type.Name))
                 {
-                    Debug.LogWarning($"Manager : {type.Name} is in GameplayIngredientSettings.excludedManagers List: ignoring Creation");
+                    if (GameplayIngredientsSettings.currentSettings.verboseCalls)
+                    {
+                        Debug.LogWarning($"Manager : {type.Name} is in GameplayIngredientSettings.excludedManagers List: ignoring Creation");
+                    }
+                    continue;
+                }
+                
+                // Check for entries in inclusion List
+                if (inclusionList != null && inclusionList.Length > 0 && !inclusionList.ToList().Contains(type.Name))
+                {
+                    if (GameplayIngredientsSettings.currentSettings.verboseCalls)
+                    {
+                        Debug.LogWarning($"GameplayIngredientSettings.includeManagers is not empty and manager : {type.Name} is not in the list: ignoring Creation");
+                    }
                     continue;
                 }
 
@@ -71,7 +91,22 @@ namespace GameplayIngredients
 
                 if(prefabAttr != null)
                 {
-                    var prefab = Resources.Load<GameObject>(prefabAttr.prefab);
+                    string prefabPath;
+                    if (sceneAssetPath != null)
+                    {
+                        prefabPath = sceneAssetPath + "/" + prefabAttr.prefab + ".prefab";
+                    }
+                    else
+                    {
+                        prefabPath = "Assets/Resources/" + prefabAttr.prefab + ".prefab";
+                    }
+
+                    if (GameplayIngredientsSettings.currentSettings.verboseCalls)
+                    {
+                        Debug.Log($"Try to load prefab : {prefabPath}");
+                    }
+
+                    var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
 
                     if(prefab == null) // Try loading the "Default_" prefixed version of the prefab
                     {
@@ -80,11 +115,11 @@ namespace GameplayIngredients
 
                     if(prefab != null)
                     {
-                        gameObject = GameObject.Instantiate(prefab);
+                        gameObject = Instantiate(prefab);
                     }
                     else
                     {
-                        Debug.LogError($"Could not instantiate default prefab for {type.ToString()} : No prefab '{prefabAttr.prefab}' found in resources folders. Ignoring...");
+                        Debug.LogError($"Could not instantiate default prefab for {type} : No prefab '{prefabAttr.prefab}' found in resources folders. Ignoring...");
                         continue;
                     }
                 }
@@ -94,7 +129,7 @@ namespace GameplayIngredients
                     gameObject.AddComponent(type);
                 }
                 gameObject.name = type.Name;
-                GameObject.DontDestroyOnLoad(gameObject);
+                DontDestroyOnLoad(gameObject);
                 var comp = (Manager)gameObject.GetComponent(type);
                 s_Managers.Add(type,comp);
 
