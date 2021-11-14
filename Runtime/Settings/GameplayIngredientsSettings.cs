@@ -7,6 +7,7 @@ using UnityEditor;
 namespace GameplayIngredients
 {
     [HelpURL(Help.URL + "settings")]
+    [CreateAssetMenu(fileName="GameplayIngredientsSettings", menuName=ComponentMenu.basePath+"Gameplay Ingredients Settings")]
     public class GameplayIngredientsSettings : ScriptableObject
     {
 	    public string[] includedManagers { get { return m_IncludedManagers;  } }

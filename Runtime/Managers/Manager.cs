@@ -55,7 +55,7 @@ namespace GameplayIngredients
             var inclusionList = GameplayIngredientsSettings.currentSettings.includedManagers;
             var exclusionList = GameplayIngredientsSettings.currentSettings.excludedManagers;
 
-            // If we have an inclusion list create an ordered list of Types
+            // If we have an inclusion list create an ordered list of Managers Types
             List<Type> managerTypes = new List<Type>(); 
             if (inclusionList != null && inclusionList.Length > 0)
             {
