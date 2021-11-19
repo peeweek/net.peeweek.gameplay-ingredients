@@ -1,4 +1,4 @@
-using NaughtyAttributes.Editor;
+﻿using NaughtyAttributes.Editor;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
@@ -46,7 +46,7 @@ namespace GameplayIngredients.Editor
         public abstract void OnInspectorGUI_PingArea();
 
         public override void OnInspectorGUI()
-        {
+	    {
             if(m_RequiredModule != null)
             {
                 EditorGUILayout.HelpBox($"This Script Requires the {m_RequiredModule.module} module : It will not execute until you enable the module in the {m_RequiredModule.fixLocation}.", MessageType.Warning);
