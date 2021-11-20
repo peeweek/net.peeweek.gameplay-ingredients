@@ -63,7 +63,18 @@ namespace GameplayIngredients
                 {
                     foreach (var type in kAllManagerTypes)
                     {
-                        if (type.Name.Equals(inclusion)) managerTypes.Add(type);
+                        if (type.Name.Equals(inclusion) || type.IsDefined(typeof(NonExcludeableManager)))
+                        {
+                            // ensure that we don't already added this type into list
+                            if (!managerTypes.Contains(type))
+                            {
+                                if (GameplayIngredientsSettings.currentSettings.verboseCalls)
+                                {
+                                    Debug.Log("Add Manager :" + type.Name);
+                                }
+                                managerTypes.Add(type);
+                            }
+                        }
                     }
                 }
             }
