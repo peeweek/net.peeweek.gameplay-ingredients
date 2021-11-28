@@ -16,28 +16,28 @@ namespace GameplayIngredients.Events
         [SerializeField]
         protected GameManagerLevelType m_LevelType = GameManagerLevelType.GameLevel;
 
-        string m_Message;
+        int m_MessageID;
 
         public Callable[] OnMessageRecieved;
 
         void OnEnable()
         {
-            m_Message = GetMessage(m_LevelType);
-            Messager.RegisterMessage(m_Message, Execute);
+            m_MessageID = GetMessageID(m_LevelType);
+            Messager.RegisterMessage(m_MessageID, Execute);
         }
 
         void OnDisable()
         {
-            Messager.RemoveMessage(m_Message, Execute);
+            Messager.RemoveMessage(m_MessageID, Execute);
         }
 
-        static string GetMessage(GameManagerLevelType type)
+        static int GetMessageID(GameManagerLevelType type)
         {
             switch(type)
             {
-                case GameManagerLevelType.MainMenu:  return GameManager.MainMenuStartMessage;
+                case GameManagerLevelType.MainMenu:  return GameManager.MainMenuStartMessageID;
                 default:
-                case GameManagerLevelType.GameLevel: return GameManager.GameLevelStartMessage;
+                case GameManagerLevelType.GameLevel: return GameManager.GameLevelStartMessageID;
             }
         }
 
@@ -49,7 +49,7 @@ namespace GameplayIngredients.Events
             }
             catch (System.Exception e)
             {
-                UnityEngine.Debug.LogError(string.Format("OnMessageEvent : Exception Caught while catching message '{0}' on Object '{1}'", m_Message, gameObject.name));
+                UnityEngine.Debug.LogError(string.Format("OnMessageEvent : Exception Caught while catching message '{0}' on Object '{1}'", m_MessageID, gameObject.name));
                 UnityEngine.Debug.LogException(e);
             }
         }

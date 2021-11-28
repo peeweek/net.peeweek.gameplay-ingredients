@@ -25,7 +25,11 @@ namespace GameplayIngredients
         public string ProgressSaveName = "Progress";
 
         public static string MainMenuStartMessage = "GAME_MANAGER_MAINMENU_START";
-        public static string GameLevelStartMessage = "GAME_MANAGER_GAME_START";
+        public static string GameLevelStartMessage ="GAME_MANAGER_GAME_START";
+
+        public static int MainMenuStartMessageID = Shader.PropertyToID(MainMenuStartMessage);
+        public static int GameLevelStartMessageID = Shader.PropertyToID(GameLevelStartMessage);
+
 
         public int currentLevel { get; private set; } = -2;
 
@@ -108,7 +112,7 @@ namespace GameplayIngredients
 
             string message = targetLevel == -1 ? MainMenuStartMessage : GameLevelStartMessage;
             sendMessage.Name = $"Send {message}";
-            sendMessage.MessageToSend = message;
+            sendMessage.SetMessageName(message);
 
             destroy.ObjectsToDestroy = new GameObject[] { go };
 
