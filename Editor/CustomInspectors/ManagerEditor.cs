@@ -20,7 +20,8 @@ namespace GameplayIngredients.Editor
 			DrawBreadCrumb("Manager", color, () =>
 			{
 				GUILayout.Label(ObjectNames.NicifyVariableName(serializedObject.targetObject.GetType().Name), GUILayout.ExpandWidth(true));
-				GUILayout.FlexibleSpace();
+				//GUILayout.FlexibleSpace();
+				GUILayout.Space(50);
 			});
 			
 			if(GameplayIngredientsSettings.currentSettings.includedManagers.Contains(serializedObject.targetObject.GetType().Name))
