@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using GameplayIngredients.Comments.Editor;
+using UnityEngine.Rendering;
 
 namespace GameplayIngredients.Editor
 {
@@ -136,6 +137,19 @@ namespace GameplayIngredients.Editor
                         }
                     }
 
+                    if (Preferences.showPipelineSwitcher)
+                    {
+                        GUILayout.Space(16);
+                        if (GUILayout.Button("URP/Built-In", EditorStyles.toolbarButton))
+                        {
+                            var renderPipelineAsset = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>("Assets/Settings/UniversalRP-HighQuality.asset");
+                            GraphicsSettings.renderPipelineAsset = GraphicsSettings.renderPipelineAsset != null ? null : renderPipelineAsset;
+                            var activeRenderPipeline = GraphicsSettings.renderPipelineAsset != null ? "UniversalRP" : "Built-in RP";
+                            SceneView.lastActiveSceneView.ShowNotification(new GUIContent($"Switched to {activeRenderPipeline}"));
+                        }
+                        GUILayout.Space(16);
+                    }
+
                     if(Preferences.showCustom)
                     {
                         // Custom Callback here
@@ -190,6 +204,7 @@ namespace GameplayIngredients.Editor
             public static bool showCheck => Get(kShowCheck);
             public static bool showComments => Get(kShowComments);
             public static bool showCustom => Get(kShowCustom);
+            public static bool showPipelineSwitcher => Get( kShowPipelineSwitcher );
 
             const string kShowToolbar = "showToolbar";
             const string kShowPlayFromHere = "showPlayFromHere";
@@ -198,6 +213,7 @@ namespace GameplayIngredients.Editor
             const string kShowCheck = "showCheck";
             const string kShowComments = "showComments";
             const string kShowCustom = "showCustom";
+            const string kShowPipelineSwitcher = "showPipelineSwitcher";
 
             const string kPrefPrefix = "GameplayIngredients.SceneViewToolbar";
             static readonly Dictionary<string, bool> defaults = new Dictionary<string, bool>
@@ -209,6 +225,7 @@ namespace GameplayIngredients.Editor
                 { kShowCheck , true },
                 { kShowComments , true },
                 { kShowCustom , true },
+                { kShowPipelineSwitcher, true }
             };
 
             static bool Default(string name)
@@ -269,6 +286,7 @@ namespace GameplayIngredients.Editor
                             PreferenceItem("Check Window", kShowCheck);
                             PreferenceItem("Comments Window", kShowComments);
                             PreferenceItem("Custom Toolbar Items", kShowCustom);
+                            PreferenceItem("Show Render Pipeline Switcher", kShowPipelineSwitcher);
                         }
                     }
                 };
