@@ -1,5 +1,11 @@
 # Changelog
 
+## 2020.2.11
+
+#### Fixed
+
+* Various Fixes related to the Enter Play Mode behaviors
+
 ## 2020.2.10
 
 #### Added
