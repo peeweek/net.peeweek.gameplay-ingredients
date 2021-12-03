@@ -14,6 +14,7 @@ namespace GameplayIngredients.Editor
         [InitializeOnLoadMethod]
         static void Initialize()
         {
+            EditorPrefs.SetInt("PlayFromHere", 0);
             EditorApplication.playModeStateChanged -= OnEnterPlayMode;
             EditorApplication.playModeStateChanged += OnEnterPlayMode;
         }
@@ -48,7 +49,7 @@ namespace GameplayIngredients.Editor
         {
             if(state == PlayModeStateChange.ExitingPlayMode)
             {
-                PlayerPrefs.SetInt("PlayFromHere", 0);
+                EditorPrefs.SetInt("PlayFromHere", 0);
             }
             if(state == PlayModeStateChange.ExitingEditMode)
             {
@@ -61,30 +62,37 @@ namespace GameplayIngredients.Editor
                     PlayerPrefs.SetInt("PlayFromHere", 0);
                 }
             }
+            try
+            {
+                if (state == PlayModeStateChange.EnteredPlayMode && (PlayerPrefs.GetInt("PlayFromHere") == 1))
+                {
+                    EditorUtility.ClearProgressBar();
 
-            if (state == PlayModeStateChange.EnteredPlayMode && (PlayerPrefs.GetInt("PlayFromHere") == 1))
+                    if (OnPlayFromHere != null)
+                    {
+                        Vector3 position = new Vector3(
+                                        EditorPrefs.GetFloat("PlayFromHere.position.x"),
+                                        EditorPrefs.GetFloat("PlayFromHere.position.y"),
+                                        EditorPrefs.GetFloat("PlayFromHere.position.z"));
+                        Vector3 forward = new Vector3(
+                                        EditorPrefs.GetFloat("PlayFromHere.forward.x"),
+                                        EditorPrefs.GetFloat("PlayFromHere.forward.y"),
+                                        EditorPrefs.GetFloat("PlayFromHere.forward.z"));
+                        OnPlayFromHere.Invoke(position, forward);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Play From Here : No Actions to take. Please add events to PlayFromHere.OnPlayFromHere()");
+                    }
+
+                    EditorPrefs.SetInt("PlayFromHere", 0);
+                }
+            }
+            catch
             {
                 EditorUtility.ClearProgressBar();
-
-                if (OnPlayFromHere != null)
-                {
-                    Vector3 position = new Vector3(
-                                    EditorPrefs.GetFloat("PlayFromHere.position.x"),
-                                    EditorPrefs.GetFloat("PlayFromHere.position.y"),
-                                    EditorPrefs.GetFloat("PlayFromHere.position.z"));
-                    Vector3 forward = new Vector3(
-                                    EditorPrefs.GetFloat("PlayFromHere.forward.x"),
-                                    EditorPrefs.GetFloat("PlayFromHere.forward.y"),
-                                    EditorPrefs.GetFloat("PlayFromHere.forward.z"));
-                    OnPlayFromHere.Invoke(position, forward);
-                }
-                else
-                {
-                    Debug.LogWarning("Play From Here : No Actions to take. Please add events to PlayFromHere.OnPlayFromHere()");
-                }
-
-                EditorPrefs.SetInt("PlayFromHere", 0);
             }
+            
 
         }
     }
