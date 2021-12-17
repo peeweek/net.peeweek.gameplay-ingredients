@@ -20,8 +20,8 @@ namespace GameplayIngredients.Editor
 			DrawBreadCrumb("Manager", color, () =>
 			{
 				GUILayout.Label(ObjectNames.NicifyVariableName(serializedObject.targetObject.GetType().Name), GUILayout.ExpandWidth(true));
-				//GUILayout.FlexibleSpace();
-				GUILayout.Space(50);
+				GUILayout.FlexibleSpace();
+				GUILayout.Space(50);	// try to fix the visualization problem on Unity 2020.1 and 2021.x
 			});
 			
 			if(GameplayIngredientsSettings.currentSettings.includedManagers.Contains(serializedObject.targetObject.GetType().Name))
