@@ -7,6 +7,7 @@ using UnityEngine;
 namespace GameplayIngredients
 {
     [AddComponentMenu(ComponentMenu.managersPath + "Game Manager")]
+    [ManagerDependsOn(typeof(GameSaveManager), typeof(FullScreenFadeManager), typeof(LevelStreamingManager))]
     [ManagerDefaultPrefab("GameManager")]
     public class GameManager : Manager
     {
