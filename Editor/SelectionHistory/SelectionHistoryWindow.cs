@@ -35,10 +35,6 @@ namespace GameplayIngredients.Editor
             EditorGUILayout.EndScrollView();
         }
 
-        public bool ignoreNextSelection = false;
-
-
-
         public bool CompareArray(Object[] a, Object[] b)
         {
             return a.SequenceEqual(b);
@@ -98,7 +94,6 @@ namespace GameplayIngredients.Editor
                             GUILayout.Label(label, Styles.icon);
                             if (GUILayout.Button($"{name} ({obj.GetType().Name})", Styles.historyItem))
                             {
-                                ignoreNextSelection = true;
                                 Selection.activeObject = obj;
                             }
 
@@ -106,7 +101,6 @@ namespace GameplayIngredients.Editor
                             {
                                 if (GUILayout.Button("Focus", Styles.historyButton, GUILayout.Width(48)))
                                 {
-                                    ignoreNextSelection = true;
                                     Selection.activeObject = obj;
                                     SceneView.lastActiveSceneView.FrameSelected();
                                 }
@@ -169,7 +163,7 @@ namespace GameplayIngredients.Editor
                         GUILayout.Label(label, Styles.icon);
                         if (GUILayout.Button($"{name} ({obj.GetType().Name})", Styles.historyItem))
                         {
-                            ignoreNextSelection = true;
+
                             Selection.activeObject = obj;
                         }
 
@@ -177,7 +171,6 @@ namespace GameplayIngredients.Editor
                         {
                             if (GUILayout.Button("Focus", Styles.historyButton, GUILayout.Width(48)))
                             {
-                                ignoreNextSelection = true;
                                 Selection.activeObject = obj;
                                 SceneView.lastActiveSceneView.FrameSelected();
                             }
@@ -222,12 +215,6 @@ namespace GameplayIngredients.Editor
 
             static void OnSelectionChange()
             {
-                if (SelectionHistoryWindow.instance != null && SelectionHistoryWindow.instance.ignoreNextSelection)
-                {
-                    SelectionHistoryWindow.instance.ignoreNextSelection = false;
-                    return;
-                }
-
                 if (selectionHistory == null) selectionHistory = new List<Object>();
                 if (lockedObjects == null) lockedObjects = new List<Object>();
 
