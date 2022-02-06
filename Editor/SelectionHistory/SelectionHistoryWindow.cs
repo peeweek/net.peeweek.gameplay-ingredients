@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 
@@ -40,8 +38,10 @@ namespace GameplayIngredients.Editor
             selectionHistory = null;
         }
 
-        List<UnityEngine.Object> selectionHistory;
-        List<UnityEngine.Object> lockedObjects;
+        [SerializeField]
+        List<Object> selectionHistory;
+        [SerializeField]
+        List<Object> lockedObjects;
 
         int maxHistoryCount = 32;
         bool ignoreNextSelection = false;
@@ -54,8 +54,8 @@ namespace GameplayIngredients.Editor
                 return;
             }
 
-            if (selectionHistory == null) selectionHistory = new List<UnityEngine.Object>();
-            if (lockedObjects == null) lockedObjects = new List<UnityEngine.Object>();
+            if (selectionHistory == null) selectionHistory = new List<Object>();
+            if (lockedObjects == null) lockedObjects = new List<Object>();
 
             if (Selection.activeObject != null || Selection.objects.Length > 0)
             {
@@ -68,21 +68,20 @@ namespace GameplayIngredients.Editor
 
                 if (selectionHistory.Count > maxHistoryCount)
                     selectionHistory.Take(maxHistoryCount);
-
-                Repaint();
             }
 
+            Repaint();
         }
 
-        public bool CompareArray(UnityEngine.Object[] a, UnityEngine.Object[] b)
+        public bool CompareArray(Object[] a, Object[] b)
         {
             return a.SequenceEqual(b);
         }
 
         void Selection_OnGUI()
         {
-            if (selectionHistory == null) selectionHistory = new List<UnityEngine.Object>();
-            if (lockedObjects == null) lockedObjects = new List<UnityEngine.Object>();
+            if (selectionHistory == null) selectionHistory = new List<Object>();
+            if (lockedObjects == null) lockedObjects = new List<Object>();
             int i = 0;
             int toRemove = -1;
 
@@ -113,6 +112,9 @@ namespace GameplayIngredients.Editor
                     }
                     else
                     {
+                        bool highlight = Selection.objects.Contains(obj);
+                        GUI.backgroundColor = highlight ? Styles.highlightColor : Color.white;
+
                         using (new EditorGUILayout.HorizontalScope(Styles.historyLine))
                         {
                             var b = GUI.color;
@@ -168,12 +170,13 @@ namespace GameplayIngredients.Editor
 
 
             GUI.backgroundColor = Color.white;
-            var reversedHistory = selectionHistory.Reverse<UnityEngine.Object>().ToArray();
+            var reversedHistory = selectionHistory.Reverse<Object>().ToArray();
             foreach (var obj in reversedHistory)
             {
                 if (obj != null)
                 {
-                    bool highlight = Selection.gameObjects.Contains(obj);
+                    bool highlight = Selection.objects.Contains(obj);
+                    GUI.backgroundColor = highlight ? Styles.highlightColor : Color.white;      
 
                     using (new EditorGUILayout.HorizontalScope(Styles.historyLine))
                     {
@@ -196,7 +199,6 @@ namespace GameplayIngredients.Editor
                             ignoreNextSelection = true;
                             Selection.activeObject = obj;
                         }
-
 
                         if (obj is GameObject && GUILayout.Button("Focus", Styles.historyButton, GUILayout.Width(48)))
                         {
@@ -229,7 +231,7 @@ namespace GameplayIngredients.Editor
             public static GUIStyle historyItem;
             public static GUIStyle historyButton;
             public static GUIStyle highlight;
-            public static Color highlightColor = new Color(2.0f, 2.0f, 2.0f);
+            public static Color highlightColor = new Color(1.0f, 1.5f, 2.0f);
 
             public static GUIStyle icon;
 
