@@ -5,18 +5,27 @@ using UnityEditor;
 
 namespace GameplayIngredients.Editor
 {
-    public class SelectionHistoryWindow : EditorWindow
+    class SelectionHistoryWindow : EditorWindow
     {
-        [MenuItem("Window/General/Selection History")]
+        public static SelectionHistoryWindow instance { get => s_Instance; }
+        public static SelectionHistoryWindow s_Instance;
+
+        [MenuItem("Window/General/Selection History &H")]
         public static void OpenSelectionHistoryWindow()
         {
-            EditorWindow.GetWindow<SelectionHistoryWindow>();
+            s_Instance = EditorWindow.GetWindow<SelectionHistoryWindow>();
+        }
+
+        private void OnDestroy()
+        {
+            s_Instance = null;
         }
 
         Vector2 scrollPos = Vector2.zero;
 
         void OnGUI()
         {
+
             titleContent = Contents.title;
 
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
@@ -26,52 +35,9 @@ namespace GameplayIngredients.Editor
             EditorGUILayout.EndScrollView();
         }
 
-        void OnEnable()
-        {
-            lockedObjects = null;
-            selectionHistory = null;
-        }
+        public bool ignoreNextSelection = false;
 
-        void OnDisable()
-        {
-            lockedObjects = null;
-            selectionHistory = null;
-        }
 
-        [SerializeField]
-        List<Object> selectionHistory;
-        [SerializeField]
-        List<Object> lockedObjects;
-
-        int maxHistoryCount = 32;
-        bool ignoreNextSelection = false;
-
-        void OnSelectionChange()
-        {
-            if (ignoreNextSelection)
-            {
-                ignoreNextSelection = false;
-                return;
-            }
-
-            if (selectionHistory == null) selectionHistory = new List<Object>();
-            if (lockedObjects == null) lockedObjects = new List<Object>();
-
-            if (Selection.activeObject != null || Selection.objects.Length > 0)
-            {
-
-                foreach(var obj in Selection.objects)
-                {
-                    if (!selectionHistory.Contains(obj))
-                        selectionHistory.Add(obj);
-                }
-
-                if (selectionHistory.Count > maxHistoryCount)
-                    selectionHistory.Take(maxHistoryCount);
-            }
-
-            Repaint();
-        }
 
         public bool CompareArray(Object[] a, Object[] b)
         {
@@ -80,12 +46,12 @@ namespace GameplayIngredients.Editor
 
         void Selection_OnGUI()
         {
-            if (selectionHistory == null) selectionHistory = new List<Object>();
-            if (lockedObjects == null) lockedObjects = new List<Object>();
+            if (History.selectionHistory == null) History.selectionHistory = new List<Object>();
+            if (History.lockedObjects == null) History.lockedObjects = new List<Object>();
             int i = 0;
             int toRemove = -1;
 
-            if (lockedObjects.Count > 0)
+            if (History.lockedObjects.Count > 0)
             {
                 GUI.backgroundColor = new Color(0, 0, 0, 0.2f);
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
@@ -96,7 +62,7 @@ namespace GameplayIngredients.Editor
                 GUI.backgroundColor = Color.white;
                 i = 0;
                 toRemove = -1;
-                foreach (var obj in lockedObjects)
+                foreach (var obj in History.lockedObjects)
                 {
                     
                     if (obj == null)
@@ -153,7 +119,7 @@ namespace GameplayIngredients.Editor
                     }
                     i++;
                 }
-                if (toRemove != -1) lockedObjects.RemoveAt(toRemove);
+                if (toRemove != -1) History.lockedObjects.RemoveAt(toRemove);
 
                 GUILayout.Space(8);
             }
@@ -169,7 +135,7 @@ namespace GameplayIngredients.Editor
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button("Clear", EditorStyles.toolbarButton))
                 {
-                    selectionHistory.Clear();
+                    History.selectionHistory.Clear();
                     Repaint();
                 }
             }
@@ -177,7 +143,7 @@ namespace GameplayIngredients.Editor
 
 
             GUI.backgroundColor = Color.white;
-            var reversedHistory = selectionHistory.Reverse<Object>().ToArray();
+            var reversedHistory = History.selectionHistory.Reverse<Object>().ToArray();
             foreach (var obj in reversedHistory)
             {
                 if (obj != null)
@@ -187,7 +153,7 @@ namespace GameplayIngredients.Editor
 
                     using (new EditorGUILayout.HorizontalScope(Styles.historyLine))
                     {
-                        bool favorited = lockedObjects.Contains(obj);
+                        bool favorited = History.lockedObjects.Contains(obj);
 
                         if (GUILayout.Button(favorited ? Contents.star : Contents.starDisabled, Styles.icon, GUILayout.Width(16)))
                         {
@@ -228,15 +194,56 @@ namespace GameplayIngredients.Editor
             }
             if (toAdd != -1)
             {
-                lockedObjects.Add(reversedHistory[toAdd]);
+                History.lockedObjects.Add(reversedHistory[toAdd]);
                 Repaint();
             }
             if (toRemove != -1)
             {
-                lockedObjects.Remove(reversedHistory[toRemove]);
+                History.lockedObjects.Remove(reversedHistory[toRemove]);
                 Repaint();
             }
 
+        }
+
+        [InitializeOnLoad]
+        static class History
+        {
+            [SerializeField]
+            internal static List<Object> selectionHistory;
+            [SerializeField]
+            internal static List<Object> lockedObjects;
+
+            static History()
+            {
+                selectionHistory = new List<Object>();
+                lockedObjects = new List<Object>();
+                Selection.selectionChanged += OnSelectionChange;
+            }
+
+            static void OnSelectionChange()
+            {
+                if (SelectionHistoryWindow.instance != null && SelectionHistoryWindow.instance.ignoreNextSelection)
+                {
+                    SelectionHistoryWindow.instance.ignoreNextSelection = false;
+                    return;
+                }
+
+                if (selectionHistory == null) selectionHistory = new List<Object>();
+                if (lockedObjects == null) lockedObjects = new List<Object>();
+
+                if (Selection.activeObject != null || Selection.objects.Length > 0)
+                {
+
+                    foreach (var obj in Selection.objects)
+                    {
+                        if (!selectionHistory.Contains(obj))
+                            selectionHistory.Add(obj);
+                    }
+                }
+
+                if (SelectionHistoryWindow.instance != null)
+                    SelectionHistoryWindow.instance.Repaint();
+            }
         }
 
         static class Styles
@@ -286,9 +293,15 @@ namespace GameplayIngredients.Editor
 
         static class Contents
         {
-            public static GUIContent title = new GUIContent("Selection History");
+            public static GUIContent title;
             public static GUIContent star = new GUIContent(EditorGUIUtility.IconContent("Favorite Icon").image);
             public static GUIContent starDisabled = new GUIContent(EditorGUIUtility.IconContent("Favorite").image);
+
+            static Contents()
+            {
+                title = EditorGUIUtility.IconContent("EventTrigger Icon");
+                title.text = "Selection History";
+            }
         }
     }
 }
