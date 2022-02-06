@@ -55,7 +55,15 @@ namespace GameplayIngredients.Editor
                 if (!Application.isPlaying)
                     EditorPrefs.SetBool(kCinemachinePreferenceName, value);
 
-                UpdateCinemachinePreview(value);
+                try
+                {
+                    UpdateCinemachinePreview(value);
+                }
+                catch(System.Exception e)
+                {
+                    Debug.LogException(e);
+                }
+
 
                 m_CinemachineActive = value;
             }
@@ -244,7 +252,7 @@ namespace GameplayIngredients.Editor
             }
 
             brain.enabled = value;
-            brain.ManualUpdate();
+
         }
 
     }
