@@ -5,6 +5,7 @@
 #### Improved
 
 * Improvements to the Selection History Window (Alt+H)
+* Storage of Messages is now handled as ints (PropertyToID mapping)
 
 ## 2020.2.10
 
