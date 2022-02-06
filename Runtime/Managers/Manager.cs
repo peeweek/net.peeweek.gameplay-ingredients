@@ -77,7 +77,7 @@ namespace GameplayIngredients
             {
                 foreach (var type in exclusionList)
                 {
-                    if(dg.TryRemove(type, exclusionList))
+                    if(dg.TryExclude(type, exclusionList))
                     {
                         if (GameplayIngredientsSettings.currentSettings.verboseCalls)
                             Debug.LogWarning($"Manager : Excluded {type} from manager creation");
@@ -171,19 +171,22 @@ namespace GameplayIngredients
                 }
             }
 
-            // Try remove a type by its name, if it's not a dependency of another node
-            public bool TryRemove(string type, string[] exclusionList)
+            // Try exclude a type by its name, if it's not a dependency of another node
+            public bool TryExclude(string type, string[] exclusionList)
             {
                 var n = nodes.Where(n => n.target.Name == type).FirstOrDefault();
 
                 foreach(var node in nodes)
                 {
-                    // If type is not excluded and our type is a dependency, then we can't remove the node
-                    if (!exclusionList.Contains(node.target.Name) && IsDependentOn(node.target, n.target))
+                    if (node == n)
+                        continue;
+
+                    // If type our type is a dependency or is already excluded, then we don't remove the node
+                    if (IsDependentOn(node.target, n.target) || exclusionList.Contains(node.target.Name))
                         return false;
                 }    
 
-                nodes.Remove(n);
+                n.excluded = true;
                 return true;
             }
 
@@ -222,6 +225,9 @@ namespace GameplayIngredients
 
                 foreach(var node in nodes)
                 {
+                    if (node.excluded)
+                        continue;
+
                     if (!d.ContainsKey(node.target))
                         d.Add(node.target, 0);
                     else
@@ -229,6 +235,9 @@ namespace GameplayIngredients
 
                     foreach(var dep in node.dependencies)
                     {
+                        if (dep.excluded)
+                            continue;
+
                         if (!d.ContainsKey(dep.target))
                             d.Add(dep.target, 0);
                         else
@@ -244,11 +253,13 @@ namespace GameplayIngredients
             {
                 public List<DependencyNode> dependencies;
                 public readonly Type target;
+                public bool excluded;
 
                 public DependencyNode(Type target)
                 {
                     dependencies = new List<DependencyNode>();
                     this.target = target;
+                    this.excluded = false;
                 }
 
                 public override string ToString()
