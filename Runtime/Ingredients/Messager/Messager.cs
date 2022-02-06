@@ -8,47 +8,66 @@ namespace GameplayIngredients
     {
         public delegate void Message(GameObject instigator = null);
 
-        private static Dictionary<string, List<Message>> m_RegisteredMessages;
+        private static Dictionary<int, List<Message>> m_RegisteredMessages;
 
         static Messager()
         {
-            m_RegisteredMessages = new Dictionary<string, List<Message>>();
+            m_RegisteredMessages = new Dictionary<int, List<Message>>();
         }
 
         public static void RegisterMessage(string messageName, Message message)
         {
-            if (!m_RegisteredMessages.ContainsKey(messageName))
-                m_RegisteredMessages.Add(messageName, new List<Message>());
+            int messageID = Shader.PropertyToID(messageName);
+            RegisterMessage(messageID, message);
+        }
 
-            if (!m_RegisteredMessages[messageName].Contains(message))
-                m_RegisteredMessages[messageName].Add(message);
+        public static void RegisterMessage(int messageID, Message message)
+        {
+            if (!m_RegisteredMessages.ContainsKey(messageID))
+                m_RegisteredMessages.Add(messageID, new List<Message>());
+
+            if (!m_RegisteredMessages[messageID].Contains(message))
+                m_RegisteredMessages[messageID].Add(message);
             else
             {
-                Debug.LogWarning(string.Format("Messager : {0} entry already contains reference to message.", messageName));
+                Debug.LogError(string.Format("Messager : {0} entry already contains reference to message."));
             }
         }
 
         public static void RemoveMessage(string messageName, Message message)
         {
-            var currentEvent = m_RegisteredMessages[messageName];
+            int messageID = Shader.PropertyToID(messageName);
+            RemoveMessage(messageID, message);
+        }
+
+        public static void RemoveMessage(int messageID, Message message)
+        {
+
+            var currentEvent = m_RegisteredMessages[messageID];
             if(currentEvent.Contains(message))
                 currentEvent.Remove(message);
 
             if (currentEvent == null || currentEvent.Count == 0)
-                m_RegisteredMessages.Remove(messageName);
+                m_RegisteredMessages.Remove(messageID);
         }
 
-        public static void Send(string eventName, GameObject instigator = null)
+        public static void Send(string messageName, GameObject instigator = null)
         {
-            if(GameplayIngredientsSettings.currentSettings.verboseCalls)
-                Debug.Log(string.Format("[MessageManager] Broadcast: {0}", eventName));
+            int messageID = Shader.PropertyToID(messageName);
+            Send(messageID, instigator);
+        }
 
-            if (m_RegisteredMessages.ContainsKey(eventName))
+        public static void Send(int messageID, GameObject instigator = null)
+        {
+            if (GameplayIngredientsSettings.currentSettings.verboseCalls)
+                Debug.Log(string.Format("[MessageManager] Broadcast: {0}", messageID));
+
+            if (m_RegisteredMessages.ContainsKey(messageID))
             {
                 try
                 {
                     // Get a copy of registered messages to iterate on. This prevents issues while deregistering message recievers while iterating.
-                    var messages = m_RegisteredMessages[eventName].ToArray();
+                    var messages = m_RegisteredMessages[messageID].ToArray();
                     foreach (var message in messages)
                     {
                         if(message != null)
@@ -57,14 +76,14 @@ namespace GameplayIngredients
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError(string.Format("Messager : Caught {0} while sending Message {1}", e.GetType().Name, eventName));
+                    Debug.LogError(string.Format("Messager : Caught {0} while sending Message {1}", e.GetType().Name, messageID));
                     Debug.LogException(e);
                 }
             }
             else
             {
                 if(GameplayIngredientsSettings.currentSettings.verboseCalls)
-                    Debug.Log("[MessageManager] could not find any listeners for event : " + eventName);
+                    Debug.Log("[MessageManager] could not find any listeners for event : " + messageID);
             }
         }
     }

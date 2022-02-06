@@ -389,8 +389,8 @@ namespace GameplayIngredients.Editor
             if (!stack.Contains(msg))
             {
                 stack.Push(msg);
-                var rootNode = new CallTreeNode(msg, CallTreeNodeType.Message, $"{msg.MessageToSend} : ({msg.gameObject.name}.{msg.Name})");
-                var all = Resources.FindObjectsOfTypeAll<OnMessageEvent>().Where(o=> o.MessageName == msg.MessageToSend).ToList();
+                var rootNode = new CallTreeNode(msg, CallTreeNodeType.Message, $"{msg.message} : ({msg.gameObject.name}.{msg.Name})");
+                var all = Resources.FindObjectsOfTypeAll<OnMessageEvent>().Where(o=> o.MessageName == msg.message).ToList();
 
                 foreach(var evt in all)
                 {
@@ -400,7 +400,7 @@ namespace GameplayIngredients.Editor
             }
             else
             {
-                return new CallTreeNode(msg, GetType(msg), $"RECURSED :{msg.MessageToSend} : ({msg.gameObject.name}.{msg.Name})");
+                return new CallTreeNode(msg, GetType(msg), $"RECURSED :{msg.message} : ({msg.gameObject.name}.{msg.Name})");
             }
         }
 

@@ -19,10 +19,10 @@ namespace GameplayIngredients.Actions
             switch(messageType)
             {
                 case MessageType.GameLevelStart:
-                    Messager.Send(GameManager.GameLevelStartMessage);
+                    Messager.Send(GameManager.GameLevelStartMessageID);
                     break;
                 case MessageType.MainMenuStart:
-                    Messager.Send(GameManager.MainMenuStartMessage);
+                    Messager.Send(GameManager.MainMenuStartMessageID);
                     break;
             }
         }

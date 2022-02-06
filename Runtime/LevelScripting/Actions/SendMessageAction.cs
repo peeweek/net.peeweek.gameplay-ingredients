@@ -7,11 +7,24 @@ namespace GameplayIngredients.Actions
     [Callable("Game", "Actions/ic-action-message.png")]
     public class SendMessageAction : ActionBase
     {
-        public string MessageToSend = "Message";
+        public string message => MessageToSend;
+
+        [SerializeField]
+        string MessageToSend = "Message";
+        int _messageID = int.MinValue;
 
         public override void Execute(GameObject instigator = null)
         {
-            Messager.Send(MessageToSend, instigator);
+            if (_messageID == int.MinValue)
+                _messageID = Shader.PropertyToID(MessageToSend);
+
+            Messager.Send(_messageID, instigator);
+        }
+
+        public void SetMessageName(string messageName)
+        {
+            MessageToSend = messageName;
+            _messageID = Shader.PropertyToID(MessageToSend);
         }
 
         public override string GetDefaultName()
