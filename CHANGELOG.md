@@ -1,5 +1,11 @@
 # Changelog
 
+## 2020.2.11
+
+#### Improved
+
+* Improvements to the Selection History Window (Alt+H)
+
 ## 2020.2.10
 
 #### Added
