@@ -96,7 +96,7 @@ namespace GameplayIngredients.Editor
                             string name = label.text;
                             label.text = string.Empty;
                             GUILayout.Label(label, Styles.icon);
-                            if (GUILayout.Button(name, Styles.historyItem))
+                            if (GUILayout.Button($"{name} ({obj.GetType().Name})", Styles.historyItem))
                             {
                                 ignoreNextSelection = true;
                                 Selection.activeObject = obj;
@@ -167,7 +167,7 @@ namespace GameplayIngredients.Editor
                         string name = label.text;
                         label.text = string.Empty;
                         GUILayout.Label(label, Styles.icon);
-                        if (GUILayout.Button(name, Styles.historyItem))
+                        if (GUILayout.Button($"{name} ({obj.GetType().Name})", Styles.historyItem))
                         {
                             ignoreNextSelection = true;
                             Selection.activeObject = obj;
