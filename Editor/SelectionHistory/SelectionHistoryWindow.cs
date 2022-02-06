@@ -136,11 +136,18 @@ namespace GameplayIngredients.Editor
                                 Selection.activeObject = obj;
                             }
 
-                            if (obj is GameObject && GUILayout.Button("Focus", Styles.historyButton, GUILayout.Width(48)))
+                            if (obj is GameObject && !PrefabUtility.IsPartOfPrefabAsset(obj))
                             {
-                                ignoreNextSelection = true;
-                                Selection.activeObject = obj;
-                                SceneView.lastActiveSceneView.FrameSelected();
+                                if (GUILayout.Button("Focus", Styles.historyButton, GUILayout.Width(48)))
+                                {
+                                    ignoreNextSelection = true;
+                                    Selection.activeObject = obj;
+                                    SceneView.lastActiveSceneView.FrameSelected();
+                                }
+                            }
+                            else if (GUILayout.Button("Open", Styles.historyButton, GUILayout.Width(48)))
+                            {
+                                AssetDatabase.OpenAsset(obj);
                             }
                         }
                     }
@@ -200,11 +207,18 @@ namespace GameplayIngredients.Editor
                             Selection.activeObject = obj;
                         }
 
-                        if (obj is GameObject && GUILayout.Button("Focus", Styles.historyButton, GUILayout.Width(48)))
+                        if (obj is GameObject && !PrefabUtility.IsPartOfPrefabAsset(obj))  
                         {
-                            ignoreNextSelection = true;
-                            Selection.activeObject = obj;
-                            SceneView.lastActiveSceneView.FrameSelected();
+                            if (GUILayout.Button("Focus", Styles.historyButton, GUILayout.Width(48)))
+                            {
+                                ignoreNextSelection = true;
+                                Selection.activeObject = obj;
+                                SceneView.lastActiveSceneView.FrameSelected();
+                            }
+                        }
+                        else if (GUILayout.Button("Open", Styles.historyButton, GUILayout.Width(48)))
+                        {
+                            AssetDatabase.OpenAsset(obj);
                         }
                     }
 
