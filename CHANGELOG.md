@@ -1,5 +1,11 @@
 # Changelog
 
+## 2020.2.12
+
+#### Improved
+
+* Add isBusy bool to check whether a Level Streaming is in progress
+
 ## 2020.2.11
 
 #### Improved

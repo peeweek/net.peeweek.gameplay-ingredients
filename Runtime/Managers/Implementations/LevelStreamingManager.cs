@@ -87,8 +87,11 @@ namespace GameplayIngredients.LevelStreaming
             }
         }
 
+        public bool isBusy { get; private set; }
+
         IEnumerator LoadScenesCoroutine(StreamingAction action, List<string> scenes, string sceneToActivate, bool showUI, Callable[] onLoadComplete)
         {
+            isBusy = true;
             LogDebugInformation("START LOAD/UNLOAD FOR LEVELS...");
             LoadingText.text = "Loading...";
             SetProgressBar(0.0f, true);
@@ -154,6 +157,8 @@ namespace GameplayIngredients.LevelStreaming
 
             if (EnableDebug)
                 DebugText.gameObject.SetActive(false);
+
+            isBusy = false;
         }
 
         void UpdatePercentage()
