@@ -3,6 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.IMGUI.Controls;
+using System.Reflection;
 
 public class AssetDependencyWindow : EditorWindow
 {
@@ -32,6 +33,9 @@ public class AssetDependencyWindow : EditorWindow
             {
                 s_Instance.WatchAsset(obj);
             }
+
+            if (s_Instance.dtv == null)
+                s_Instance.dtv = new DependencyTreeView(new TreeViewState());
 
             s_Instance.dtv.Reload();
         }
@@ -155,8 +159,49 @@ public class AssetDependencyWindow : EditorWindow
                 }
             }
 
+            // If Game object
+            if (watchedObject is GameObject)
+            {
+                foreach (var component in (watchedObject as GameObject).GetComponents<Component>())
+                {
+                    dependencies.Add(component);
+                }
+            }
+
+            
+            // If Component, list add any serialized property that is a reference to a UnityEngine.Object
+            if (typeof(Component).IsAssignableFrom(watchedObject.GetType()))
+            {
+                List<Object> fieldsAndProps = new List<Object>();
+
+
+                foreach(var mi in watchedObject.GetType().GetFields())
+                {
+                    if(typeof(Object).IsAssignableFrom(mi.FieldType))
+                    {
+                        Object o = mi.GetValue(watchedObject) as Object;
+                        if(o != null)
+                            fieldsAndProps.Add(o);
+                    }
+                }
+
+                foreach (var pi in watchedObject.GetType().GetProperties())
+                {
+                    if (typeof(Object).IsAssignableFrom(pi.PropertyType))
+                    {
+                        Object o = pi.GetValue(watchedObject) as Object;
+                        if (o != null)
+                            fieldsAndProps.Add(o);
+                    }
+                }
+
+                dependencies.AddRange(fieldsAndProps);
+ 
+            }
+
+
             // Search for dependencies
-            foreach(var d in AssetDatabase.GetDependencies(AssetDatabase.GetAssetPath(watchedObject), false))
+            foreach (var d in AssetDatabase.GetDependencies(AssetDatabase.GetAssetPath(watchedObject), false))
             {
                 dependencies.Add(AssetDatabase.LoadMainAssetAtPath(d));
             }
