@@ -45,6 +45,9 @@ public class AssetDependencyWindow : EditorWindow
 
     void WatchAsset(Object obj)
     {
+        if (obj == null)
+            return;
+
         if (watched == null)
             watched = new List<Object>();
 
@@ -91,7 +94,6 @@ public class AssetDependencyWindow : EditorWindow
         }
 
         GUILayout.FlexibleSpace();
-
         dtv.OnGUI(new Rect(0,22,position.width, position.height -22));
     }
 
@@ -166,37 +168,6 @@ public class AssetDependencyWindow : EditorWindow
                 {
                     dependencies.Add(component);
                 }
-            }
-
-            
-            // If Component, list add any serialized property that is a reference to a UnityEngine.Object
-            if (typeof(Component).IsAssignableFrom(watchedObject.GetType()))
-            {
-                List<Object> fieldsAndProps = new List<Object>();
-
-
-                foreach(var mi in watchedObject.GetType().GetFields())
-                {
-                    if(typeof(Object).IsAssignableFrom(mi.FieldType))
-                    {
-                        Object o = mi.GetValue(watchedObject) as Object;
-                        if(o != null)
-                            fieldsAndProps.Add(o);
-                    }
-                }
-
-                foreach (var pi in watchedObject.GetType().GetProperties())
-                {
-                    if (typeof(Object).IsAssignableFrom(pi.PropertyType))
-                    {
-                        Object o = pi.GetValue(watchedObject) as Object;
-                        if (o != null)
-                            fieldsAndProps.Add(o);
-                    }
-                }
-
-                dependencies.AddRange(fieldsAndProps);
- 
             }
 
 
