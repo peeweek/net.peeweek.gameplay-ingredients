@@ -1,14 +1,17 @@
 {
   "name": "net.peeweek.gameplay-ingredients",
   "displayName": "Gameplay Ingredients",
-  "version": "2020.2.12",
+  "version": "2021.3.0",
   "category": "Gameplay",
-  "unity": "2020.2",
+  "documentationUrl": "https://peeweek.readthedocs.io/en/latest/gameplay-ingredients/index.html",
+  "licensesUrl": "https://github.com/peeweek/net.peeweek.gameplay-ingredients/blob/master/LICENSE",
+  "changelogUrl": "https://github.com/peeweek/net.peeweek.gameplay-ingredients/blob/master/CHANGELOG.md",
+  "unity": "2021.3",
   "description": "Gameplay ingredients - A Collection of scripts for the editor and runtime to set-up gameplay actions and logic in your games.",
   "dependencies": {
-    "com.unity.cinemachine": "2.6.3",
-    "com.unity.timeline": "1.4.5",
-    "com.dbrizov.naughtyattributes": "2.0.8"
+    "com.unity.cinemachine": "2.8.4",
+    "com.unity.timeline": "1.6.4",
+    "com.dbrizov.naughtyattributes": "2.1.4"
   },
   "keywords": [
     "Gameplay",
