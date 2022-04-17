@@ -92,8 +92,15 @@ namespace GameplayIngredients.Editor
                     SetValueWithoutNotify(LinkGameView.Active && LinkGameView.LockedSceneView == containerWindow as SceneView);
 
                     buttons.Add(this);
-
+                    EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
                     UpdateIcon();
+
+                }
+
+                private void EditorApplication_playModeStateChanged(PlayModeStateChange obj)
+                {
+                    if(obj == PlayModeStateChange.EnteredPlayMode || obj == PlayModeStateChange.EnteredEditMode)
+                        UpdateIcon();
                 }
 
                 ~LinkGameViewButton()
@@ -290,6 +297,7 @@ namespace GameplayIngredients.Editor
         public class IngredientsCustomToolbarOverlay : Overlay, IAccessContainerWindow
         {
             EditorWindow IAccessContainerWindow.containerWindow { get; set; }
+
             SceneView sceneView => containerWindow as SceneView;
 
             protected override Layout supportedLayouts => Layout.HorizontalToolbar;
