@@ -1,5 +1,19 @@
 # Changelog
 
+## 2021.3.1
+
+#### Added
+
+* Asset Dependency Explorer
+
+## 2021.3.0
+
+#### This release changes the minimal version to **Unity 2021.3**
+
+* Upgraded Visual Assets to reflect the major version change
+* Fixes in Link Game View behavior
+* Removed 2020.3 specific code
+
 ## 2020.2.12
 
 #### Improved
