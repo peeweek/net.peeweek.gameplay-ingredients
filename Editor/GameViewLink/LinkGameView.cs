@@ -93,7 +93,7 @@ namespace GameplayIngredients.Editor
             // Reset State when entering editmode or play mode
             if(state == PlayModeStateChange.EnteredEditMode || state == PlayModeStateChange.EnteredPlayMode)
             {
-                if (Active)
+                if (Active && !Application.isPlaying)
                     Active = true;
                 else
                     Active = false;

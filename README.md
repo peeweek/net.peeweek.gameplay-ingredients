@@ -8,7 +8,9 @@ Gameplay Ingredients for your Unity Games - A collection of scripts that ease si
 
 ## Requirements
 
-* **Unity 2020.2** (Older versions compatible with 2018.3 / 2019.1 / 2019.2 / 2019.3 / 2020.1)
+* **Unity 2020.3** for latest version 
+  * (Older releases are still compatible with 2018.3 / 2019.1 / 2019.2 / 2019.3 / 2020.3)
+
 * (**Optional, for older versions or development** : Command-line Git installed on your system, for example [Git For Windows](https://gitforwindows.org/))
 
 ## How to install (2020.2 and Newer)
@@ -54,10 +56,11 @@ You can check that the package was imported by looking at the project window, un
 
 Gameplay Ingredients comes at latest version with the following compatibility:
 
-**Unity 2020.2 +** : choose the tag  : ![openupm](https://img.shields.io/npm/v/net.peeweek.gameplay-ingredients?label=openupm&registry_uri=https://package.openupm.com)
+**Unity 2021.3 +** : choose the tag  : ![openupm](https://img.shields.io/npm/v/net.peeweek.gameplay-ingredients?label=openupm&registry_uri=https://package.openupm.com)
 
 #### Older Versions
 
 * **Unity 2018.3 / 2018.4 :** choose the tag `2018.3.0`
 * **Unity 2019.1 / 2019.2 :** choose the tag `2019.1.2` 
 * **Unity 2019.3 / 2020.1**  : choose the  the tag `2019.3.7` 
+* **Unity 2020.3**  : choose the  the tag `2020.2.11` 
