@@ -148,7 +148,7 @@ namespace GameplayIngredients.Editor
 
         static void OpenHelp(string page)
         {
-            Application.OpenURL($"{helpBaseURL}{page}/");
+            Application.OpenURL($"{helpBaseURL}/{page}.html");
         }
 
         static void OpenHelp()
