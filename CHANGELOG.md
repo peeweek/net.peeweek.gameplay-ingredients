@@ -1,5 +1,16 @@
 # Changelog
 
+## 2021.3.2
+
+#### Fixes
+
+* Fixes in documentation links (did point to non-css pages on readthedocs)
+* Fixed a potential break in chinese locale (unsupported unicode character (Issue #76))
+
+#### Changes
+
+* Fixed custom toolbar overlay to remove error message. Is now a Panel, inherits from ToolbarOverlay
+
 ## 2021.3.1
 
 #### Added

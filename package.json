@@ -1,7 +1,7 @@
 {
   "name": "net.peeweek.gameplay-ingredients",
   "displayName": "Gameplay Ingredients",
-  "version": "2021.3.1",
+  "version": "2021.3.2",
   "category": "Gameplay",
   "documentationUrl": "https://peeweek.readthedocs.io/en/latest/gameplay-ingredients/index.html",
   "licensesUrl": "https://github.com/peeweek/net.peeweek.gameplay-ingredients/blob/master/LICENSE",
