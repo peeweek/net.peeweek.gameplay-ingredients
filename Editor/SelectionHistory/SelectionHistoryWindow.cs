@@ -66,7 +66,7 @@ namespace GameplayIngredients.Editor
                         using (new EditorGUILayout.HorizontalScope())
                         {
                             GUILayout.Label("(object is either null or has been deleted)");
-                            if (GUILayout.Button("×", GUILayout.Width(16)))
+                            if (GUILayout.Button("x", GUILayout.Width(16)))
                             {
                                 toRemove = i;
                             }
