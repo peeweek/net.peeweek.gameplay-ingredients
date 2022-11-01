@@ -452,7 +452,7 @@ namespace GameplayIngredients.Editor
                 }
                 GUILayout.Space(4);
 
-                using (new GUILayout.VerticalScope(GUILayout.Width(440)))
+                using (new GUILayout.VerticalScope(GUILayout.Width(discoverAsset.WindowWidth - discoverAsset.DiscoverListWidth - 25)))
                 {
                     contentScroll = GUILayout.BeginScrollView(contentScroll);
                     GUILayout.Space(8);

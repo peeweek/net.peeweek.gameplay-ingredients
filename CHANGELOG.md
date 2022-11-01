@@ -6,6 +6,7 @@
 
 * Fixes in documentation links (did point to non-css pages on readthedocs)
 * Fixed a potential break in chinese locale (unsupported unicode character (Issue #76))
+* Fixed Discover Window Content not resizing (Issue #62)
 
 #### Changes
 
