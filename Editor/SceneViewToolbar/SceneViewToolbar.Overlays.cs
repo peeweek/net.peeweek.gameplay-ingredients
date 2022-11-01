@@ -294,13 +294,13 @@ namespace GameplayIngredients.Editor
         }
 
         [Overlay(typeof(SceneView), "Custom (Gameplay Ingredients)", true)]
-        public class IngredientsCustomToolbarOverlay : Overlay, IAccessContainerWindow
+        public class IngredientsCustomToolbarOverlay : ToolbarOverlay, IAccessContainerWindow
         {
             EditorWindow IAccessContainerWindow.containerWindow { get; set; }
 
             SceneView sceneView => containerWindow as SceneView;
 
-            protected override Layout supportedLayouts => Layout.HorizontalToolbar;
+            protected override Layout supportedLayouts => Layout.Panel;
 
             public override VisualElement CreatePanelContent()
             {
