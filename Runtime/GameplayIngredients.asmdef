@@ -6,7 +6,8 @@
         "Cinemachine",
         "Unity.Timeline",
         "UnityEngine.UI",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.Cinemachine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -30,6 +31,11 @@
             "name": "com.unity.visualeffectgraph",
             "expression": "10.0.0",
             "define": "PACKAGE_VFXGRAPH"
+        },
+        {
+            "name": "com.unity.cinemachine",
+            "expression": "3.0.0",
+            "define": "PACKAGE_CINEMACHINE_3"
         }
     ],
     "noEngineReferences": false

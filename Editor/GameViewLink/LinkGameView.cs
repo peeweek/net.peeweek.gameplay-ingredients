@@ -2,7 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+#if PACKAGE_CINEMACHINE_3
+using Unity.Cinemachine;
+#else
 using Cinemachine;
+#endif
 
 namespace GameplayIngredients.Editor
 {

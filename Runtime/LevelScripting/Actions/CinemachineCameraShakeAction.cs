@@ -1,5 +1,9 @@
 using UnityEngine;
+#if PACKAGE_CINEMACHINE_3
+using Unity.Cinemachine;
+#else
 using Cinemachine;
+#endif
 using NaughtyAttributes;
 
 namespace GameplayIngredients.Actions

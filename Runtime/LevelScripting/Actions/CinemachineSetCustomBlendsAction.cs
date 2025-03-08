@@ -1,5 +1,9 @@
 using UnityEngine;
+#if PACKAGE_CINEMACHINE_3
+using Unity.Cinemachine;
+#else
 using Cinemachine;
+#endif
 
 namespace GameplayIngredients.Actions
 {
@@ -25,11 +29,19 @@ namespace GameplayIngredients.Actions
             {
                 if (action == Action.Disable || settings == null)
                 {
+#if PACKAGE_CINEMACHINE_3
+                    vcm.Brain.CustomBlends = null;
+#else
                     vcm.Brain.m_CustomBlends = null;
+#endif
                 }
                 else
                 {
+#if PACKAGE_CINEMACHINE_3
+                    vcm.Brain.CustomBlends = settings;
+#else
                     vcm.Brain.m_CustomBlends = settings;
+#endif
                 }
             }
         }

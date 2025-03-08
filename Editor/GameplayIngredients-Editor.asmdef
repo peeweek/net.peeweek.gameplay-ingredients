@@ -8,7 +8,9 @@
         "Unity.ugui",
         "Unity.Timeline",
         "Cinemachine",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.Cinemachine.Editor",
+        "Unity.Cinemachine"
     ],
     "includePlatforms": [
         "Editor"
@@ -19,6 +21,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.cinemachine",
+            "expression": "3.0.0",
+            "define": "PACKAGE_CINEMACHINE_3"
+        }
+    ],
     "noEngineReferences": false
 }
