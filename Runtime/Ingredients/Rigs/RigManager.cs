@@ -5,7 +5,6 @@ using UnityEngine;
 namespace GameplayIngredients.Rigs
 {
     [AddComponentMenu(ComponentMenu.managersPath + "Rig Manager")]
-    [NonExcludeableManager]
     public class RigManager : Manager
     {
         Dictionary<int, List<Rig>> m_UpdateRigs;
